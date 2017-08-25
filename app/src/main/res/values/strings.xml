@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Leap</string>
+    <string name="welcomeMessage">You are Welcome to Leap</string>
+
+
+    <string name="title_activity_leap">Leap</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_new_leap">New Leap</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="FreeLeap">Free</string>
+    <string name="WageredLeap">Wagered</string>
+    <string name="RankedLeap">Ranked</string>
+    <string name="Chats">Chats</string>
+    <string name="Circles">Circles</string>
+    <string name="Leaps">Leaps</string>
+    <string name="wallet">Wallet:</string>
+    <string name="mmr">MMR:</string>
+    <string name="verify_phone_number">Verify Phone Number</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="leap_in">Leap In</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="full_name">Full Name</string>
+    <string name="my_profile">My Profile</string>
+    <string name="verification_dashes">- - - - - -</string>
+    <string name="resend_verification_code">Resend Verification Code</string>
+    <string name="verifying">Verifying:</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="new_circle">New Circle</string>
+
+</resources>

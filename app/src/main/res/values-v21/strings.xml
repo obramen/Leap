@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="FreeLeap">Free</string>
+    <string name="WageredLeap">Wagered</string>
+    <string name="RankedLeap">Ranked</string>
+</resources>

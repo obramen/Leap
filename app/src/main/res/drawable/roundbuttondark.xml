@@ -3,19 +3,19 @@
     <item>
         <shape>
             <gradient
-                android:startColor="@color/appleRed"
-                android:endColor="@color/appleRed"
+                android:startColor="@color/colorPrimaryDark"
+                android:endColor="@color/colorPrimaryDark"
                 />
             <corners
-                android:radius="50dp"
+                android:radius="100dp"
                 />
             <size
                 android:height="60dp"
                 android:width="60dp"
                 />
             <stroke
-                android:width="2dp"
-                android:color="@color/appleRed"
+                android:width="0dp"
+                android:color="@color/colorPrimaryDark"
                 />
         </shape>
     </item>

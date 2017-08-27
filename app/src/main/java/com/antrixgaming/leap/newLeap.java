@@ -67,6 +67,7 @@ public class newLeap extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new_leap, menu);
+
         return true;
     }
 
@@ -78,7 +79,7 @@ public class newLeap extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.new_leap_settings) {
             return true;
         }
 
@@ -139,6 +140,8 @@ public class newLeap extends AppCompatActivity {
         }
     }
 
+
+    //back when return arrow is clicked
     @Override
     public boolean onSupportNavigateUp(){
         finish();

@@ -31,7 +31,7 @@
                 android:id="@+id/verificationCode"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@null"
                 android:ems="10"
                 android:hint="@string/verification_dashes"
                 android:inputType="number"

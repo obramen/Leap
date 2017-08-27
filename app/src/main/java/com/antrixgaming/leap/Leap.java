@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -36,6 +37,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -48,10 +50,13 @@ public class Leap extends AppCompatActivity
 
 
     public final String userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().toString();
+    public final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+
     private DatabaseReference leapDatabase;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     TabLayout tabLayout;
+
 
 
     private int[] tabIcons = {
@@ -78,18 +83,6 @@ public class Leap extends AppCompatActivity
 
 
 
-        //Floating Action Bar
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
-
-                Intent newLeapIntent = new Intent (Leap.this, newLeap.class);
-                startActivity(newLeapIntent);
-            }
-        });
 
 
         //Setting Drawers
@@ -118,21 +111,6 @@ public class Leap extends AppCompatActivity
         txtProfileName.setText(userPhoneNumber);
 
 
-        //Making the Logout Button Active
-        View header = navigationView.getHeaderView(0);
-        ImageView btnSignOut = (ImageView) header.findViewById(R.id.imgProfile);
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FirebaseAuth.getInstance().signOut();
-                finish();
-                Intent logoutIntent = new Intent(Leap.this, registerLogin.class);
-                logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(logoutIntent);
-
-            }
-        });
 
 
 
@@ -149,20 +127,16 @@ public class Leap extends AppCompatActivity
         public android.support.v4.app.Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new chatsFragment();
-                case 1:
-                    return new circlesFragment();
-                case 2:
-                    return new leapsFragment();
-                case 3:
                     return new userProfileFragment();
+                case 1:
+                    return new chatsFragment();
+                case 2:
+                    return new circlesFragment();
+                case 3:
+                    return new leapsFragment();
                 default:
                     return null;
-
-
             }
-
-
         }
 
         @Override
@@ -190,7 +164,9 @@ public class Leap extends AppCompatActivity
     }
 
     private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+
+        tabLayout.getTabAt(0)
+                .setIcon(tabIcons[0]);
     }
 
 
@@ -209,8 +185,11 @@ public class Leap extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.leap, menu);
+
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -220,7 +199,11 @@ public class Leap extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_leap_settings) {
+            return true;
+        }
+        else if (id == R.id.action_leap_search){
+
             return true;
         }
 
@@ -267,12 +250,25 @@ public class Leap extends AppCompatActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }  else if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
         {
             this.moveTaskToBack(true);
             return true;
         }
+
+        else {
+            super.onBackPressed();
+        }
+
+
         return super.onKeyDown(keyCode, event);
+
+
+
+
     }
 
 

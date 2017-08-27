@@ -3,6 +3,11 @@
     package="com.antrixgaming.leap">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+
+
 
     <application
         android:allowBackup="true"
@@ -26,15 +31,24 @@
             android:name=".Leap"
             android:label="@string/title_activity_leap"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".phoneVerifyActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".phoneVerifyActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".registerLogin" />
         <activity android:name=".bottomDrawer" />
         <activity
             android:name=".newLeap"
             android:label="@string/title_activity_new_leap"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity_one_chat" />
+        <activity android:name=".activity_one_circle"></activity>
+
+
+
+
+
     </application>
+
 
 
 </manifest>

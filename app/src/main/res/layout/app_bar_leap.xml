@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,14 +49,15 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_input_add"
         android:tint="@color/white"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
-        />
-
-
+        app:rippleColor="@android:color/black"
+        app:borderWidth="0dp"
+        app:elevation="2dp"
+        android:visibility="invisible"/>
 
 </android.support.design.widget.CoordinatorLayout>

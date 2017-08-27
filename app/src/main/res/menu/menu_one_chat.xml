@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+    android:id="@+id/action_one_chat_profile"
+    android:orderInCategory="100"
+    android:title="View leaper"
+    app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_one_chat_history"
+        android:orderInCategory="100"
+        android:title="@string/match_history"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_action_search"
+        android:title="Favourite"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>

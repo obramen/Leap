@@ -35,5 +35,6 @@
     <string name="new_circle">New Circle</string>
     <string name="match_history">Match history</string>
     <string name="new_leap">New Leap</string>
+    <string name="input">Input</string>
 
 </resources>

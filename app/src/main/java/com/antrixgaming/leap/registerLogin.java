@@ -167,8 +167,9 @@ public class registerLogin extends AppCompatActivity {
                 openPhoneVerifyIntent.putExtra("mVerificationId", mVerificationId);
                 openPhoneVerifyIntent.putExtra("phoneNumber", phoneNumberAndCode);
 
-                spinner.setVisibility(View.GONE);
                 registerLogin.this.startActivity(openPhoneVerifyIntent);
+                spinner.setVisibility(View.GONE);
+
             }
 
 

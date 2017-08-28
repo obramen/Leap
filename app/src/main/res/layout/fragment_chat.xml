@@ -4,7 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.antrixgaming.leap.Leap">
+    tools:context="com.antrixgaming.leap.Leap"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/chat_fab"
@@ -12,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/sym_action_chat"
+        android:src="@drawable/ic_chat"
         android:tint="@color/white"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
@@ -20,9 +24,14 @@
         app:borderWidth="0dp"
         app:elevation="2dp" />
 
-    <com.stfalcon.chatkit.dialogs.DialogsList
-        android:id="@+id/dialogsList"
+    <ListView
+        android:id="@+id/list_of_chats"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="16dp"
+        android:scrollbarSize="5dp" />
 
 </android.support.design.widget.CoordinatorLayout>

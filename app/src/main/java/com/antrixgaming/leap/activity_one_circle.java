@@ -9,5 +9,19 @@ public class activity_one_circle extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_circle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
     }
+
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
 }

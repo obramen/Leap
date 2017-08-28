@@ -7,11 +7,11 @@
                 android:endColor="@color/colorPrimary"
                 />
             <corners
-                android:radius="30dp"
+                android:radius="50dp"
                 />
             <size
-                android:height="50dp"
-                android:width="300dp"
+                android:height="20dp"
+                android:width="20dp"
                 />
             <stroke
                 android:width="0dp"

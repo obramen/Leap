@@ -13,9 +13,9 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:dividerHeight="16dp"
+        android:dividerHeight="10dp"
         android:divider="@android:color/transparent"
-        android:id="@+id/phoneContactList"
+        android:id="@+id/phone_ContactList"
         android:scrollbarSize="5dp"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="0dp" />

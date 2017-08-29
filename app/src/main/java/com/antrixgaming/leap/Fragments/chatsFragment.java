@@ -29,17 +29,12 @@ import com.antrixgaming.leap.NewClasses.ChatMessage;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.activity_one_chat;
 import com.antrixgaming.leap.newLeap;
+import com.antrixgaming.leap.phoneContactList;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 
 public class chatsFragment extends Fragment {
@@ -59,7 +54,8 @@ public class chatsFragment extends Fragment {
 
 
 
-                Intent openOneChat = new Intent(getActivity(), activity_one_chat.class);
+                //Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
+                Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
                 startActivity(openOneChat);
 
 
@@ -72,12 +68,37 @@ public class chatsFragment extends Fragment {
 
 
 
+        ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_chats);
+
+
+        FirebaseListAdapter<ChatMessage> adapter;
+        adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
+                R.layout.chats_list, FirebaseDatabase.getInstance().getReference().child("messages").orderByChild("messageTime").limitToLast(1)) {
+
+            @Override
+            protected void populateView(View v, ChatMessage model, int position) {
+                // Get references to the views of message.xml
+                TextView messageText = (TextView)v.findViewById(R.id.lastLeaperMessage);
+                //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
+                TextView phoneNumber = (TextView)v.findViewById(R.id.leaperName);
+                TextView messageTime = (TextView)v.findViewById(R.id.lastLeaperMessageTime);
+
+                // Set their text
+                messageText.setText(model.getMessageText());
+                phoneNumber.setText(model.getPhoneNumber());
+
+                // Format the date before showing it
+                messageTime.setText(DateFormat.format("HH:mm",
+                        model.getMessageTime()));
 
 
 
 
 
+            }
+        };
 
+        listOfMessages.setAdapter(adapter);
 
 
 

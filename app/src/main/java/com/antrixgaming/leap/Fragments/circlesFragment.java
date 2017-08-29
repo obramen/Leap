@@ -45,8 +45,6 @@ public class circlesFragment extends Fragment {
 
 
 
-        //Get UID of user
-
         ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_chats);
 
 

@@ -25,6 +25,8 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.hbb20.CountryCodePicker;
 
 import java.util.concurrent.TimeUnit;
@@ -48,6 +50,7 @@ public class registerLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_login);
+
         getSupportActionBar().hide();
 
         //assign progress bar
@@ -216,7 +219,7 @@ public class registerLogin extends AppCompatActivity {
                 ccp.registerCarrierNumberEditText(phoneNumber);
 
                 // get phone number with country code and plus
-                String phoneNumberAndCode = ccp.getFullNumber().toString();
+                String phoneNumberAndCode = ccp.getFullNumber().toString().trim();
                 Toast.makeText(registerLogin.this, "The Full Number is " + phoneNumberAndCode, Toast.LENGTH_LONG).show();
 
 
@@ -249,12 +252,10 @@ public class registerLogin extends AppCompatActivity {
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
 
-
                             //Open main interface for Leap while passing usr value
                             Intent openLeapIntent = new Intent(registerLogin.this, Leap.class);
                             registerLogin.this.startActivity(openLeapIntent);
                             Toast.makeText(registerLogin.this, user.getUid().toString().trim() , Toast.LENGTH_LONG).show();
-
                             finish();
 
 

@@ -7,32 +7,32 @@
     >
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:weightSum="10"
-        android:clickable="true">
+        android:id="@+id/phoneContactToSelect">
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/contact_list_image"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/profile_picture"
                 app:civ_border_color="#EEE"
-                app:civ_border_width="2dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                app:civ_border_width="2dp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="6"
             android:padding="5dp">
 
@@ -40,16 +40,18 @@
                 android:id="@+id/phoneContactName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:text="name"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/phoneContactStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/circleName"
+                android:layout_below="@id/phoneContactName"
                 android:layout_marginTop="5dp"
-                android:textSize="14sp"/>
+                android:text="status"
+                android:textSize="14sp" />
 
 
         </RelativeLayout>
@@ -65,9 +67,23 @@
                 android:id="@+id/phoneContactType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:text="type"
+                android:textSize="12sp"/>
 
-
+            <TextView
+                android:id="@+id/leaperIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/phoneContactType"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/redbutton"
+                android:padding="5dp"
+                android:text="leaper"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="8sp" />
 
 
         </RelativeLayout>

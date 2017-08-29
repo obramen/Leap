@@ -2,6 +2,7 @@ package com.antrixgaming.leap;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.os.RecoverySystem;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,10 +24,14 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
 public class phoneVerifyActivity extends AppCompatActivity {
+
+
+    //TODO fix phoneVery.java / phone verification scree crash after first login
 
 
     // [START declare_auth]
@@ -37,11 +42,16 @@ public class phoneVerifyActivity extends AppCompatActivity {
 
     private ProgressBar spinner;
 
+    // 15min progress bar declaration
+    private int progress = 0;
+    private final int pBarMax = 600;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
@@ -53,6 +63,27 @@ public class phoneVerifyActivity extends AppCompatActivity {
         final String phoneNumber = bundle.getString("phoneNumber");
 
         Toast.makeText(phoneVerifyActivity.this, "Verification ID is " + mVerificationID , Toast.LENGTH_LONG).show();
+
+
+
+        //15 minutes progress bar
+        final ProgressBar pBar = (ProgressBar) findViewById(R.id.progressBar2);
+        pBar.setMax(pBarMax);
+        final Thread pBarThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(progress<=pBarMax) {
+                        pBar.setProgress(progress);
+                        sleep(1000);
+                        ++progress;
+                    }
+                }
+                catch(InterruptedException e) {
+                }
+            }
+        };
+        pBarThread.start();
 
 
 
@@ -184,6 +215,11 @@ public class phoneVerifyActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
         // Open Main Screen on successful login
         private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
             mAuth.signInWithCredential(credential)
@@ -221,6 +257,8 @@ public class phoneVerifyActivity extends AppCompatActivity {
             spinner.setVisibility(View.GONE);
 
 
+
+
         }
 
         boolean doubleBackToExitPressedOnce = false;
@@ -243,4 +281,6 @@ public class phoneVerifyActivity extends AppCompatActivity {
                 }
             }, 2000);
         }
+
+
 }

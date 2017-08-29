@@ -42,7 +42,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
-
+import java.util.Date;
 
 
 public class Leap extends AppCompatActivity
@@ -51,11 +51,14 @@ public class Leap extends AppCompatActivity
 
     public final String userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().toString();
     public final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+    private FirebaseAuth mAuth;
 
     private DatabaseReference leapDatabase;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     TabLayout tabLayout;
+    private long messageTime;
+
 
 
 
@@ -68,6 +71,36 @@ public class Leap extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leap);
+
+        // [START initialize_auth]
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+        messageTime = new Date().getTime();
+
+        /////////////// ADD USER'S UID TO PHONE NUMBERS TABLE TOGETHER WITH UID /////////////////
+        /////////// CHECK FOR AVAILABILITY ON TABLE FIRST ////////////////////////
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        // add phone number to table
+        dbRef.child("phonenumbers").child(userPhoneNumber).child("uid").setValue(UID);
+        // add last login time
+        dbRef.child("phonenumbers").child(userPhoneNumber).child("logins").push().setValue(messageTime);
+        // add phone number to table
+        dbRef.child("uid").child(UID).child("phoneNumber").setValue(userPhoneNumber);
+
+
+
+        Toast.makeText(this, "User Newly registered", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Last login saved", Toast.LENGTH_LONG).show();
+
+
+
+
+        /////////////// ADDING ENDS HEREE /////////////////
+
+
+
+
+
 
         //initialize database reference
         leapDatabase = FirebaseDatabase.getInstance().getReference();
@@ -87,6 +120,7 @@ public class Leap extends AppCompatActivity
 
 
 
+
         //Setting Drawers
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -101,10 +135,6 @@ public class Leap extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.mainTabs);
         tabLayout.setupWithViewPager(mViewPager);
         setupTabIcons();
-
-
-
-
 
 
 

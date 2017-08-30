@@ -13,14 +13,14 @@ public class ChatMessage {
     private long messageTime;
     private String phoneNumber;
     private String uid;
-    private String circleid;
+    private String onecircleid;
 
 
-    public ChatMessage(String messageText, String circleid, String phoneNumber, String uid) {
+    public ChatMessage(String messageText, String onecircleid, String phoneNumber, String uid) {
         this.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         this.messageText = messageText;
         //this.messageUser = FirebaseDatabase.getInstance().getReference().child("uid").child(uid).child("name").toString();
-        this.circleid = circleid;
+        this.onecircleid = onecircleid;
         this.phoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         // Initialize to current time
@@ -63,9 +63,9 @@ public class ChatMessage {
 
     public void setUid  (String uid) {this.uid = uid;}
 
-    public String getCircleid(){return circleid;}
+    public String getOnecircleid(){return onecircleid;}
 
-    public void setCircleid(String circleid){this.circleid = circleid;}
+    public void setOnecircleid(String onecircleid){this.onecircleid = onecircleid;}
 
 
 }

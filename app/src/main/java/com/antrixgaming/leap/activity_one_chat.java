@@ -27,6 +27,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.antrixgaming.leap.NewClasses.CUID;
+
+import org.w3c.dom.Text;
+
+import java.security.PublicKey;
+import java.util.Date;
+
 public class activity_one_chat extends AppCompatActivity {
 
 
@@ -34,12 +41,11 @@ public class activity_one_chat extends AppCompatActivity {
     String  oneCircleFirstUserUid;
     String oneCircleSecondUserPhoneNumber;
     String oneCircleSecondUserUid;
-    String oneCircleUid;
+    public String oneCircleUid;
     DatabaseReference oneCircleSecondUserUidReference;
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     String numberA;
     String numberB;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +53,9 @@ public class activity_one_chat extends AppCompatActivity {
         setContentView(R.layout.activity_one_chat);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //DatabaseReference ref = database.getReference("/phonenumbers/" + "233242100903" +"/uid");
-        //Post post = dataSnapshot.getValue(Post.class);
 
-        //DatabaseReference seconduseruid = FirebaseDatabase.getReference("phonenumbers");
+        final TextView newOneCircleSecondUserUid = (TextView) findViewById(R.id.newOneCircleSecondUserUid);
+
 
 
         // One Circle first user details ***phone number and UID***
@@ -64,22 +68,34 @@ public class activity_one_chat extends AppCompatActivity {
 
         //Reference path to oneCircleSecondUserUid
         oneCircleSecondUserUidReference = FirebaseDatabase.getInstance()
-                                            .getReference("phonenumbers").child("+233242100903")
-                                            .child("uid");
+                                            .getReference().child("phonenumbers").child("+233242100903").child("uid");
+
+
+        //oneCircleSecondUserUidReferenceA = FirebaseDatabase.getInstance().getReference().child("uid").orderByChild("phoneNumber").
 
 
 
-        oneCircleSecondUserUidReference.addValueEventListener(new ValueEventListener() {
+
+
+        long lastSeenTimeWithMe = new Date().getTime();
+
+        oneCircleSecondUserUidReference.getParent().child("lastseenwith"+oneCircleFirstUserUid).setValue(lastSeenTimeWithMe);
+
+        oneCircleSecondUserUidReference.getParent().addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //Log.i(TAG, dataSnapshot.getValue(String.class);
 
 
                 //get UID from datareference for second User to chat with
-                oneCircleSecondUserUid = dataSnapshot.getValue().toString();
+                oneCircleSecondUserUid = dataSnapshot.child("uid").getValue().toString();
 
-                //TODO compare the two UIDs in order to produce numberA and numberB
+                //newOneCircleSecondUserUid.setText(oneCircleSecondUserUid);
 
+
+               //oneCircleSecondUserUid = newOneCircleSecondUserUid.getText().toString();
+                //compare two UIDs and generate circle uid Number A should be smaller than Number B
                 if(oneCircleFirstUserUid.compareTo(oneCircleSecondUserUid)<0){
                     numberA = oneCircleFirstUserUid;
                     numberB = oneCircleSecondUserUid;
@@ -95,40 +111,38 @@ public class activity_one_chat extends AppCompatActivity {
                     numberB = oneCircleFirstUserUid;
                 }
 
-
-
+                //number to save as onecircle uid
                 oneCircleUid = numberA + numberB;
-
-
-
 
                 dbRef.child("onecircles").child(oneCircleUid).child("numberA").setValue(numberA);
                 dbRef.child("onecircles").child(oneCircleUid).child("numberB").setValue(numberB);
 
-                Toast.makeText(activity_one_chat.this, "oneCircleUID is " + oneCircleUid, Toast.LENGTH_LONG).show();
+                readData();
 
-            }
+
+          }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //Log.w(TAG, "onCancelled", databaseError.toException());
             }
 
+
         });
 
 
 
 
+
+
+
+        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
         getSupportActionBar().setTitle(oneCircleSecondUserPhoneNumber);
-        getSupportActionBar().setIcon(R.drawable.ic_menu_camera);
+        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
 
 
-        ////// INFORMATION FOR THE ONE CIRCLE /////
-        ////// ONE CIRCLE ID IS FORMED BY CONCATENATING Uid OF BOTH USERS /////
-
-
-
-
+        ///////////////////// SAVING NEW DATA /////////////////////////
+        //Send key functions start here
         FloatingActionButton sendFab =
                 (FloatingActionButton)findViewById(R.id.send_chat_fab);
 
@@ -144,65 +158,69 @@ public class activity_one_chat extends AppCompatActivity {
 
                 // Read the input field and push a new instance
                 // of ChatMessage to the Firebase database inside onecirclemessages table
+
+                //first push and store the generated key for the message
                 String key = dbRef.child("onecirclemessages")
                         .push().getKey();
-
+                //next update the message using the key stored
                 dbRef.child("onecirclemessages").child(key)
                         .setValue(new ChatMessage(input.getText().toString(),oneCircleUid,
                                 oneCircleFirstUserPhoneNumber, oneCircleFirstUserUid)
                         );
                 //get the just sent messageid and add to messages with UID of sender attached
-                dbRef.child("onecircles").child(oneCircleUid).child("messages").child(key)
+                dbRef.child("onecircles").child(oneCircleUid).child("onecirclemessages").child(key)
                         .setValue(oneCircleFirstUserUid);
 
 
                 // Clear the input
                 input.setText("");
             }
+
         });
-
-
-
-        ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
-
-
-        FirebaseListAdapter<ChatMessage> adapter;
-            adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
-                    R.layout.messages, FirebaseDatabase.getInstance().getReference().child("onecirclemessages")) {
-
-                @Override
-                protected void populateView(View v, ChatMessage model, int position) {
-                    // Get references to the views of message.xml
-                    TextView messageText = (TextView)v.findViewById(R.id.message_text);
-                    //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
-                    TextView phoneNumber = (TextView)v.findViewById(R.id.phoneNumber);
-                    TextView messageTime = (TextView)v.findViewById(R.id.message_time);
-
-                    // Set their text
-                    messageText.setText(model.getMessageText());
-                    phoneNumber.setText(model.getPhoneNumber());
-                    //messageUser.setText(model.getMessageUser());
-
-                    // Format the date before showing it
-                    messageTime.setText(DateFormat.format("HH:mm",
-                            model.getMessageTime()));
-
-
-
-
-
-                }
-            };
-
-            listOfMessages.setAdapter(adapter);
-
-
-
 
 
 
     }
 
+    public void readData(){
+
+        //TODO filter messages for only those involved for the one chat screen - DONE
+        //TODO sort messages with time
+
+        String finalOneCircleUid = oneCircleUid;
+
+
+        ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
+
+        FirebaseListAdapter<ChatMessage> adapter;
+        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
+                R.layout.messages, FirebaseDatabase.getInstance().getReference().child("onecirclemessages").orderByChild("onecircleid").equalTo(oneCircleUid)) {
+            @Override
+            protected void populateView(View v, ChatMessage model, int position) {
+
+
+                // Get references to the views of message.xml
+                TextView messageText = (TextView)v.findViewById(R.id.message_text);
+                //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
+                TextView phoneNumber = (TextView)v.findViewById(R.id.phoneNumber);
+                TextView messageTime = (TextView)v.findViewById(R.id.message_time);
+
+                // Set their text
+                messageText.setText(model.getMessageText());
+                phoneNumber.setText(model.getPhoneNumber());
+                //messageUser.setText(model.getMessageUser());
+
+                // Format the date before showing it
+                messageTime.setText(DateFormat.format("HH:mm",
+                        model.getMessageTime()));
+
+            }
+        };
+
+        listOfMessages.setAdapter(adapter);
+
+
+    }
 
 
 

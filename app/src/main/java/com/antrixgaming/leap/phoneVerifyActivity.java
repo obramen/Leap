@@ -51,7 +51,6 @@ public class phoneVerifyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);

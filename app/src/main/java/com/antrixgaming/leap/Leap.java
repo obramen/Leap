@@ -49,8 +49,8 @@ public class Leap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    public final String userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().toString();
-    public final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+    public final String userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+    public final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private FirebaseAuth mAuth;
 
     private DatabaseReference leapDatabase;
@@ -77,25 +77,35 @@ public class Leap extends AppCompatActivity
         // [END initialize_auth]
         messageTime = new Date().getTime();
 
+        // get bundled country code from registerLogin activity
+        Bundle bundle = getIntent().getExtras();
+        String countryCode = bundle.getString("countryCode");
+        String countryCodeStatus = bundle.getString("countryCodeStatus");
+
+
         /////////////// ADD USER'S UID TO PHONE NUMBERS TABLE TOGETHER WITH UID /////////////////
         /////////// CHECK FOR AVAILABILITY ON TABLE FIRST ////////////////////////
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        // add phone number to table
+        // add phone number to phone numbers table with section named as user's phone number
         dbRef.child("phonenumbers").child(userPhoneNumber).child("uid").setValue(UID);
-        // add last login time
+        // add last login time under phone numbers table with section logins
         dbRef.child("phonenumbers").child(userPhoneNumber).child("logins").push().setValue(messageTime);
-        // add phone number to table
+        // add phone number under uid table
         dbRef.child("uid").child(UID).child("phoneNumber").setValue(userPhoneNumber);
+        // add country code under uid table
+        //////dbRef.child("uid").child(UID).child(countryCode).setValue("true");
+        // add the phone number to user table under phone numbers. this table contains phone numbers only
+        // for check all contacts available
 
+        int x = Integer.parseInt(countryCodeStatus);
+        if (x == 1){
 
+            dbRef.child("users").child(userPhoneNumber).setValue(true);
 
-        Toast.makeText(this, "User Newly registered", Toast.LENGTH_LONG).show();
-        Toast.makeText(this, "Last login saved", Toast.LENGTH_LONG).show();
+        }else {
 
-
-
-
-        /////////////// ADDING ENDS HEREE /////////////////
+        }
+        /////////////// ADDING ENDS HERE /////////////////
 
 
 

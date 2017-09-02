@@ -2,9 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/chat_background_2"
     android:padding="5dp"
-    >
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+     android:background="@color/white">
 
 
     <LinearLayout
@@ -41,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="name"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -51,7 +54,7 @@
                 android:layout_below="@id/phoneContactName"
                 android:layout_marginTop="5dp"
                 android:text="status"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
 
         </RelativeLayout>
@@ -69,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="type"
-                android:textSize="12sp"/>
+                android:textSize="11sp"/>
 
             <TextView
                 android:id="@+id/leaperIndicator"
@@ -87,6 +90,7 @@
 
 
         </RelativeLayout>
+
 
 
     </LinearLayout>

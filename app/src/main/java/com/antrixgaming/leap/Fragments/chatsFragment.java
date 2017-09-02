@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,17 +25,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
-import com.antrixgaming.leap.Leap;
 import com.antrixgaming.leap.NewClasses.ChatMessage;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.activity_one_chat;
-import com.antrixgaming.leap.newLeap;
 import com.antrixgaming.leap.phoneContactList;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class chatsFragment extends Fragment {
@@ -47,17 +48,16 @@ public class chatsFragment extends Fragment {
         // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
+
+
         FloatingActionButton chatFab = (FloatingActionButton) view.findViewById(R.id.chat_fab);
         chatFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-
                 //Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
                 Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
                 startActivity(openOneChat);
-
 
 
             }
@@ -70,13 +70,14 @@ public class chatsFragment extends Fragment {
 
         ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_chats);
 
-
         FirebaseListAdapter<ChatMessage> adapter;
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.chats_list, FirebaseDatabase.getInstance().getReference().child("messages").orderByChild("messageTime").limitToLast(1)) {
+                R.layout.chats_list, FirebaseDatabase.getInstance().getReference().child("userchatlist").child(FirebaseAuth.getInstance()
+                        .getCurrentUser().getUid())) {
+
 
             @Override
-            protected void populateView(View v, ChatMessage model, int position) {
+            protected void populateView(View v, final ChatMessage model, int position) {
                 // Get references to the views of message.xml
                 TextView messageText = (TextView)v.findViewById(R.id.lastLeaperMessage);
                 //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
@@ -84,12 +85,25 @@ public class chatsFragment extends Fragment {
                 TextView messageTime = (TextView)v.findViewById(R.id.lastLeaperMessageTime);
 
                 // Set their text
-                messageText.setText(model.getMessageText());
-                phoneNumber.setText(model.getPhoneNumber());
-
+                messageText.setText(model.getMessageText()); // set last message as it is
                 // Format the date before showing it
                 messageTime.setText(DateFormat.format("HH:mm",
                         model.getMessageTime()));
+                String loadName = model.getloadname();
+                int x = Integer.parseInt(loadName);
+
+                if (x == 0){
+                    //don't change number or name in chat list
+                    phoneNumber.setText(model.getReceiverPhoneNumber());
+
+                }
+
+                else if(x == 1){
+                    // change number or name in chat list
+                    phoneNumber.setText(model.getSenderPhoneNumber());
+
+                }
+
 
 
 
@@ -99,6 +113,27 @@ public class chatsFragment extends Fragment {
         };
 
         listOfMessages.setAdapter(adapter);
+
+
+
+
+
+        ListView listView = (ListView) view.findViewById(R.id.list_of_chats);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+                //TODO change +233242366623 to PHONE NUMBER FROM View selected - DONE
+                TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneContactStatus);
+                //String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
+                TextView sendToPhoneNumber = (TextView) view.findViewById(R.id.leaperName);
+
+                Intent intent = new Intent(getActivity(), activity_one_chat.class);
+                intent.putExtra("oneCircleSecondUser", sendToPhoneNumber.getText().toString());
+                startActivity(intent);
+            }
+        });
 
 
 

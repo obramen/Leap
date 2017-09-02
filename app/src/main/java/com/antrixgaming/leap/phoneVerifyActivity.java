@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +46,9 @@ public class phoneVerifyActivity extends AppCompatActivity {
     private final int pBarMax = 600;
 
 
+    public String countryCode;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +58,10 @@ public class phoneVerifyActivity extends AppCompatActivity {
         spinner.setVisibility(View.GONE);
 
 
-
         Bundle bundle = getIntent().getExtras();
         final String mVerificationID = bundle.getString("mVerificationId");
         final String phoneNumber = bundle.getString("phoneNumber");
-
-        Toast.makeText(phoneVerifyActivity.this, "Verification ID is " + mVerificationID , Toast.LENGTH_LONG).show();
+        final String countryCode = bundle.getString("countryCode");
 
 
 
@@ -182,6 +182,8 @@ public class phoneVerifyActivity extends AppCompatActivity {
                         return;
                     }
 
+
+
                     spinner.setVisibility(View.VISIBLE);
 
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, verificationCode.getText().toString().trim());
@@ -231,11 +233,23 @@ public class phoneVerifyActivity extends AppCompatActivity {
                                 FirebaseUser user = task.getResult().getUser();
 
 
+
+                                Bundle bundle = getIntent().getExtras();
+                                final String countryCode = bundle.getString("countryCode");
+
+
                                 //Open main interface for Leap while passing usr value
                                 Intent openLeapIntent = new Intent(phoneVerifyActivity.this, Leap.class);
-                                phoneVerifyActivity.this.startActivity(openLeapIntent);
-                                Toast.makeText(phoneVerifyActivity.this, user.getUid().toString().trim() , Toast.LENGTH_LONG).show();
 
+                                //Open main interface for Leap while passing usr value
+                                //code status is used to tell the Leap activity where the extras is coming from.
+                                // the number "1" is used to signal that the intent is coming from phoneVerify activity or registerLogin activity.
+                                // Hence it comes with country code attached to it
+                                openLeapIntent.putExtra("countryCode", countryCode);
+                                openLeapIntent.putExtra("countryCodeStatus", "1");
+
+
+                                phoneVerifyActivity.this.startActivity(openLeapIntent);
                                 finish();
 
 

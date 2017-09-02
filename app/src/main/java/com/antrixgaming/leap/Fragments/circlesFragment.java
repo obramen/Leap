@@ -62,7 +62,7 @@ public class circlesFragment extends Fragment {
 
                 // Set their text
                 messageText.setText(model.getMessageText());
-                phoneNumber.setText(model.getPhoneNumber());
+                phoneNumber.setText(model.getSenderPhoneNumber());
 
                 // Format the date before showing it
                 messageTime.setText(DateFormat.format("HH:mm",

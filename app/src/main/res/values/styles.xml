@@ -22,7 +22,6 @@
     <style name="AppTheme.NightRed">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/appleRedLight</item>
         <item name="colorPrimaryDark">@color/appleRed</item>
         <item name="colorAccent">@color/black</item>
     </style>
@@ -64,8 +63,23 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/redbutton</item>
         <item name="android:textColor">@color/white</item>
-
     </style>
+
+
+    <style name="squareButton">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/square_buttons</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="squareButtonHollow">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/square_buttons_hollow</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
 
     <style name="tabsStyle">
         <item name="android:textStyle">bold</item>

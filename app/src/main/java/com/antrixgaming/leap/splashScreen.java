@@ -42,8 +42,6 @@ public class splashScreen extends Activity {
 
                     Intent openRegisterLoginIntent = new Intent(splashScreen.this, registerLogin.class);
                     splashScreen.this.startActivity(openRegisterLoginIntent);
-                    Toast.makeText(splashScreen.this, "Splash Screen to Login with no user", Toast.LENGTH_LONG).show();
-
                     splashScreen.this.finish();
 
                 } else {
@@ -55,10 +53,15 @@ public class splashScreen extends Activity {
                                 public void onComplete(@NonNull Task<GetTokenResult> task) {
                                     if (task.isSuccessful()) {
 
-                                        //if token is valid open main app
+                                        //TODO add intent extras for selected country code country code picker
+                                                                                //if token is valid open main app
                                         Intent openLeapIntent = new Intent(splashScreen.this, Leap.class);
+                                        //code status is used to tell the Leap activity where the extras is coming from.
+                                        // the number "0" is used to signal that the intent is coming from splash screen activity.
+                                        // Hence it comes with no country code attached to it
+                                        openLeapIntent.putExtra("countryCodeStatus", "0");
+                                        openLeapIntent.putExtra("countryCode", "0");
                                         splashScreen.this.startActivity(openLeapIntent);
-                                        Toast.makeText(splashScreen.this, "Splash Screen to Leap with user", Toast.LENGTH_LONG).show();
                                         splashScreen.this.finish();
 
 
@@ -67,7 +70,6 @@ public class splashScreen extends Activity {
                                         //if token is invalid or expired, open login
                                         Intent openRegisterLoginIntent = new Intent(splashScreen.this, registerLogin.class);
                                         splashScreen.this.startActivity(openRegisterLoginIntent);
-                                        Toast.makeText(splashScreen.this, "Splash Screen to Login with expired user", Toast.LENGTH_LONG).show();
                                         FirebaseAuth.getInstance().signOut();
                                         splashScreen.this.finish();
 

@@ -6,7 +6,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Date;
 
-public class ChatMessage {
+public class ChatMessageReceived {
 
     private String messageText;
     private String messageUser;
@@ -14,25 +14,20 @@ public class ChatMessage {
     private String senderPhoneNumber;
     private String senderuid;
     private String onecircleid;
-    private String receiverPhoneNumber;
-    private String loadname;
 
 
-
-    public ChatMessage(String messageText, String onecircleid, String senderPhoneNumber, String receiverPhoneNumber, String senderuid, String loadname) {
+    public ChatMessageReceived(String messageText, String onecircleid, String senderPhoneNumber, String senderuid) {
         this.senderuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         this.messageText = messageText;
         //this.messageUser = FirebaseDatabase.getInstance().getReference().child("uid").child(uid).child("name").toString();
         this.onecircleid = onecircleid;
         this.senderPhoneNumber = senderPhoneNumber;
-        this.receiverPhoneNumber = receiverPhoneNumber;
-        this.loadname = loadname;
 
         // Initialize to current time
         messageTime = new Date().getTime();
     }
 
-    public ChatMessage(){
+    public ChatMessageReceived(){
 
     }
 
@@ -62,11 +57,7 @@ public class ChatMessage {
 
     public String getSenderPhoneNumber(){return senderPhoneNumber;}
 
-    public void setsenderPhoneNumber(String senderPhoneNumber){this.senderPhoneNumber = senderPhoneNumber;}
-
-    public String getReceiverPhoneNumber(){return receiverPhoneNumber;}
-
-    public void setReceiverPhoneNumber(String receiverPhoneNumber){this.receiverPhoneNumber = receiverPhoneNumber;}
+    public void setSenderPhoneNumber(String phoneNumber){this.senderPhoneNumber = phoneNumber;}
 
     public String getSenderUid(){return senderuid;}
 
@@ -75,10 +66,6 @@ public class ChatMessage {
     public String getOnecircleid(){return onecircleid;}
 
     public void setOnecircleid(String onecircleid){this.onecircleid = onecircleid;}
-
-    public String getloadname(){return loadname;}
-
-    public void setLoadname(String loadname){this.loadname = loadname;}
 
 
 }

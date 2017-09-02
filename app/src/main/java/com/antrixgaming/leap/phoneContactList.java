@@ -25,6 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.antrixgaming.leap.NewClasses.getPhoneContacts;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class phoneContactList extends AppCompatActivity {
@@ -33,6 +40,8 @@ public class phoneContactList extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     //private ArrayList<String> ContactList;
 
+    public DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    public String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
     public String mContactName;
@@ -41,16 +50,20 @@ public class phoneContactList extends AppCompatActivity {
 
 
 
+    ///// populate in list view
 
-
-    public class ContactsAdapter extends ArrayAdapter<getPhoneContacts> {
+    public static class ContactsAdapter extends ArrayAdapter<getPhoneContacts> {
         public ContactsAdapter(Context context, ArrayList<getPhoneContacts> contacts) {
             super(context, 0, contacts);
         }
 
+
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Get the data item for this position
+
+
             final getPhoneContacts contacts = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
@@ -58,40 +71,36 @@ public class phoneContactList extends AppCompatActivity {
             }
             // Lookup view for data population
             TextView mPhoneContactName = (TextView) convertView.findViewById(R.id.phoneContactName);
-            TextView phoneContactType = (TextView) convertView.findViewById(R.id.phoneContactType);
+            TextView mPhoneContactType = (TextView) convertView.findViewById(R.id.phoneContactType);
             TextView mContactPhoneNumber = (TextView) convertView.findViewById(R.id.phoneContactStatus);
             // Populate the data into the template view using the data object
             mPhoneContactName.setText(contacts.mContactName);
             mContactPhoneNumber.setText(contacts.mContactPhoneNumber);
 
-
             //get the contact TYPE digit and assign manually
             int id = Integer.parseInt(contacts.mPhoneContactType.trim());
             if (id == 1) {
-                phoneContactType.setText("HOME");
+                mPhoneContactType.setText("HOME");
             } else if (id == 2) {
-                phoneContactType.setText("MOBILE");
+                mPhoneContactType.setText("MOBILE");
             } else if (id == 3) {
-                phoneContactType.setText("WORK");
+                mPhoneContactType.setText("WORK");
             } else if (id == 4) {
-                phoneContactType.setText("");
+                mPhoneContactType.setText("");
             } else if (id == 5) {
-                phoneContactType.setText("");
+                mPhoneContactType.setText("");
             } else if (id == 6) {
-                phoneContactType.setText("PAGER");
+                mPhoneContactType.setText("PAGER");
             } else if (id == 7) {
-                phoneContactType.setText("OTHER");
+                mPhoneContactType.setText("OTHER");
             } else if (id == 8) {
-                phoneContactType.setText("");
+                mPhoneContactType.setText("");
             } else {
-                phoneContactType.setText("");
+                mPhoneContactType.setText("");
             }
 
             //phoneContactType.setText(contacts.mPhoneContactType);
             // Return the completed view to render on screen
-
-
-
 
 
 
@@ -113,6 +122,7 @@ public class phoneContactList extends AppCompatActivity {
         getContactRetrievalPermission();
         gettingPhoneContacts();
 
+
         ListView listView = (ListView) findViewById(R.id.phone_ContactList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -122,9 +132,9 @@ public class phoneContactList extends AppCompatActivity {
                 TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneContactStatus);
                 String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
                 Intent intent = new Intent(phoneContactList.this, activity_one_chat.class);
-                //String message = "abc";
                 intent.putExtra("oneCircleSecondUser", oneCircleSecondUser);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -135,7 +145,7 @@ public class phoneContactList extends AppCompatActivity {
     //getting phone contacts from mobile phone
     private void gettingPhoneContacts() {
 
-        String[] ContactList;
+        //String[] ContactList;
 
 
         // Construct the data source
@@ -162,23 +172,82 @@ public class phoneContactList extends AppCompatActivity {
                 String Phone_number = c
                         .getString(c
                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)); //Phone number
-                String name = c
+                final String name = c
                         .getString(c
                                 .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)); //Name of contact
                 String contactType = c
                         .getString(c
                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
 
+                // TODO put error checker here
+                // remove symbols and non digit variables from number
+                Phone_number = Phone_number.replaceAll("[^0-9]", "");
+
+                // if number begins with "0", remove it (this shows it's number saved without the country code.
+                // Eg. 02423666623 / 0540853936
+                int firstDigit = Integer.parseInt(Phone_number.substring(0, 1));
+                int secondDigit = Integer.parseInt(Phone_number.substring(0, 2));
+                int thirdDigit = Integer.parseInt(Phone_number.substring(0, 3));
+                if ((firstDigit == 0) && (secondDigit != 0)){
+                    Phone_number = Phone_number.substring(1);
+                } else if ((firstDigit == 0) && (secondDigit == 0) && (thirdDigit !=0) ) {
+
+                }
+
+
+                dbRef.child("uid").child(UID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //String countryCode = dataSnapshot.child(UID).child("countrycode").getValue().toString();
+                        //int countyCodeShort = Integer.parseInt(countryCode.substring(1)) ;
+
+                        String countryCode = dataSnapshot.child("countrycode").getValue().toString();
 
 
 
-                // Add items to array
-                getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
+                    }
 
-                //attach array to adapter
-                adapter.add(newContact);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+                if (Phone_number.length() < 8){
+                    //skip short numbers that are possibly not phone numbers
+                } else if (Phone_number.length() > 13){
+                    // skip potentially too long numbers
+                }
+
+                else {
+
+                    // Add items to array
+                    getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
+                    //attach array to adapter
+                    adapter.add(newContact);
+                    //dbRef.child("contactlist").child(UID).child(Phone_number).setValue(newContact);
+                }
+
+                //add phone number to list of contacts in contactlist table in database
+                //dbRef.child("contactlist").child(UID).child(Phone_number).setValue("true");
+                //dbRef.child("contactlist").child(UID).child(Phone_number).child("fullcontact").child("phonenumber").setValue(Phone_number);
+                //dbRef.child("contactlist").child(UID).child(Phone_number).child("fullcontact").child("name").setValue(name);
+                //dbRef.child("contactlist").child(UID).child(Phone_number).child("fullcontact").child("contacttype").setValue(contactType);
+                //dbRef.child("contactlist").child(UID).child(Phone_number).child("fullcontact").child("leaper").setValue("true");
+
+
+
+
+
 
             }
+
 
 
 
@@ -189,8 +258,9 @@ public class phoneContactList extends AppCompatActivity {
         //attach adapter to list view
         listView.setAdapter(adapter);
 
-    }
 
+
+    }
 
 
 

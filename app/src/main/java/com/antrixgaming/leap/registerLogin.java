@@ -39,12 +39,11 @@ public class registerLogin extends AppCompatActivity {
     private FirebaseAuth mAuth;
     // [END declare_auth]
 
-    private boolean mVerificationInProgress = false;
-    private String mVerificationId;
-    private PhoneAuthProvider.ForceResendingToken mResendToken;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-
-    private ProgressBar spinner;
+    public boolean mVerificationInProgress = false;
+    public String mVerificationId;
+    public PhoneAuthProvider.ForceResendingToken mResendToken;
+    public PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    public ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,8 @@ public class registerLogin extends AppCompatActivity {
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
+
+
 
 
 
@@ -164,11 +165,17 @@ public class registerLogin extends AppCompatActivity {
                 String phoneNumberAndCode = ccp.getFullNumber().toString();
 
 
-                //Open Phone Verification screen to enter CODE
+
+
+
+                //Open Phone Verification screen (phoneVerifyActivity) to enter CODE
                 Intent openPhoneVerifyIntent = new Intent(registerLogin.this, phoneVerifyActivity.class);
                 //send verification ID and phone number used via intent
                 openPhoneVerifyIntent.putExtra("mVerificationId", mVerificationId);
                 openPhoneVerifyIntent.putExtra("phoneNumber", phoneNumberAndCode);
+
+                //countryCode is sent to the phoneVerifyActivity activity which is sent to Leap activity if verification is successful.
+                openPhoneVerifyIntent.putExtra("countryCode", ccp.getSelectedCountryCode());
 
                 registerLogin.this.startActivity(openPhoneVerifyIntent);
                 spinner.setVisibility(View.GONE);
@@ -211,12 +218,20 @@ public class registerLogin extends AppCompatActivity {
                 }
 
 
+
                 spinner.setVisibility(View.VISIBLE);
 
+                //remove "0" from number if any
+                int firstDigit = Integer.parseInt((phoneNumber.getText().toString()).substring(0, 1));
+
+                if (firstDigit < 1){
+                    phoneNumber.setText(phoneNumber.getText().toString().substring(1));
+                }
 
                 //assign phone number to variable CarrierNumberEditText inside CountryCodePicker class.
                 // More info here https://github.com/hbb20/CountryCodePickerProject
                 ccp.registerCarrierNumberEditText(phoneNumber);
+
 
                 // get phone number with country code and plus
                 String phoneNumberAndCode = ccp.getFullNumber().toString().trim();
@@ -252,10 +267,15 @@ public class registerLogin extends AppCompatActivity {
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
 
+                            CountryCodePicker ccp = (CountryCodePicker) findViewById(R.id.ccp);
+
                             //Open main interface for Leap while passing usr value
                             Intent openLeapIntent = new Intent(registerLogin.this, Leap.class);
+                            openLeapIntent.putExtra("countryCode", ccp.getSelectedCountryCode());
+                            openLeapIntent.putExtra("countryCodeStatus", "1");
+
+
                             registerLogin.this.startActivity(openLeapIntent);
-                            Toast.makeText(registerLogin.this, user.getUid().toString().trim() , Toast.LENGTH_LONG).show();
                             finish();
 
 
@@ -292,10 +312,17 @@ public class registerLogin extends AppCompatActivity {
                             // Send token to your backend via HTTPS
                             // ...
 
-                            Intent openLeapIntent = new Intent(registerLogin.this, Leap.class);
-                            registerLogin.this.startActivity(openLeapIntent);
-                            Toast.makeText(registerLogin.this, "This works, already signed in", Toast.LENGTH_LONG).show();
 
+                            CountryCodePicker ccp = (CountryCodePicker) findViewById(R.id.ccp);
+
+                            //Open main interface for Leap while passing usr value
+                            //code status is used to tell the Leap activity where the extras is coming from.
+                            // the number "0" is used to signal that the intent is coming from splash screen activity.
+                            // Hence it comes with country code attached to it
+                            Intent openLeapIntent = new Intent(registerLogin.this, Leap.class);
+                            openLeapIntent.putExtra("countryCode", ccp.getSelectedCountryCode());
+                            openLeapIntent.putExtra("countryCodeStatus", "1");
+                            registerLogin.this.startActivity(openLeapIntent);
                             finish();
 
                         } else {

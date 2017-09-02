@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_leap_logo_round"
@@ -23,9 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoadScreen"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".Leap"
             android:label="@string/title_activity_leap"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -40,10 +36,9 @@
             android:label="@string/title_activity_new_leap"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity_one_chat" />
+        <activity android:name=".phoneContactList" />
         <activity android:name=".activity_one_circle" />
-        <activity android:name=".phoneContactList"
-            android:label="Select Contact"
-            ></activity>
+        <activity android:name=".ChatKitNewMessageActivity"></activity>
     </application>
 
 </manifest>

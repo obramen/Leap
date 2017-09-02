@@ -25,6 +25,9 @@
     <color name="black">#000000</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
+    <color name="grey">#616A7F</color>
+    <color name="darkgrey">#455372</color>
+    
 
 
 </resources>

@@ -4,6 +4,7 @@ package com.antrixgaming.leap.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,6 +21,8 @@ import com.antrixgaming.leap.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class userProfileFragment extends Fragment {
 
@@ -55,6 +58,16 @@ public class userProfileFragment extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+
+        CircleImageView profileImage = (CircleImageView) view.findViewById(R.id.profile_image);
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Change profile picture", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Action", null).show();            }
+        });
+
         return view;
     }
 
@@ -75,6 +88,8 @@ public class userProfileFragment extends Fragment {
                     return new recentLeapsFragment();
                 case 1:
                     return new leapHistoryFragment();
+                case 2:
+                    return new openLeapsFragment();
                 default:
                     return null;
             }
@@ -83,7 +98,7 @@ public class userProfileFragment extends Fragment {
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -93,8 +108,8 @@ public class userProfileFragment extends Fragment {
                     return "Leaps Live";
                 case 1:
                     return "My History";
-
-
+                case 2:
+                    return "Open Leaps";
                 default:
                     return null;
 

@@ -6,12 +6,13 @@
 
     <ImageView
         android:id="@+id/splashscreen"
-        android:layout_width="49dp"
-        android:layout_height="49dp"
-        android:src="@drawable/bootimage"
-        android:layout_marginTop="155dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logohexred_small"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="30dp"
+        android:elevation="10dp"/>
 
 
 </RelativeLayout>

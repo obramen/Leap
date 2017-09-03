@@ -267,7 +267,6 @@ public class phoneVerifyActivity extends AppCompatActivity {
                             }
                         }
                     });
-            spinner.setVisibility(View.GONE);
 
 
 

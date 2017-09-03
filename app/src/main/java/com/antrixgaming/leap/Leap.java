@@ -1,17 +1,13 @@
 package com.antrixgaming.leap;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,8 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,17 +25,14 @@ import com.antrixgaming.leap.Fragments.circlesFragment;
 import com.antrixgaming.leap.Fragments.leapsFragment;
 
 import com.antrixgaming.leap.Fragments.userProfileFragment;
+import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.Date;
 
@@ -58,10 +50,6 @@ public class Leap extends AppCompatActivity
     private ViewPager mViewPager;
     TabLayout tabLayout;
     private long messageTime;
-
-
-
-
 
 
     private int[] tabIcons = {
@@ -98,18 +86,14 @@ public class Leap extends AppCompatActivity
         // for check all contacts available
 
         int x = Integer.parseInt(countryCodeStatus);
-        if (x == 1){
+        if (x == 1) {
 
-            dbRef.child("users").child(userPhoneNumber).setValue(true);
+            dbRef.child("uid").child(UID).child("+" + countryCode).setValue("true");
 
-        }else {
+        } else {
 
         }
         /////////////// ADDING ENDS HERE /////////////////
-
-
-
-
 
 
         //initialize database reference
@@ -125,10 +109,6 @@ public class Leap extends AppCompatActivity
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.leapsContainer);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-
-
-
 
 
         //Setting Drawers
@@ -147,12 +127,9 @@ public class Leap extends AppCompatActivity
         setupTabIcons();
 
 
-
         //Set Username text in top nav
         TextView txtProfileName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.profileFullName);
         txtProfileName.setText(userPhoneNumber);
-
-
 
 
 
@@ -171,11 +148,11 @@ public class Leap extends AppCompatActivity
                 case 0:
                     return new userProfileFragment();
                 case 1:
-                    return new chatsFragment();
-                case 2:
-                    return new circlesFragment();
-                case 3:
                     return new leapsFragment();
+                case 2:
+                    return new chatsFragment();
+                case 3:
+                    return new circlesFragment();
                 default:
                     return null;
             }
@@ -193,11 +170,11 @@ public class Leap extends AppCompatActivity
                 case 0:
                     return "";
                 case 1:
-                    return getString(R.string.Chats);
-                case 2:
-                    return getString(R.string.Circles);
-                case 3:
                     return getString(R.string.Leaps);
+                case 2:
+                    return getString(R.string.Chats);
+                case 3:
+                    return getString(R.string.Circles);
                 default:
                     return null;
 
@@ -210,7 +187,6 @@ public class Leap extends AppCompatActivity
         tabLayout.getTabAt(0)
                 .setIcon(tabIcons[0]);
     }
-
 
 
     @Override
@@ -233,6 +209,7 @@ public class Leap extends AppCompatActivity
 
 
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -242,11 +219,63 @@ public class Leap extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_leap_settings) {
-            return true;
-        }
-        else if (id == R.id.action_leap_search){
 
             return true;
+        }
+        else if (id == R.id.action_new_circle){
+
+               new LovelyTextInputDialog(this, R.style.AppTheme)
+                    .setTopColorRes(R.color.colorPrimary)
+                    .setTitle(R.string.new_leapers_circle)
+                    .setMessage(R.string.new_circle_message)
+                    .setIcon(R.drawable.ic_circle_add)
+                    .setInputFilter("Enter circle name", new LovelyTextInputDialog.TextFilter() {
+                        @Override
+                        public boolean check(String text) {
+                            //return text.matches("\\w{3,23}\\b");     //("\\w+");
+                            return text.matches("^\\w+( +\\w+)*$");     //("\\w+");
+                            //return text.matches("\\w+");
+                        }
+
+                    })
+                    .setConfirmButton("Create circle", new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                        @Override
+                        public void onTextInputConfirmed(String text) {
+
+                            // push and get the key for new group under "groupcircles" table
+                            String key = FirebaseDatabase.getInstance().getReference().child("groupcircles").push().getKey();
+                            // using the new key, update group info with group creator, group name and group key under same table
+                            FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key)
+                                    .setValue(new createGroupCircle(FirebaseAuth.getInstance()
+                                            .getCurrentUser().getUid(), text, key));
+                            // using the new key update members list under same table with the creator of the group setting status to true
+                            /// true = admin
+                            /// false = not admin
+                            FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key).child("members")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("true");
+                            // update the usergroupcirclelist (a list containing all groups a leaper is part of
+
+
+                            // This list is used to load the circles fragment
+                            // First add the group id
+                            FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupid").setValue(key);
+                            // Next add the group name
+                            FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupName").setValue(text);
+                            // Lastly add the admin status
+                            FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+
+                            Toast.makeText(Leap.this, "Group added", Toast.LENGTH_SHORT).show();
+
+                        }
+                    })
+                    .show();
+
+
+            return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -312,6 +341,8 @@ public class Leap extends AppCompatActivity
 
 
     }
+
+
 
 
     @Override

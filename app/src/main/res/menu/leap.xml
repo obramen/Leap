@@ -11,10 +11,19 @@
         android:actionViewClass="android.widget.SearchView"/>
 
     <item
+        android:id="@+id/action_new_circle"
+        android:orderInCategory="100"
+        android:title="@string/new_circle"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_leap_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+
+
 
 
 </menu>

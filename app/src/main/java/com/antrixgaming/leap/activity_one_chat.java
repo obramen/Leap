@@ -1,26 +1,20 @@
 package com.antrixgaming.leap;
 
-import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.antrixgaming.leap.NewClasses.ChatMessage;
-import com.antrixgaming.leap.NewClasses.ChatMessageReceived;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,8 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -62,7 +54,7 @@ public class activity_one_chat extends AppCompatActivity {
         //TODO put error check here
         // One Circle second user details ***phone number and UID***
         Bundle bundle = getIntent().getExtras();
-        oneCircleSecondUserPhoneNumber = "+233242366623"; // bundle.getString("oneCircleSecondUser"); //phone number
+        oneCircleSecondUserPhoneNumber = "+233242100903"; // bundle.getString("oneCircleSecondUser"); //phone number
         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
         getSupportActionBar().setTitle(oneCircleSecondUserPhoneNumber);
         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
@@ -172,8 +164,7 @@ public class activity_one_chat extends AppCompatActivity {
                 //next update the message using the key stored
                 FirebaseDatabase.getInstance().getReference().child("onecirclemessages").child(key)
                         .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
-                                oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "0")
-                        );
+                                oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "0"));
                 //get the just sent messageid and add to one circle with UID of sender attached
                 FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("onecirclemessages").child(key).setValue(oneCircleFirstUserUid);
 

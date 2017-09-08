@@ -19,11 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.NewClasses.circleMessage;
+import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.antrixgaming.leap.NewClasses.getPhoneContacts;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.ArrayList;
 
@@ -139,6 +143,68 @@ public class phoneContactList extends AppCompatActivity {
         });
 
 
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.circleLayout);
+
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LovelyTextInputDialog(phoneContactList.this, R.style.AppTheme)
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setTitle(R.string.new_leapers_circle)
+                        .setMessage(R.string.new_circle_message)
+                        .setIcon(R.drawable.ic_circle_add)
+                        .setInputFilter("Enter circle name", new LovelyTextInputDialog.TextFilter() {
+                            @Override
+                            public boolean check(String text) {
+                                //return text.matches("\\w{3,23}\\b");     //("\\w+");
+                                return text.matches("^\\w+( +\\w+)*$");     //("\\w+");
+                                //return text.matches("\\w+");
+                            }
+
+                        })
+                        .setConfirmButton("Create circle", new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
+
+                                // push and get the key for new group under "groupcircles" table
+                                String key = FirebaseDatabase.getInstance().getReference().child("groupcircles").push().getKey();
+                                // using the new key, update group info with group creator, group name and group key under same table
+                                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key)
+                                        .setValue(new createGroupCircle(FirebaseAuth.getInstance()
+                                                .getCurrentUser().getUid(), text, key));
+                                // using the new key update members list under same table with the creator of the group setting status to true
+                                /// true = admin
+                                /// false = not admin
+                                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key).child("members")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("true");
+                                // update the usergroupcirclelist (a list containing all groups a leaper is part of
+
+
+                                // This list is used to load the circles fragment
+                                // First add the group id
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupid").setValue(key);
+                                // Next add the group name
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupName").setValue(text);
+                                // Lastly add the admin status
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
+                                        .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
+                                                "Leap Bot", "LEAPBOT"));
+                                Toast.makeText(phoneContactList.this, "Circle added", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        })
+                        .show();
+            }
+        });
+
+
 
     }
 
@@ -186,13 +252,13 @@ public class phoneContactList extends AppCompatActivity {
                 // if number begins with "0", remove it (this shows it's number saved without the country code.
                 // Eg. 02423666623 / 0540853936
                 int firstDigit = Integer.parseInt(Phone_number.substring(0, 1));
-                int secondDigit = Integer.parseInt(Phone_number.substring(0, 2));
-                int thirdDigit = Integer.parseInt(Phone_number.substring(0, 3));
-                if ((firstDigit == 0) && (secondDigit != 0)){
+                //int secondDigit = Integer.parseInt(Phone_number.substring(0, 2));
+                //int thirdDigit = Integer.parseInt(Phone_number.substring(0, 3));
+                if (firstDigit == 0){
                     Phone_number = Phone_number.substring(1);
-                } else if ((firstDigit == 0) && (secondDigit == 0) && (thirdDigit !=0) ) {
-
                 }
+
+
 
 
                 dbRef.child("uid").child(UID).addValueEventListener(new ValueEventListener() {
@@ -201,7 +267,7 @@ public class phoneContactList extends AppCompatActivity {
                         //String countryCode = dataSnapshot.child(UID).child("countrycode").getValue().toString();
                         //int countyCodeShort = Integer.parseInt(countryCode.substring(1)) ;
 
-                        String countryCode = dataSnapshot.child("countrycode").getValue().toString();
+                        //String countryCode = dataSnapshot.child("countrycode").getValue().toString();
 
 
 

@@ -1,29 +1,18 @@
 package com.antrixgaming.leap.Fragments;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import android.widget.Toast;
 
 import com.antrixgaming.leap.NewClasses.ChatMessage;
 import com.antrixgaming.leap.R;
@@ -31,11 +20,7 @@ import com.antrixgaming.leap.activity_one_chat;
 import com.antrixgaming.leap.phoneContactList;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class chatsFragment extends Fragment {
@@ -50,6 +35,28 @@ public class chatsFragment extends Fragment {
 
 
 
+        ListView listView = (ListView) view.findViewById(R.id.list_of_chats);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position,
+                                    long id) {
+
+                Toast.makeText(getContext(), "TOADSTED",
+                        Toast.LENGTH_SHORT).show();
+
+                //TODO change +233242366623 to PHONE NUMBER FROM View selected - DONE
+                TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
+                //String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
+                TextView sendToPhoneNumber = (TextView) view.findViewById(R.id.leaperName);
+
+                Intent intent = new Intent(getActivity(), activity_one_chat.class);
+                intent.putExtra("oneCircleSecondUser", sendToPhoneNumber.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+
+
         FloatingActionButton chatFab = (FloatingActionButton) view.findViewById(R.id.chat_fab);
         chatFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,17 +66,12 @@ public class chatsFragment extends Fragment {
                 Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
                 startActivity(openOneChat);
 
-
             }
         });
 
 
 
-
-
-
         ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_chats);
-
         FirebaseListAdapter<ChatMessage> adapter;
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
                 R.layout.chats_list, FirebaseDatabase.getInstance().getReference().child("userchatlist").child(FirebaseAuth.getInstance()
@@ -116,24 +118,6 @@ public class chatsFragment extends Fragment {
 
 
 
-
-
-        ListView listView = (ListView) view.findViewById(R.id.list_of_chats);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-
-                //TODO change +233242366623 to PHONE NUMBER FROM View selected - DONE
-                TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneContactStatus);
-                //String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
-                TextView sendToPhoneNumber = (TextView) view.findViewById(R.id.leaperName);
-
-                Intent intent = new Intent(getActivity(), activity_one_chat.class);
-                intent.putExtra("oneCircleSecondUser", sendToPhoneNumber.getText().toString());
-                startActivity(intent);
-            }
-        });
 
 
 

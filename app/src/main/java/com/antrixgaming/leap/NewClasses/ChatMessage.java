@@ -20,7 +20,7 @@ public class ChatMessage {
 
 
     public ChatMessage(String messageText, String onecircleid, String senderPhoneNumber, String receiverPhoneNumber, String senderuid, String loadname) {
-        this.senderuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.senderuid = senderuid;
         this.messageText = messageText;
         //this.messageUser = FirebaseDatabase.getInstance().getReference().child("uid").child(uid).child("name").toString();
         this.onecircleid = onecircleid;

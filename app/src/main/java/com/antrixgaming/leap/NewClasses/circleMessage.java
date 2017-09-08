@@ -16,12 +16,13 @@ public class circleMessage {
     private String circleid;
 
 
-    public circleMessage(String messageText, String circleid, String phoneNumber, String uid) {
-        this.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+    public circleMessage(String messageText, String circleid, String phoneNumber, String uid ) {
+        this.uid = uid;
         this.messageText = messageText;
         //this.messageUser = FirebaseDatabase.getInstance().getReference().child("uid").child(uid).child("name").toString();
         this.circleid = circleid;
-        this.phoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        this.phoneNumber = phoneNumber;
 
         // Initialize to current time
         messageTime = new Date().getTime();

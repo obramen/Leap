@@ -55,7 +55,8 @@
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabMode="fixed"
-                app:tabTextColor="@color/white" />
+                app:tabTextColor="@color/white"
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -64,7 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/profile_image"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_scrollFlags="scroll|enterAlways"/>
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"

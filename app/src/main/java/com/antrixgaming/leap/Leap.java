@@ -25,6 +25,7 @@ import com.antrixgaming.leap.Fragments.circlesFragment;
 import com.antrixgaming.leap.Fragments.leapsFragment;
 
 import com.antrixgaming.leap.Fragments.userProfileFragment;
+import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -266,8 +267,13 @@ public class Leap extends AppCompatActivity
                             // Lastly add the admin status
                             FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+                            FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+                            FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
+                                    .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
+                                            "Leap Bot", "LEAPBOT"));
+                            Toast.makeText(Leap.this, "Circle added", Toast.LENGTH_SHORT).show();
 
-                            Toast.makeText(Leap.this, "Group added", Toast.LENGTH_SHORT).show();
 
                         }
                     })
@@ -287,15 +293,15 @@ public class Leap extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_circle_invites) {
             // Handle the camera action
         } else if (id == R.id.nav_wallet) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_circle_invites) {
+
+        } else if (id == R.id.nav_leap_invites) {
 
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();

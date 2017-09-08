@@ -1,5 +1,6 @@
 package com.antrixgaming.leap;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,28 +14,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.antrixgaming.leap.NewClasses.ChatMessage;
+import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class activity_one_circle extends AppCompatActivity {
 
-    private String oneCircleFirstUserPhoneNumber;
-    private String  oneCircleFirstUserUid;
-    private String oneCircleSecondUserPhoneNumber;
-    private String oneCircleSecondUserUid;
-    public String oneCircleUid;
-    private DatabaseReference oneCircleSecondUserUidReference;
-    private String numberA;
-    private String numberB;
+    String groupID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,86 +36,37 @@ public class activity_one_circle extends AppCompatActivity {
         setContentView(R.layout.activity_one_circle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final TextView secondUid = (TextView) findViewById(R.id.secondUid);
-        final TextView circleid = (TextView) findViewById(R.id.circleUid);
-
-        // One Circle first user details ***phone number and UID***
-        oneCircleFirstUserPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        oneCircleFirstUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        //TODO change +233242100903 to oneCircleSecondUserPhoneNumber
-        //TODO put error check here
-        // One Circle second user details ***phone number and UID***
         Bundle bundle = getIntent().getExtras();
-        oneCircleSecondUserPhoneNumber = "+233242366623"; // bundle.getString("oneCircleSecondUser"); //phone number
-        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-        getSupportActionBar().setTitle(oneCircleSecondUserPhoneNumber);
-        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+        //final String groupName = bundle.getString("groupName");
+        final String circleID = bundle.getString("circleID");
+        groupID = circleID;
+
+        final String myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
-        ///////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////
-        /////////////////////////// CREATE CIRCLE START ///////////////////////
-
-        //Reference path to oneCircleSecondUserUid
-        oneCircleSecondUserUidReference = FirebaseDatabase.getInstance()
-                .getReference().child("phonenumbers").child(oneCircleSecondUserPhoneNumber).child("uid");
-
-
-        //oneCircleSecondUserUidReferenceA = FirebaseDatabase.getInstance().getReference().child("uid").orderByChild("phoneNumber").
-
-
-        long lastSeenTimeWithMe = new Date().getTime();
-
-
-        /// add seen with time to ensure data change for value event listener
-        oneCircleSecondUserUidReference.getParent().child("lastseenwith" + oneCircleFirstUserUid).setValue(lastSeenTimeWithMe);
-        oneCircleSecondUserUidReference.getParent().addValueEventListener(new ValueEventListener() {
-
+        // get the created date and user who created the group
+        ValueEventListener listener = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Log.i(TAG, dataSnapshot.getValue(String.class);
+                String groupCreatedBy = dataSnapshot.child("createdBy").getValue().toString();
+                String groupCreatedOn = dataSnapshot.child("createdOn").getValue().toString();
+                String groupName = dataSnapshot.child("groupName").getValue().toString();
 
-                //get UID from datareference for second User to chat with
-                oneCircleSecondUserUid = dataSnapshot.child("uid").getValue().toString();
+                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                getSupportActionBar().setTitle(groupName);
+                getSupportActionBar().setSubtitle("Created by " + groupCreatedBy +", " + groupCreatedOn);
 
-                secondUid.setText(oneCircleSecondUserUid);
-
-                //compare two UIDs and generate circle uid Number A should be smaller than Number B
-                if (oneCircleFirstUserUid.compareTo(oneCircleSecondUserUid) < 0) {
-                    numberA = oneCircleFirstUserUid;
-                    numberB = oneCircleSecondUserUid;
-                } else if (oneCircleFirstUserUid.compareTo(oneCircleSecondUserUid) > 0) {
-                    numberA = oneCircleSecondUserUid;
-                    numberB = oneCircleFirstUserUid;
-                } else if (oneCircleFirstUserUid.compareTo(oneCircleSecondUserUid) == 0) {
-                    numberA = oneCircleFirstUserUid;
-                    numberB = oneCircleFirstUserUid;
-                }
-
-                //number to save as onecircle uid
-                oneCircleUid = numberA + numberB;
-                circleid.setText(oneCircleUid);
-
-
-                FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("numberA").setValue(numberA);
-                FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("numberB").setValue(numberB);
-
-
-
+                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //Log.w(TAG, "onCancelled", databaseError.toException());
+
             }
-
-
         });
 
 
-        ////// this function returns running of the code to the value event listener above to get secondUid
-        oneCircleSecondUserUid = secondUid.getText().toString();
 
 
 
@@ -131,9 +76,39 @@ public class activity_one_circle extends AppCompatActivity {
 
 
 
-        /////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////
-        ///////////////////////////CREAGE CIRCLE  EDND //////////////////
+
+        //groupID.setText(circleID);
+
+
+
+
+        // record user's last opening of the group
+        // long lastGroupOpenTime = new Date().getTime();
+        // FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).child("members").child(myUid).child("lastOpenTime").setValue(lastGroupOpenTime);
+
+        //// CREATE AN ARRAY FOR THE LIST OF MEMBERS AND UPDATE IT ON DATA CHANGE
+        final ArrayList<ArrayList<String >> memberList = new ArrayList<ArrayList<String>>();
+        final ArrayList<String> loadedMember = new ArrayList<String>();
+
+        FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).child("members")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            //get member
+                            String memberUid = dataSnapshot.getKey();
+                            loadedMember.add(memberUid);
+
+                        }
+                        memberList.add(loadedMember);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
+
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -155,43 +130,23 @@ public class activity_one_circle extends AppCompatActivity {
                 }
 
                 // Read the input field and push a new instance
-                // of ChatMessage to the Firebase database inside onecirclemessages table
+                // of CircleMessage to the Firebase database inside groupcirclemessages table
 
-                //first push and store the generated key for the message
-                String key = FirebaseDatabase.getInstance().getReference().child("onecirclemessages")
+                //push new messages using Circle ID stored
+                String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .push().getKey();
-                //next update the message using the key stored
-                FirebaseDatabase.getInstance().getReference().child("onecirclemessages").child(key)
-                        .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
-                                oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "0")
-                        );
-                //get the just sent messageid and add to one circle with UID of sender attached
-                FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("onecirclemessages").child(key).setValue(oneCircleFirstUserUid);
+                FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                        .child(key).setValue(new circleMessage(input.getText().toString(), circleID,
+                                myPhoneNumber, myUid));
+                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
+                        .child("lastgroupmessage").setValue(new circleMessage(input.getText().toString(), circleID,
+                                myPhoneNumber, myUid));
+                FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                        .child(key).child("members").setValue(memberList);
+                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
+                        .setValue(new circleMessage(input.getText().toString(), circleID,
+                        myPhoneNumber, myUid));
 
-
-                //save into first user's chat list ----- this uses the "chatlist" table to populate list of chats
-                ///////////////////------USER THE CHATMESSAGE CLASS-------/////////////////////
-                /////////////////////// THE PHONE NUMBER FIELD IS SET TO THE RECEIVER'S PHONE
-                /// /////////////////// NUMBER SO AS TO SHOW IN FIRST USER'S CHAT LIST AS WHO IT WAS SENT TO
-                FirebaseDatabase.getInstance().getReference().child("userchatlist").child(oneCircleFirstUserUid).child(oneCircleUid)
-                        .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
-                                oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "0"));
-                //// tell the data where to be loaded with sender name or not. this affects how it appears in chat list
-                //dbRef.child("userchatlist").child(oneCircleFirstUserUid).child(oneCircleUid).child("loadname")
-                //       .setValue("0"); // 0 means false so don't load it
-
-
-                ///////////////////------USER THE CHATMESSAGERECEIVED CLASS-------/////////////////////
-                /////////////////////// THE PHONE NUMBER FIELD IS SET TO THE SENDER'S PHONE NUMBER SO AS TO
-                /////////////////////// SHOW IN THE CHAT LIST OF THE SECOND USER SO AS TO SHOW WHO SENT THE MESSAGE
-                //save into second user's chat list ----- this uses the "chatlist" table to populate list of chats
-                /////////////////////// NOTE THIS WILL SHOW IN DATABASE AS SENDER'S NUMBER
-                FirebaseDatabase.getInstance().getReference().child("userchatlist").child(oneCircleSecondUserUid).child(oneCircleUid)
-                        .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
-                                oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "1"));
-                //update with sender number / sender name to user chatList location
-                //dbRef.child("userchatlist").child(oneCircleSecondUserUid).child(oneCircleUid).child("loadname")
-                //        .setValue("1"); // 1 means true so load it
 
                 // Clear the input
                 input.setText("");
@@ -209,34 +164,24 @@ public class activity_one_circle extends AppCompatActivity {
         /////////////////////////////////////////////////////////////////
         /////////////////////////// READ DATA START /////////////////////
 
+                ListView listOfMessages = (ListView) findViewById(R.id.list_of_group_messages);
 
-        //TODO filter messages for only those involved for the one chat screen - DONE
-        //TODO sort messages with time
-        //TODO optimize sorting to 200 messages for fast listing
-
-
-
-        oneCircleSecondUserUidReference.getParent().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ListView listOfMessages = (ListView) findViewById(R.id.list_of_messages);
-
-                FirebaseListAdapter<ChatMessage> adapter;
-                adapter = new FirebaseListAdapter<ChatMessage>(activity_one_circle.this, ChatMessage.class,
-                        R.layout.messages, FirebaseDatabase.getInstance().getReference().child("onecirclemessages")
-                        .orderByChild("onecircleid").equalTo(circleid.getText().toString())) {
+                FirebaseListAdapter<circleMessage> adapter;
+                adapter = new FirebaseListAdapter<circleMessage>(activity_one_circle.this, circleMessage.class,
+                        R.layout.messages_for_group, FirebaseDatabase.getInstance().getReference().child("groupcirclemessages")
+                        .child(circleID)) {
                     @Override
-                    protected void populateView(View v, ChatMessage model, int position) {
+                    protected void populateView(View v, circleMessage model, int position) {
 
                         // Get references to the views of message.xml
-                        TextView messageText = (TextView) v.findViewById(R.id.message_text);
-                        //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
-                        TextView phoneNumber = (TextView) v.findViewById(R.id.phoneNumber);
-                        TextView messageTime = (TextView) v.findViewById(R.id.message_time);
+                        TextView messageText = (TextView) v.findViewById(R.id.group_message_text);
+                        //TextView messageUser = (TextView)v.findViewById(R.id.group_message_user);
+                        TextView phoneNumber = (TextView) v.findViewById(R.id.group_phoneNumber);
+                        TextView messageTime = (TextView) v.findViewById(R.id.group_message_time);
 
                         // Set their text
                         messageText.setText(model.getMessageText());
-                        phoneNumber.setText(model.getSenderPhoneNumber());
+                        phoneNumber.setText(model.getPhoneNumber());
                         //messageUser.setText(model.getMessageUser());
 
                         // Format the date before showing it
@@ -248,13 +193,6 @@ public class activity_one_circle extends AppCompatActivity {
 
                 listOfMessages.setAdapter(adapter);
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
 
 
 
@@ -268,62 +206,16 @@ public class activity_one_circle extends AppCompatActivity {
         /////////////////////////// READ DATA END ///////////////////////
 
 
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_one_chat, menu);
+        getMenuInflater().inflate(R.menu.menu_group_chat, menu);
 
         ////////////////////////////////// SEARCH BUTTON START /////////////////////////////
-        MenuItem searchItem = menu.findItem(R.id.action_one_chat_search);
-        SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
-
-
-        // Define the listener
-        MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Do something when action item collapses
-
-                return true;  // Return true to collapse action view
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                // Do something when expanded
-
-                return true;  // Return true to expand action view
-            }
-        };
-
-        // Get the MenuItem for the action item
-        //MenuItem actionMenuItem = menu.findItem(R.id.action_contacts_search);
-
-        // Assign the listener to that action item
-        //MenuItemCompat.setOnActionExpandListener(actionMenuItem, expandListener);
-        ////////////////////////////////// SEARCH BUTTON END /////////////////////////////
-
-
-        ////////////////////////////////// SHARE BUTTON START /////////////////////////////
-        //MenuItem shareItem = menu.findItem(R.id.action_one_chat_share);
-        //ShareActionProvider myShareActionProvider =
-        //      (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-        //Intent myShareIntent = new Intent(Intent.ACTION_SEND);
-        //myShareIntent.setType("text/*");
-        //myShareIntent.putExtra(Intent.EXTRA_STREAM, "Text");
-
-        //myShareActionProvider.setShareIntent(myShareIntent);
-
-        // Image has changed! Update the intent:
-        //myShareIntent.putExtra(Intent.EXTRA_STREAM, "My new Text");
-        //myShareActionProvider.setShareIntent(myShareIntent);
-        ////////////////////////////////// SHARE BUTTON END /////////////////////////////
-
-
-
-
+        MenuItem searchItem = menu.findItem(R.id.action_one_group_chat_memberlist);
+        new DrawerBuilder().withActivity(this).build();
 
 
         return super.onCreateOptionsMenu(menu);
@@ -337,10 +229,14 @@ public class activity_one_circle extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_one_chat_search) {
+        if (id == R.id.action_one_group_chat_memberlist) {
+
             return true;
-        }
-        else if (id == R.id.action_one_chat_leap_history) {
+        }else if (id == R.id.action_one_group_chat_Group_info) {
+
+            Intent groupInfoIntent = new Intent(this, groupInfoActivity.class);
+            groupInfoIntent.putExtra("circleID", groupID);
+            startActivity(groupInfoIntent);
             return true;
         }
 

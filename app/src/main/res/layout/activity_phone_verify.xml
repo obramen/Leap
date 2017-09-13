@@ -12,29 +12,82 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyleHorizontal"
+
+        <RelativeLayout
+            android:id="@+id/textTop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:background="@color/grey">
 
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyleInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayout2"
-            android:layout_centerHorizontal="true" />
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
 
-        <LinearLayout
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/progressBar2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="VERIFICATION"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/someText"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView5"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:text="You will get an SMS with a confirmation code to this number"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textColor="@color/white"/>
+
+
+            <TextView
+                android:id="@+id/vPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/someText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="2dp"
+                android:text="@string/phone_number"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
+
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
             android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_below="@id/textTop"
+            android:layout_marginTop="40dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleInverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" />
+
 
             <EditText
                 android:id="@+id/verificationCode"
@@ -47,60 +100,51 @@
                 android:maxLength="6"
                 android:textAlignment="center"
                 android:textColor="@color/appleRedLight"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/btnSendV"
-                style="@style/darkButton"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/redbutton"
-                android:text="@string/verify_phone_number"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/btnResendV"
-                style="@style/darkButton"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/redbuttonlight"
-                android:text="@string/resend_verification_code"
-                android:textColor="@color/appleRed" />
+                android:layout_centerHorizontal="true"
+                android:textSize="30sp"
+                android:layout_margin="10dp"
+                android:layout_below="@id/progressBar1"/>
+            
+            <LinearLayout
+                android:layout_width="230dp"
+                android:layout_height="60dp"
+                android:layout_below="@id/verificationCode"
+                android:layout_centerHorizontal="true"
+                android:weightSum="4">
 
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/btnSendV"
+                    style="@style/darkButton"
+                    android:layout_width="110dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/redbutton"
+                    android:text="Verify"
+                    android:layout_margin="5dp"
+                    android:textSize="13sp"
+                    android:textColor="@color/white" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_above="@+id/progressBar1"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:text="@string/verifying"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/vPhoneNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:text="@string/phone_number"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+                <Button
+                    android:id="@+id/btnResendV"
+                    style="@style/darkButton"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_toEndOf="@id/btnSendV"
+                    android:layout_weight="1"
+                    android:background="@drawable/redbuttonlight"
+                    android:text="Resend Code"
+                    android:textColor="@color/appleRed"
+                    android:textSize="13sp" />
 
 
+            </LinearLayout>
+
+
+
+
+        </RelativeLayout>
 
 
     </RelativeLayout>

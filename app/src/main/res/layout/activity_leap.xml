@@ -25,7 +25,38 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_leap"
-        app:menu="@menu/activity_leap_drawer"/>
+        app:menu="@menu/activity_leap_drawer">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:padding="7dp"
+                android:background="@color/colorPrimary">
+
+                <Button
+                    android:id="@+id/leapOutButton"
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:text="Leap out"
+                    style="@style/whiteButton"
+                    android:layout_marginStart="10dp"
+                    android:textSize="10sp"/>
+
+
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+
+
+
+        </android.support.design.widget.NavigationView>
 
 
 </android.support.v4.widget.DrawerLayout>

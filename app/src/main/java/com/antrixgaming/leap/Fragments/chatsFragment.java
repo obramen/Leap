@@ -41,8 +41,6 @@ public class chatsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, final View view, int position,
                                     long id) {
 
-                Toast.makeText(getContext(), "TOADSTED",
-                        Toast.LENGTH_SHORT).show();
 
                 //TODO change +233242366623 to PHONE NUMBER FROM View selected - DONE
                 TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneNumber);

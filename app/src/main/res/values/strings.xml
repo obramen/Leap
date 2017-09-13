@@ -40,6 +40,14 @@
     <string name="new_circle_message">Provide a name for your circle</string>
     <string name="new_leapers_circle">New Leapers\' Circle</string>
     <string name="title_activity_group_info">Group Info</string>
+    <string-array name="match_type">
+        <item>single match</item>
+        <item>home and away</item>
+        <item>best of three</item>
+        <item>straight three</item>
+        <item>best of five</item>
+        <item>straight five</item>
+    </string-array>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

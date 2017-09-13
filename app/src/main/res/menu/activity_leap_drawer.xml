@@ -8,9 +8,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_circle_invites"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Circle invites" />
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notifications"
+            android:title="Notifications" />
         <item
             android:id="@+id/nav_wallet"
             android:icon="@drawable/ic_menu_gallery"
@@ -42,14 +42,6 @@
         </menu>
     </item>
 
-
-
-
-
-    <item
-        android:id="@+id/nav_logout"
-        android:title="Leap out"
-        />
 
 
 

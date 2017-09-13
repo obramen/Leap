@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.activity_one_circle;
@@ -23,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 
 public class circlesFragment extends Fragment {
@@ -33,13 +36,71 @@ public class circlesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_circles, container, false);
 
-        FloatingActionButton chatFab = (FloatingActionButton) view.findViewById(R.id.circle_fab);
-        chatFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton circleFAB = (FloatingActionButton) view.findViewById(R.id.circle_fab);
+        circleFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent openOneChat = new Intent(getActivity(), activity_one_circle.class);
-                startActivity(openOneChat);
+                new LovelyTextInputDialog(getActivity(), R.style.MyDialogTheme)
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setTitle(R.string.new_leapers_circle)
+                        .setMessage(R.string.new_circle_message)
+                        .setIcon(R.drawable.ic_circle_add)
+                        .setInputFilter("Enter circle name", new LovelyTextInputDialog.TextFilter() {
+                            @Override
+                            public boolean check(String text) {
+                                //return text.matches("\\w{3,23}\\b");     //("\\w+");
+                                return text.matches("^\\w+( +\\w+)*$");     //("\\w+");
+                                //return text.matches("\\w+");
+                            }
+
+                        })
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                return;
+                            }
+                        })
+                        .setConfirmButton("Create circle", new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
+
+                                // push and get the key for new group under "groupcircles" table
+                                String key = FirebaseDatabase.getInstance().getReference().child("groupcircles").push().getKey();
+                                // using the new key, update group info with group creator, group name and group key under same table
+                                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key)
+                                        .setValue(new createGroupCircle(FirebaseAuth.getInstance()
+                                                .getCurrentUser().getUid(), text, key));
+                                // using the new key update members list under same table with the creator of the group setting status to true
+                                /// true = admin
+                                /// false = not admin
+                                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key).child("members")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("true");
+                                // update the usergroupcirclelist (a list containing all groups a leaper is part of
+
+
+                                // This list is used to load the circles fragment
+                                // First add the group id
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupid").setValue(key);
+                                // Next add the group name
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupName").setValue(text);
+                                // Lastly add the admin status
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
+                                        .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
+                                                "Leap Bot", "LEAPBOT"));
+                                Toast.makeText(getActivity(), "Circle added", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        })
+                        .show();
 
             }
         });
@@ -47,7 +108,7 @@ public class circlesFragment extends Fragment {
 
 
 
-        ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_groupCircles);
+        final ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_groupCircles);
 
         FirebaseListAdapter<createGroupCircle> adapter;
         adapter = new FirebaseListAdapter<createGroupCircle>(getActivity(), createGroupCircle.class,
@@ -116,7 +177,20 @@ public class circlesFragment extends Fragment {
 
 
 
-        ListView listView = (ListView) view.findViewById(R.id.list_of_groupCircles);
+        final ListView listView = (ListView) view.findViewById(R.id.list_of_groupCircles);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                listView.setSelector(android.R.color.darker_gray);
+                return true;
+            }
+
+
+        });
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position,

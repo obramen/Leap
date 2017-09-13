@@ -27,24 +27,25 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="1dp">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            >
+            android:layout_weight="2">
 
-
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/contact_list_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_circle_add"
-                android:background="@drawable/redbutton"
-                android:padding="7dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-               />
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="6dp"
+                app:civ_fill_color="@color/colorPrimary"/>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -60,6 +61,7 @@
                 android:text="New Circle"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
+                android:textSize="15sp"
                 />
 
 

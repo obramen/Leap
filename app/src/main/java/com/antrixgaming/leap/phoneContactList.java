@@ -1,5 +1,6 @@
 package com.antrixgaming.leap;
 
+import android.animation.PropertyValuesHolder;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,14 +30,28 @@ import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.antrixgaming.leap.NewClasses.getPhoneContacts;
 import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.terrakok.phonematter.PhoneFormat;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static android.R.attr.country;
+import static android.R.attr.phoneNumber;
+import static java.security.AccessController.getContext;
 
 public class phoneContactList extends AppCompatActivity {
 
@@ -51,6 +66,7 @@ public class phoneContactList extends AppCompatActivity {
     public String mContactName;
     public String mContactPhoneNumber;
     public String mPhoneContactType;
+    public String countryCode = "";
 
 
 
@@ -66,7 +82,6 @@ public class phoneContactList extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Get the data item for this position
-
 
             final getPhoneContacts contacts = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
@@ -123,6 +138,21 @@ public class phoneContactList extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        FirebaseDatabase.getInstance().getReference().child("uid").child(FirebaseAuth.getInstance()
+                .getCurrentUser().getUid()).child("countrycode").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                countryCode = dataSnapshot.getValue().toString();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         getContactRetrievalPermission();
         gettingPhoneContacts();
 
@@ -148,7 +178,7 @@ public class phoneContactList extends AppCompatActivity {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new LovelyTextInputDialog(phoneContactList.this, R.style.AppTheme)
+                new LovelyTextInputDialog(phoneContactList.this, R.style.MyDialogTheme)
                         .setTopColorRes(R.color.colorPrimary)
                         .setTitle(R.string.new_leapers_circle)
                         .setMessage(R.string.new_circle_message)
@@ -161,6 +191,13 @@ public class phoneContactList extends AppCompatActivity {
                                 //return text.matches("\\w+");
                             }
 
+                        })
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                return;
+                            }
                         })
                         .setConfirmButton("Create circle", new LovelyTextInputDialog.OnTextInputConfirmListener() {
                             @Override
@@ -216,9 +253,10 @@ public class phoneContactList extends AppCompatActivity {
 
         // Construct the data source
         ArrayList<getPhoneContacts> arrayOfContacts = new ArrayList<getPhoneContacts>();
-        // Create the adapter to convert the array to views
-        ContactsAdapter adapter = new ContactsAdapter(this, arrayOfContacts);
 
+        // Create the adapter to convert the array to views
+
+        ContactsAdapter adapter = new ContactsAdapter(this, arrayOfContacts);
 
         ContentResolver cr = getContentResolver();
         // Read Contacts
@@ -241,9 +279,11 @@ public class phoneContactList extends AppCompatActivity {
                 final String name = c
                         .getString(c
                                 .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)); //Name of contact
-                String contactType = c
+                final String contactType = c
                         .getString(c
                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+
+
 
                 // TODO put error checker here
                 // remove symbols and non digit variables from number
@@ -252,53 +292,171 @@ public class phoneContactList extends AppCompatActivity {
                 // if number begins with "0", remove it (this shows it's number saved without the country code.
                 // Eg. 02423666623 / 0540853936
                 int firstDigit = Integer.parseInt(Phone_number.substring(0, 1));
-                //int secondDigit = Integer.parseInt(Phone_number.substring(0, 2));
+                int secondDigit = Integer.parseInt(Phone_number.substring(0, 2));
                 //int thirdDigit = Integer.parseInt(Phone_number.substring(0, 3));
-                if (firstDigit == 0){
+                if ((firstDigit == 0)&&(secondDigit != 00)){
                     Phone_number = Phone_number.substring(1);
+
+                } else if ((firstDigit == 0)&&(secondDigit == 00)) {
+                    Phone_number = Phone_number.substring(1);
+                    Phone_number = Phone_number.substring(1);
+
+                } else{
+
                 }
-
-
-
-
-                dbRef.child("uid").child(UID).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //String countryCode = dataSnapshot.child(UID).child("countrycode").getValue().toString();
-                        //int countyCodeShort = Integer.parseInt(countryCode.substring(1)) ;
-
-                        //String countryCode = dataSnapshot.child("countrycode").getValue().toString();
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
 
 
 
 
                 if (Phone_number.length() < 8){
                     //skip short numbers that are possibly not phone numbers
-                } else if (Phone_number.length() > 13){
+                } else if (Phone_number.length() > 14){
                     // skip potentially too long numbers
-                }
+                } else if ((Phone_number.length() == 8) || (Phone_number.length() == 9)){
 
-                else {
 
+
+                    Phone_number = countryCode + Phone_number;
                     // Add items to array
                     getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
-                    //attach array to adapter
-                    adapter.add(newContact);
+
+                    Collections.sort(arrayOfContacts, new Comparator<getPhoneContacts>(){
+                        public int compare(getPhoneContacts obj1, getPhoneContacts obj2) {
+                            // ## Ascending order
+
+
+
+
+                            return obj1.mContactName.compareToIgnoreCase(obj2.mContactName); // To compare string values
+                            // return Integer.valueOf(obj1.empId).compareTo(obj2.empId); // To compare integer values
+
+                            // ## Descending order
+                            // return obj2.firstName.compareToIgnoreCase(obj1.firstName); // To compare string values
+                            // return Integer.valueOf(obj2.empId).compareTo(obj1.empId); // To compare integer values
+                        }
+                    });
+
+
+                    if (arrayOfContacts.contains(newContact)){
+
+
+                    }
+                    else{
+                        adapter.add(newContact);
+                        //dbRef.child("contactlist").child(U
+                        // ID).child(Phone_number).setValue(newContact);
+
+                    }
+
+
+
+
+
+
+                }else if((Phone_number.length() == 11) && (Integer.parseInt(Phone_number.substring(0, 1)) == 1)) {
+                    Phone_number = "+" + Phone_number;
+
+                    getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
+
+                    Collections.sort(arrayOfContacts, new Comparator<getPhoneContacts>(){
+                        public int compare(getPhoneContacts obj1, getPhoneContacts obj2) {
+                            // ## Ascending order
+                            return obj1.mContactName.compareToIgnoreCase(obj2.mContactName); // To compare string values
+                            // return Integer.valueOf(obj1.empId).compareTo(obj2.empId); // To compare integer values
+
+                            // ## Descending order
+                            // return obj2.firstName.compareToIgnoreCase(obj1.firstName); // To compare string values
+                            // return Integer.valueOf(obj2.empId).compareTo(obj1.empId); // To compare integer values
+                        }
+                    });
+
+
+
+                    if (arrayOfContacts.contains(newContact)){
+
+
+                    }
+                    else{
+                        adapter.add(newContact);
+                        //dbRef.child("contactlist").child(U
+                        // ID).child(Phone_number).setValue(newContact);
+
+                    }
+
+                }else if((Phone_number.length() == 11)&& (Integer.parseInt(Phone_number.substring(0, 1)) == 1) &&
+                        (Integer.parseInt(Phone_number.substring(0, 2)) == 10)){
+                    Phone_number = Phone_number.substring(1);
+                    Phone_number = Phone_number.substring(1);
+                    Phone_number = "+1" + Phone_number;
+
+                    getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
+
+                    Collections.sort(arrayOfContacts, new Comparator<getPhoneContacts>(){
+                        public int compare(getPhoneContacts obj1, getPhoneContacts obj2) {
+                            // ## Ascending order
+                            return obj1.mContactName.compareToIgnoreCase(obj2.mContactName); // To compare string values
+                            // return Integer.valueOf(obj1.empId).compareTo(obj2.empId); // To compare integer values
+
+                            // ## Descending order
+                            // return obj2.firstName.compareToIgnoreCase(obj1.firstName); // To compare string values
+                            // return Integer.valueOf(obj2.empId).compareTo(obj1.empId); // To compare integer values
+                        }
+                    });
+
+                    if (arrayOfContacts.contains(newContact)){
+
+
+                    }
+                    else{
+                        adapter.add(newContact);
+                        //dbRef.child("contactlist").child(U
+                        // ID).child(Phone_number).setValue(newContact);
+
+                    }                }
+
+                else if((Phone_number.length() > 9) && (Phone_number.length() < 14)  && (Phone_number.length() != 11) ) {
+
+                    int CCDGH = Integer.parseInt(Phone_number.substring(0, 3));
+                    if (Objects.equals("+" + CCDGH, countryCode))
+                    {
+                        Phone_number = "+" + Phone_number;
+
+                    } else {
+
+                    }
+
+
+                    getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
+
+                    Collections.sort(arrayOfContacts, new Comparator<getPhoneContacts>(){
+                        public int compare(getPhoneContacts obj1, getPhoneContacts obj2) {
+
+                            // ## Ascending order
+                            return obj1.mContactName.compareToIgnoreCase(obj2.mContactName); // To compare string values
+                            // return Integer.valueOf(obj1.empId).compareTo(obj2.empId); // To compare integer values
+
+                            // ## Descending order
+                            // return obj2.firstName.compareToIgnoreCase(obj1.firstName); // To compare string values
+                            // return Integer.valueOf(obj2.empId).compareTo(obj1.empId); // To compare integer values
+                        }
+                    });
+
+
+
+                    if (arrayOfContacts.contains(newContact)){
+
+
+                    }
+                    else{
+                        adapter.add(newContact);
+                        //dbRef.child("contactlist").child(U
+                        // ID).child(Phone_number).setValue(newContact);
+
+                    }
                     //dbRef.child("contactlist").child(UID).child(Phone_number).setValue(newContact);
                 }
+
+
 
                 //add phone number to list of contacts in contactlist table in database
                 //dbRef.child("contactlist").child(UID).child(Phone_number).setValue("true");
@@ -308,11 +466,9 @@ public class phoneContactList extends AppCompatActivity {
                 //dbRef.child("contactlist").child(UID).child(Phone_number).child("fullcontact").child("leaper").setValue("true");
 
 
-
-
-
-
             }
+
+
 
 
 
@@ -327,6 +483,7 @@ public class phoneContactList extends AppCompatActivity {
 
 
     }
+
 
 
 

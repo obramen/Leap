@@ -41,7 +41,8 @@
         <activity
             android:name=".groupInfoActivity"
             android:label="@string/title_activity_group_info"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".leapDetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#d12a25</color>
-    <color name="colorPrimaryDark">#AC0909</color>
+    <color name="colorPrimary">#C02F1D</color>
+    <color name="colorPrimaryDark">#9A2617</color>
     <color name="colorAccent">#d12a25</color>
 
     <color name="nightRedA">#e31616</color>
@@ -19,15 +19,23 @@
     <color name="lightBlue">#556DAC</color>
 
 
-    <color name="appleRed">#AC0909</color>
-    <color name="appleRedLight">#d12a25</color>
+    <color name="appleRed">#9A2617</color>
+    <color name="appleRedLight">#C02F1D</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="grey">#616A7F</color>
     <color name="darkgrey">#455372</color>
-    
+    <color name="green">#61c663</color>
+    <color name="lightgrey">#EEEEEE</color>
+    <color name="lightruby">#CD594A</color>
+    <color name="lightindigo">#3C6478</color>
+    <color name="lightblack">#212121</color>
+    <color name="verylightblack">#2d2c2c</color>
+
+
+
 
 
 </resources>

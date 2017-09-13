@@ -6,7 +6,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.antrixgaming.leap.newLeap$PlaceholderFragment">
+    tools:context="com.antrixgaming.leap.newLeap$PlaceholderFragment"
+    android:background="@color/grey">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="COMING SOON"
+        android:textColor="@color/gray"
+        android:layout_centerInParent="true"/>
 
 
 </RelativeLayout>

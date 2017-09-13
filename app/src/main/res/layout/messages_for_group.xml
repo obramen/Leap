@@ -40,7 +40,7 @@ android:visibility="invisible"
 
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/groupTxtBracketTop"
@@ -58,11 +58,9 @@ android:visibility="invisible"
             android:id="@+id/group_message_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:gravity="bottom|end"
+            android:layout_below="@id/group_message_text"
             android:textSize="12sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>

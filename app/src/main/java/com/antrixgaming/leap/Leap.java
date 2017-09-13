@@ -2,10 +2,16 @@ package com.antrixgaming.leap;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.support.design.widget.NavigationView;
@@ -17,6 +23,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +45,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
+
 
 import java.util.Date;
 
@@ -89,7 +101,7 @@ public class Leap extends AppCompatActivity
         int x = Integer.parseInt(countryCodeStatus);
         if (x == 1) {
 
-            dbRef.child("uid").child(UID).child("+" + countryCode).setValue("true");
+            dbRef.child("uid").child(UID).child("countrycode").setValue("+" + countryCode);
 
         } else {
 
@@ -134,7 +146,21 @@ public class Leap extends AppCompatActivity
 
 
 
+        Button leapOutButton = (Button) findViewById(R.id.leapOutButton);
+        leapOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                Intent logoutIntent = new Intent(Leap.this, registerLogin.class);
+                logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(logoutIntent);
+            }
+        });
+
     }
+
+
 
     // Pager adapter initialize and import of fragments
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -219,13 +245,13 @@ public class Leap extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_leap_settings) {
+        if (id == R.id.nav_notifications) {
 
             return true;
         }
         else if (id == R.id.action_new_circle){
 
-               new LovelyTextInputDialog(this, R.style.AppTheme)
+               new LovelyTextInputDialog(this, R.style.MyDialogTheme)
                     .setTopColorRes(R.color.colorPrimary)
                     .setTitle(R.string.new_leapers_circle)
                     .setMessage(R.string.new_circle_message)
@@ -239,6 +265,13 @@ public class Leap extends AppCompatActivity
                         }
 
                     })
+                       .setCancelable(false)
+                       .setNegativeButton("Cancel", new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               return;
+                           }
+                       })
                     .setConfirmButton("Create circle", new LovelyTextInputDialog.OnTextInputConfirmListener() {
                         @Override
                         public void onTextInputConfirmed(String text) {
@@ -293,29 +326,20 @@ public class Leap extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_circle_invites) {
+        if (id == R.id.nav_notifications) {
             // Handle the camera action
         } else if (id == R.id.nav_wallet) {
 
-        } else if (id == R.id.nav_circle_invites) {
-
-        } else if (id == R.id.nav_leap_invites) {
+        }  else if (id == R.id.nav_leap_invites) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_logout) {
-            FirebaseAuth.getInstance().signOut();
-            finish();
-            Intent logoutIntent = new Intent(this, registerLogin.class);
-            logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(logoutIntent);
-
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+
 
 
     }

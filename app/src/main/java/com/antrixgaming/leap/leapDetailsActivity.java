@@ -87,7 +87,6 @@ public class leapDetailsActivity extends AppCompatActivity {
                 final String lDay = model.getleapDay();
                 final String lTime = model.getleapTime();
 
-
                 // Set their texts
                 String leapID = model.getleapID();
                 gameType.setText(model.getgameType());

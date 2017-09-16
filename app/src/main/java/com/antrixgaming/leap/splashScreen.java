@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class splashScreen extends Activity {
@@ -23,6 +24,15 @@ public class splashScreen extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_splash_screen);
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+
+
+
+
+
+
 
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
@@ -44,6 +54,22 @@ public class splashScreen extends Activity {
                     splashScreen.this.startActivity(openRegisterLoginIntent);
                     splashScreen.this.finish();
 
+
+
+
+                    //Intent CCC = new Intent(splashScreen.this, selectLeaperContact.class);
+                    //startActivity(CCC);
+
+                    //Intent CCC1 = new Intent(splashScreen.this, leapDetailsActivity.class);
+                    //startActivity(CCC1);
+
+
+                    //finish();
+
+
+
+
+
                 } else {
 
                     //if there's a user, check if his token is valid
@@ -61,6 +87,7 @@ public class splashScreen extends Activity {
                                         // Hence it comes with no country code attached to it
                                         openLeapIntent.putExtra("countryCodeStatus", "0");
                                         openLeapIntent.putExtra("countryCode", "0");
+
                                         splashScreen.this.startActivity(openLeapIntent);
                                         splashScreen.this.finish();
 

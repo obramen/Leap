@@ -2,13 +2,12 @@ package com.antrixgaming.leap.Fragments;
 
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.antrixgaming.leap.LeapClasses.DatePickerFragment;
 import com.antrixgaming.leap.LeapClasses.UserLeap;
 import com.antrixgaming.leap.R;
+import com.antrixgaming.leap.selectLeaperContact;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -119,6 +117,19 @@ public class newLeapFragment extends Fragment {
                 //newFragment.show(getFragmentManager(), "datePicker");
 
 
+                if (TextUtils.isEmpty(dateTextView.getText().toString())) {
+                    //mVerificationField.setError("Cannot be empty.");
+                    dateTextView.setHintTextColor(getResources().getColor(R.color.cherry));
+                    timeTextView.setHintTextColor(getResources().getColor(R.color.cherry));
+                    Snackbar.make(getView(), "Day and Time required", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
+
+
+                    return;
+                }
+
+
                 // Get Current Date
                 final Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
@@ -202,12 +213,21 @@ public class newLeapFragment extends Fragment {
                         .child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
                         mLeaperTwo, mLeapDate, mLeapTime, "0"));
 
-                Toast.makeText(getActivity(), "you just leaped", Toast.LENGTH_LONG).show();
+                Snackbar.make(getView(), "you just leaped", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
 
                 getActivity().finish();
 
 
 
+            }
+        });
+
+        leaperTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openSelectLeaperIntent = new Intent(getActivity(), selectLeaperContact.class);
+                startActivity(openSelectLeaperIntent);
             }
         });
 

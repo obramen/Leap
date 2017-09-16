@@ -42,7 +42,22 @@
             android:name=".groupInfoActivity"
             android:label="@string/title_activity_group_info"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".leapDetailsActivity"></activity>
+        <activity
+            android:name=".leapDetailsActivity"
+            android:label="">
+
+        </activity>
+        <activity android:name=".selectLeaperContact"
+            android:label="Select leapers"
+            >
+
+        </activity>
+        <service android:name=".LeapServices.LeapService"
+            android:exported="false">
+        </service>
+        <service android:name=".LeapServices.ContactService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

@@ -52,6 +52,7 @@ public class registerLogin extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
+
         //assign progress bar
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
 

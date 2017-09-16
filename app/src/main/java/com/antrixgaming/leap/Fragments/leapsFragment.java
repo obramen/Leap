@@ -4,10 +4,12 @@ package com.antrixgaming.leap.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
 import android.support.v7.widget.CardView;
@@ -19,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +37,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Time;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,16 +89,18 @@ public class leapsFragment extends Fragment {
                 final TextView leapID = (TextView)v.findViewById(R.id.leapID);
                 TextView gameType = (TextView)v.findViewById(R.id.gameType);
                 TextView gameFormat = (TextView)v.findViewById(R.id.gameFormat);
-                TextView countdownTimer = (TextView)v.findViewById(R.id.countdownTimer);
+                final TextView countdownTimer = (TextView)v.findViewById(R.id.countdownTimer);
                 TextView leaperOne = (TextView)v.findViewById(R.id.leaperOne);
                 TextView leaperTwo = (TextView)v.findViewById(R.id.leaperTwo);
                 TextView gameTime = (TextView)v.findViewById(R.id.gameTime);
                 final Button leapInButton = (Button) v.findViewById(R.id.leapInButton);
                 final Button recordScoreButton = (Button) v.findViewById(R.id.recordScoreButton);
                 final CardView leapCard = (CardView) v.findViewById(R.id.leapCard);
+                final RelativeLayout leapInButtonLayout = (RelativeLayout) v.findViewById(R.id.leapInButtonLayout);
 
-                String lDay = model.getleapDay();
-                String lTime = model.getleapTime();
+                final String lDay = model.getleapDay();
+                final String lTime = model.getleapTime();
+
 
                 // Set their texts
                 leapID.setText(model.getleapID());
@@ -109,26 +117,44 @@ public class leapsFragment extends Fragment {
                 // countdown timer
                 // leap button status
                 if (leapStatus == 0){
-                    leapInButton.setText("LEAP IN");
+                    if(Objects.equals(leaperOne.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())){
+                        recordScoreButton.setText("CANCEL");
+                        leapInButtonLayout.setVisibility(view.GONE);
+                        leapInButton.setEnabled(false);
+                        leapInButton.setVisibility(view.GONE);
+                        recordScoreButton.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        leapInButton.setText("LEAP IN");
+                        leapInButtonLayout.setVisibility(view.GONE);
 
-                    //if(Objects.equals(leaperOne.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())){
-                        //recordScoreButton.setVisibility(View.GONE);
-                    //} else{
                         recordScoreButton.setText("DECLINE");
-                    //}
+                        recordScoreButton.setVisibility(View.VISIBLE);
+                        leapInButtonLayout.setVisibility(view.VISIBLE);
+                    }
 
                 } else if (leapStatus == 1){
                     leapInButton.setText("ACCEPTED");
+                    leapInButton.setVisibility(view.GONE);
+                    leapInButtonLayout.setVisibility(view.GONE);
                     leapInButton.setBackgroundResource(R.drawable.grey_button);
                     leapInButton.setEnabled(false);
                     recordScoreButton.setText("SCORE");
+                    recordScoreButton.setVisibility(View.VISIBLE);
+
                 }  else if (leapStatus == 2){
-                    leapInButton.setText("DECLINE");
+                    leapInButton.setText("DECLINED");
+                    leapInButton.setVisibility(view.VISIBLE);
+                    leapInButtonLayout.setVisibility(view.VISIBLE);
+                    leapInButton.setBackgroundResource(R.drawable.redbuttonlight);
                     leapInButton.setEnabled(false);
                     recordScoreButton.setVisibility(View.GONE);
                 } else if (leapStatus == 3){
                     leapInButton.setText("CANCELED");
+                    leapInButton.setBackgroundResource(R.drawable.grey_button);
                     leapInButton.setEnabled(false);
+                    leapInButton.setVisibility(view.VISIBLE);
+                    leapInButtonLayout.setVisibility(view.VISIBLE);
                     recordScoreButton.setVisibility(View.GONE);
 
                 } else{
@@ -152,8 +178,30 @@ public class leapsFragment extends Fragment {
 
                             FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .child(leapID.getText().toString()).child("leapStatus").setValue("1");
+                            FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child(leapID.getText().toString()).child("leapStatusChangeTime").setValue(new Date().getTime());
 
-                            Toast.makeText(getActivity(), "accepted", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "LEAP ACCEPTED", Toast.LENGTH_SHORT).show();
+
+                            Snackbar.make(view, "LEAP ACCEPTED", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+
+                            //Long acceptTime = model.getleapStatusChangeTime();
+                            //Long matchTime = Long.parseLong(lDay + " "  + lTime);
+
+
+                            new CountDownTimer(30000, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    countdownTimer.setText("" + millisUntilFinished / 1000);
+                                }
+
+                                public void onFinish() {
+                                    countdownTimer.setText("LIVE!");
+                                    //countdownTimer.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                    countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                }
+                            }.start();
 
 
 
@@ -173,7 +221,7 @@ public class leapsFragment extends Fragment {
                             FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .child(leapID.getText().toString()).child("leapStatus").setValue("2");
 
-                            Toast.makeText(getActivity(), "declined", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "LEAP DECLINED", Toast.LENGTH_SHORT).show();
 
 
 
@@ -182,9 +230,17 @@ public class leapsFragment extends Fragment {
                         } else if(Objects.equals(recordScoreButton.getText().toString(), "SCORE")){
 
                             Intent openLeapDetails = new Intent(getActivity(), leapDetailsActivity.class);
+                            openLeapDetails.putExtra("leapID", model.getleapID());
                             startActivity(openLeapDetails);
 
-                        } else {
+                        } else if (Objects.equals(recordScoreButton.getText().toString(), "CANCEL")){
+
+                            FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child(leapID.getText().toString()).child("leapStatus").setValue("3");
+
+                            Toast.makeText(getActivity(), "LEAP CANCELLED", Toast.LENGTH_SHORT).show();
+
+                        } else{
 
 
                         }
@@ -195,8 +251,8 @@ public class leapsFragment extends Fragment {
                 leapCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        leapCard.setBackgroundResource(R.drawable.grey_button);
                         Intent openLeapDetails = new Intent(getActivity(), leapDetailsActivity.class);
+                        openLeapDetails.putExtra("leapID", model.getleapID());
                         startActivity(openLeapDetails);
 
                     }
@@ -210,25 +266,20 @@ public class leapsFragment extends Fragment {
         listOfLeaps.setAdapter(adapter);
 
 
+        ListView listView = (ListView) view.findViewById(R.id.list_of_leaps);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //listOfLeaps.setBackgroundResource(R.color.verylightblack);
+            }
+        });
+
+
         //return inflated layout
         return view;
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

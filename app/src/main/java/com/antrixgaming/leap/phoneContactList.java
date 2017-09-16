@@ -1,6 +1,5 @@
 package com.antrixgaming.leap;
 
-import android.animation.PropertyValuesHolder;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,9 +25,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.LeapServices.LeapService;
 import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.antrixgaming.leap.NewClasses.getPhoneContacts;
+import com.antrixgaming.leap.NewClasses.phoneContactsImport;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.database.DataSnapshot;
@@ -36,22 +37,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.terrakok.phonematter.PhoneFormat;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static android.R.attr.country;
-import static android.R.attr.phoneNumber;
-import static java.security.AccessController.getContext;
 
 public class phoneContactList extends AppCompatActivity {
 
@@ -153,9 +144,8 @@ public class phoneContactList extends AppCompatActivity {
             }
         });
 
-        getContactRetrievalPermission();
-        gettingPhoneContacts();
-
+        //getContactRetrievalPermission();
+        //gettingPhoneContacts();
 
         ListView listView = (ListView) findViewById(R.id.phone_ContactList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -630,10 +620,12 @@ public class phoneContactList extends AppCompatActivity {
             return true;
         }
         else if (id == R.id.action_contacts_refresh) {
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-            Toast.makeText(phoneContactList.this, "Contacts Refreshed", Toast.LENGTH_SHORT).show();
+            //Intent intent = getIntent();
+            //finish();
+            //startActivity(intent);
+            Intent contactServiceIntent = new Intent(this, LeapService.class);
+            startService(contactServiceIntent);
+            Toast.makeText(phoneContactList.this, "Refreshing contacts", Toast.LENGTH_SHORT).show();
             return true;
         }
 

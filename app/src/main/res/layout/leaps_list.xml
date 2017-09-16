@@ -11,11 +11,11 @@
         android:id="@+id/leapCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="2dp"
-        android:background="@color/grey">
+        android:background="@color/grey"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:id="@+id/leapDetails"
@@ -125,7 +125,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:text="00:00"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:padding="5dp"/>
 
                     </RelativeLayout>
 
@@ -189,7 +190,7 @@
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="7.5"
+                            android:layout_weight="7"
                             android:padding="5dp">
 
                             <TextView
@@ -207,15 +208,17 @@
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1">
+                            android:layout_weight="1.5">
 
                             <TextView
                                 android:id="@+id/leaperOneScore"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="5dp"
                                 android:textStyle="bold"
-                                android:text="2" />
+                                android:text="5" />
                         </RelativeLayout>
 
 
@@ -254,7 +257,7 @@
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="7.5"
+                            android:layout_weight="7"
                             android:padding="5dp">
 
                             <TextView
@@ -272,13 +275,15 @@
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1">
+                            android:layout_weight="1.5">
 
                             <TextView
                                 android:id="@+id/leaperTwoScore"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="5dp"
                                 android:text="2"
                                 android:textStyle="bold" />
                         </RelativeLayout>
@@ -321,8 +326,7 @@
                                 android:layout_centerHorizontal="true"
                                 android:background="@drawable/redbutton"
                                 android:text="Leap in"
-                                android:textSize="9sp"/>
-
+                                android:textSize="9sp" />
 
 
                         </RelativeLayout>

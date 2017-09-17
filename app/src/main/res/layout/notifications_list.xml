@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <RelativeLayout
+            android:id="@+id/notificationTypeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/notificationInviteType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite Type"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/notificationInviteTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite Time"
+                android:layout_toRightOf="@id/notificationInviteType"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/notificationDetilsLaout"
+            android:layout_below="@id/notificationTypeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/notificationInviteBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite by"/>
+
+            <TextView
+                android:id="@+id/notificationInviteMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invitation to join AnTrix Playground"
+                android:textSize="12sp"
+                android:layout_below="@id/notificationInviteBy"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_below="@+id/notificationDetilsLaout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/notificationLeapInButton"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                style="@style/redButtonDark"
+                android:textSize="10sp"
+                android:text="Leap in"/>
+            <Button
+                android:id="@+id/notificationLeapOutButton"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Leap out"
+                style="@style/redButtonLight"
+                android:layout_marginStart="10dp"
+                android:textSize="10sp"
+                android:layout_toRightOf="@id/notificationLeapInButton"/>
+        </RelativeLayout>
+
+
+
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>

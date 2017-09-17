@@ -1,5 +1,7 @@
 package com.antrixgaming.leap;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.view.animation.Interpolator;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +30,7 @@ public class groupInfoActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         final String groupName = bundle.getString("groupName");
-        String circleID = bundle.getString("circleID");
+        final String circleID = bundle.getString("circleID");
 
         // get the created date and user who created the group
         ValueEventListener listener = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).addValueEventListener(new ValueEventListener() {
@@ -57,14 +60,14 @@ public class groupInfoActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent selectLeapersIntent = new Intent (groupInfoActivity.this, selectLeaperContact.class);
+                selectLeapersIntent.putExtra("SourceActivity", "3");
+                selectLeapersIntent.putExtra("CircleID", circleID);
+                startActivity(selectLeapersIntent);
+
             }
         });
     }
-
-
-
 
 
     @Override

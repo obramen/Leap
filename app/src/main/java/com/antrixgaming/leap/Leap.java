@@ -48,7 +48,7 @@ public class Leap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-
+    //TODO CHANGE ALL FIREBASE INSTANCES TO dbRef
 
     public final String userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
     public final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -244,6 +244,9 @@ public class Leap extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.nav_notifications) {
 
+            Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
+            startActivity(openNotificationsIntent);
+
             return true;
         }
         else if (id == R.id.action_new_circle){
@@ -324,12 +327,15 @@ public class Leap extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_notifications) {
-            // Handle the camera action
-        } else if (id == R.id.nav_wallet) {
 
-        }  else if (id == R.id.nav_leap_invites) {
+            Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
+            startActivity(openNotificationsIntent);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_cancelled_leaps) {
+
+        }  else if (id == R.id.nav_pending_leaps) {
+
+        } else if (id == R.id.nav_declined_leaps) {
 
         }
 
@@ -394,11 +400,11 @@ public class Leap extends AppCompatActivity
 
                         } else {
                             // Handle error -> task.getException();
-                            FirebaseAuth.getInstance().signOut();
-                            finish();
-                            Intent logoutIntent = new Intent(Leap.this, registerLogin.class);
-                            logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(logoutIntent);
+                            //FirebaseAuth.getInstance().signOut();
+                            //finish();
+                            //Intent logoutIntent = new Intent(Leap.this, registerLogin.class);
+                            //logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            //startActivity(logoutIntent);
 
 
 

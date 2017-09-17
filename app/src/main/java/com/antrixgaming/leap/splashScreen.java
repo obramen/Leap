@@ -26,6 +26,7 @@ public class splashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().getReference().keepSynced(true);
 
 
 

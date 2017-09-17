@@ -92,7 +92,7 @@ public class phoneVerifyActivity extends AppCompatActivity {
         final Button btnVerify = (Button) findViewById(R.id.btnSendV);
         final Button btnResendVerify = (Button) findViewById(R.id.btnResendV);
         final TextView vPhoneNumber = (TextView) findViewById(R.id.vPhoneNumber);
-        vPhoneNumber.setText(phoneNumber);
+        vPhoneNumber.setText("+" + phoneNumber);
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();

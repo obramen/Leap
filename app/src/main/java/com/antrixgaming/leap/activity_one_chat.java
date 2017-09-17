@@ -1,5 +1,6 @@
 package com.antrixgaming.leap;
 
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,8 @@ public class activity_one_chat extends AppCompatActivity {
         setContentView(R.layout.activity_one_chat);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+
         final TextView secondUid = (TextView) findViewById(R.id.secondUid);
         final TextView circleid = (TextView) findViewById(R.id.circleUid);
 
@@ -65,8 +68,7 @@ public class activity_one_chat extends AppCompatActivity {
         /////////////////////////// CREATE CIRCLE START ///////////////////////
 
         //Reference path to oneCircleSecondUserUid
-        oneCircleSecondUserUidReference = FirebaseDatabase.getInstance()
-                .getReference().child("phonenumbers").child(oneCircleSecondUserPhoneNumber).child("uid");
+        oneCircleSecondUserUidReference = dbRef.child("phonenumbers").child(oneCircleSecondUserPhoneNumber).child("uid");
 
 
         if (oneCircleFirstUserPhoneNumber.compareTo(oneCircleSecondUserPhoneNumber) < 0) {
@@ -85,8 +87,8 @@ public class activity_one_chat extends AppCompatActivity {
         circleid.setText(oneCircleUid);
 
 
-        FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("numberA").setValue(numberA);
-        FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("numberB").setValue(numberB);
+        dbRef.child("onecircles").child(oneCircleUid).child("numberA").setValue(numberA);
+        dbRef.child("onecircles").child(oneCircleUid).child("numberB").setValue(numberB);
 
 
 

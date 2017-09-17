@@ -18,6 +18,7 @@ import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.antrixgaming.leap.NewClasses.createGroupCircle;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.activity_one_circle;
+import com.antrixgaming.leap.groupInfoActivity;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -219,7 +220,7 @@ public class circlesFragment extends Fragment {
 
                             }else {
 
-                                Intent intent = new Intent(getActivity(), activity_one_circle.class);
+                                Intent intent = new Intent(getActivity(), groupInfoActivity.class);
                                 intent.putExtra("circleID", circleID.getText().toString());
                                 intent.putExtra("groupName", circleName.getText().toString());
                                 startActivity(intent);

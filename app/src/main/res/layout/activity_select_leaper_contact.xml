@@ -6,17 +6,62 @@
     android:layout_height="match_parent"
     android:background="@color/grey">
 
-    <ListView
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_menu_send"
+        android:id="@+id/addLeaperToGroupFAB"
+        android:tint="@android:color/white"
+        app:elevation="3dp"
+        app:rippleColor="@android:color/black"
+        android:layout_gravity="top|right"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+    
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="1dp"
-        android:divider="@android:color/transparent"
-        android:id="@+id/leaperContactList"
-        android:scrollbarThumbVertical="@drawable/redbutton"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/circleLayout"/>
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/selectLeaperListLayout"
+            android:layout_width="match_parent"
+            android:minHeight="30dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+            
+            <TextView
+                android:id="@+id/selectedLeapers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+
+
+        </RelativeLayout>
+
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="1dp"
+            android:divider="@android:color/transparent"
+            android:id="@+id/leaperContactList"
+            android:scrollbarThumbVertical="@drawable/redbutton"
+            tools:layout_editor_absoluteY="8dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/circleLayout"
+            android:choiceMode="multipleChoice"/>
+
+
+    </LinearLayout>
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>

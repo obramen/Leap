@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.ContactsContract;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.view.accessibility.AccessibilityManagerCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +36,11 @@ import com.antrixgaming.leap.newLeap;
 import com.firebase.ui.auth.ui.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
 import java.text.DateFormat;
@@ -46,6 +51,10 @@ import java.util.Objects;
 
 
 public class leapsFragment extends Fragment {
+
+    public DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    public String leaperTwoUID;
+    public String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
 
@@ -72,13 +81,13 @@ public class leapsFragment extends Fragment {
 
 
 
-        DatabaseReference dataSource = FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance()
+        DatabaseReference dataSource = dbRef.child("leaps").child(FirebaseAuth.getInstance()
                 .getCurrentUser().getUid());
 
         final ListView listOfLeaps = (ListView)view.findViewById(R.id.list_of_leaps);
         FirebaseListAdapter<UserLeap> adapter;
         adapter = new FirebaseListAdapter<UserLeap>(getActivity(), UserLeap.class,
-                R.layout.leaps_list, dataSource) {
+                R.layout.leaps_list, dataSource.orderByChild("leapSetupTime")) {
 
             private int layout;
 
@@ -91,12 +100,13 @@ public class leapsFragment extends Fragment {
                 TextView gameFormat = (TextView)v.findViewById(R.id.gameFormat);
                 final TextView countdownTimer = (TextView)v.findViewById(R.id.countdownTimer);
                 TextView leaperOne = (TextView)v.findViewById(R.id.leaperOne);
-                TextView leaperTwo = (TextView)v.findViewById(R.id.leaperTwo);
+                final TextView leaperTwo = (TextView)v.findViewById(R.id.leaperTwo);
                 TextView gameTime = (TextView)v.findViewById(R.id.gameTime);
                 final Button leapInButton = (Button) v.findViewById(R.id.leapInButton);
                 final Button recordScoreButton = (Button) v.findViewById(R.id.recordScoreButton);
                 final CardView leapCard = (CardView) v.findViewById(R.id.leapCard);
                 final RelativeLayout leapInButtonLayout = (RelativeLayout) v.findViewById(R.id.leapInButtonLayout);
+                final TextView leapsLeaperTwoUID = (TextView) v.findViewById(R.id.leapsLeaperTwoUID);
 
                 final String lDay = model.getleapDay();
                 final String lTime = model.getleapTime();
@@ -165,8 +175,52 @@ public class leapsFragment extends Fragment {
 
 
 
+
+
                 // Format the date before showing it
                 //messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()));
+
+                if (leaperOne.getText().toString() == FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()){
+                    DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
+                            .child("phonenumbers").child(leaperTwo.getText().toString()).child("uid");
+
+                    leaperTwoDbRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            leaperTwoUID = dataSnapshot.getValue().toString();
+                            leapsLeaperTwoUID.setText(leaperTwoUID);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else{
+                    DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
+                            .child("phonenumbers").child(leaperOne.getText().toString()).child("uid");
+
+                    leaperTwoDbRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            leaperTwoUID = dataSnapshot.getValue().toString();
+                            leapsLeaperTwoUID.setText(leaperTwoUID);
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+
+
+
+
+
 
 
 
@@ -176,9 +230,17 @@ public class leapsFragment extends Fragment {
                         if(Objects.equals(leapInButton.getText().toString(), "LEAP IN")){
 
 
-                            FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+
+                            // Changes for first leaper
+                            dbRef.child("leaps").child(myUID)
                                     .child(leapID.getText().toString()).child("leapStatus").setValue("1");
-                            FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            dbRef.child("leaps").child(myUID)
+                                    .child(leapID.getText().toString()).child("leapStatusChangeTime").setValue(new Date().getTime());
+
+                            // Changes for second leaper
+                            dbRef.child("leaps").child(leaperTwoUID)
+                                    .child(leapID.getText().toString()).child("leapStatus").setValue("1");
+                            dbRef.child("leaps").child(leaperTwoUID)
                                     .child(leapID.getText().toString()).child("leapStatusChangeTime").setValue(new Date().getTime());
 
                             //Toast.makeText(getActivity(), "LEAP ACCEPTED", Toast.LENGTH_SHORT).show();
@@ -218,7 +280,9 @@ public class leapsFragment extends Fragment {
 
                         if(Objects.equals(recordScoreButton.getText().toString(), "DECLINE")) {
 
-                            FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            dbRef.child("leaps").child(myUID)
+                                    .child(leapID.getText().toString()).child("leapStatus").setValue("2");
+                            dbRef.child("leaps").child(leaperTwoUID)
                                     .child(leapID.getText().toString()).child("leapStatus").setValue("2");
 
                             Toast.makeText(getActivity(), "LEAP DECLINED", Toast.LENGTH_SHORT).show();
@@ -235,7 +299,9 @@ public class leapsFragment extends Fragment {
 
                         } else if (Objects.equals(recordScoreButton.getText().toString(), "CANCEL")){
 
-                            FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            dbRef.child("leaps").child(myUID)
+                                    .child(leapID.getText().toString()).removeValue();
+                            dbRef.child("leaps").child(leaperTwoUID)
                                     .child(leapID.getText().toString()).removeValue();
 
                             Toast.makeText(getActivity(), "LEAP CANCELLED", Toast.LENGTH_SHORT).show();

@@ -44,20 +44,21 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".leapDetailsActivity"
-            android:label="">
+            android:label=""></activity>
+        <activity
+            android:name=".selectLeaperContact"
+            android:label="Select leaper"></activity>
 
-        </activity>
-        <activity android:name=".selectLeaperContact"
-            android:label="Select leaper"
-            >
+        <service
+            android:name=".LeapServices.LeapService"
+            android:exported="false"></service>
+        <service
+            android:name=".LeapServices.ContactService"
+            android:exported="false"></service>
 
+        <activity android:name=".receivedNotifications"
+            android:label="Notifications">
         </activity>
-        <service android:name=".LeapServices.LeapService"
-            android:exported="false">
-        </service>
-        <service android:name=".LeapServices.ContactService"
-            android:exported="false">
-        </service>
     </application>
 
 </manifest>

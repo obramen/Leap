@@ -25,10 +25,15 @@ import com.antrixgaming.leap.LeapClasses.UserLeap;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.selectLeaperContact;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,6 +50,8 @@ public class newLeapFragment extends Fragment {
     private Spinner gameFormat;
     private CircleImageView leaperOneImage;
     private CircleImageView leaperTwoImage;
+    private String leaperTwoUID;
+    private TextView newLeaperTwoUID;
 
 
 
@@ -57,6 +64,8 @@ public class newLeapFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_new_leap, container, false);
 
+        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         timeTextView = (EditText) view.findViewById(R.id.freeLeapTime);
         dateTextView = (EditText) view.findViewById(R.id.freeLeapDate);
@@ -67,6 +76,7 @@ public class newLeapFragment extends Fragment {
         gameFormat = (Spinner) view.findViewById(R.id.freeLeapGameFormat);
         leaperOneImage = (CircleImageView) view.findViewById(R.id.freeLeapLeaper1Image);
         leaperTwoImage = (CircleImageView) view.findViewById(R.id.freeLeapLeaper2Image);
+        newLeaperTwoUID = (TextView) view.findViewById(R.id.freeLeaperTwoUID);
 
 
 
@@ -152,7 +162,6 @@ public class newLeapFragment extends Fragment {
                                 dateTextView.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
 
 
-
                                 // Get Current Time
                                 final Calendar c = Calendar.getInstance();
                                 mHour = c.get(Calendar.HOUR_OF_DAY);
@@ -205,7 +214,7 @@ public class newLeapFragment extends Fragment {
                     //mVerificationField.setError("Cannot be empty.");
                     dateTextView.setHintTextColor(getResources().getColor(R.color.cherry));
                     timeTextView.setHintTextColor(getResources().getColor(R.color.cherry));
-                    Snackbar.make(getView(), "Day and Time required", Snackbar.LENGTH_LONG)
+                    Snackbar.make(getView(), "Leap day and time required", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 
 
@@ -214,26 +223,66 @@ public class newLeapFragment extends Fragment {
                 }
 
 
+                final String mGameType = gameType.getText().toString();
+                final String mGameFormat = gameFormat.getSelectedItem().toString();
+                final String mLeaperOne = leaperOne.getText().toString();
+                final String mLeaperTwo = leaperTwo.getText().toString();
+                final String mLeapDate = dateTextView.getText().toString();
+                final String mLeapTime = timeTextView.getText().toString();
+
+                if (Objects.equals(mLeaperTwo, "Leaper Two")) {
+                    //mVerificationField.setError("Cannot be empty.");
+                    leaperTwo.setHintTextColor(getResources().getColor(R.color.cherry));
+                    Snackbar.make(getView(), "Choose opposing leaper", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    return;
+                } else {
+
+                    DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
+                            .child("phonenumbers").child(mLeaperTwo).child("uid");
+
+                    //long lastLeapTimeWithMe = new Date().getTime();
+                    //leaperTwoDbRef.getParent().child("lastleapwith" + myUID).setValue(lastLeapTimeWithMe);
+
+                    leaperTwoDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //Log.i(TAG, dataSnapshot.getValue(String.class);
+
+                            leaperTwoUID = dataSnapshot.getValue().toString();
+                            // newLeaperTwoUID.setText(leaperTwoUID);
+
+                            //leaperTwoUID = newLeaperTwoUID.getText().toString();
+
+                            // status "0" show a new leap. "1" = accepted. "2" = declined. "3" = cancelled
+
+                            String key = dbRef.child("leaps").child(myUID).push().getKey();
+                            dbRef.child("leaps").child(myUID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
+                                    mLeaperTwo, mLeapDate, mLeapTime, "0"));
+                            dbRef.child("leaps").child(leaperTwoUID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
+                                    mLeaperTwo, mLeapDate, mLeapTime, "0"));
+
+                            Snackbar.make(getView(), "you just leaped", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+
+                            getActivity().finish();
+
+                        }
 
 
-                String mGameType = gameType.getText().toString();
-                String mGameFormat = gameFormat.getSelectedItem().toString();
-                String mLeaperOne = leaperOne.getText().toString();
-                String mLeaperTwo = leaperTwo.getText().toString();
-                String mLeapDate = dateTextView.getText().toString();
-                String mLeapTime = timeTextView.getText().toString();
 
-                // status "0" show a new leap. "1" = accepted. "2" = declined. "3" = cancelled
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //Log.w(TAG, "onCancelled", databaseError.toException());
+                        }
 
-                String key = FirebaseDatabase.getInstance().getReference().child("leaps").child(myUID).push().getKey();
-                FirebaseDatabase.getInstance().getReference().child("leaps").child(myUID)
-                        .child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                        mLeaperTwo, mLeapDate, mLeapTime, "0"));
 
-                Snackbar.make(getView(), "you just leaped", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                    });
 
-                getActivity().finish();
+                }
+
+
 
 
 

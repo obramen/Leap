@@ -211,9 +211,10 @@ public class ContactService extends IntentService {
                                 if ((Objects.equals(firstDigit, countryCode)) || (Objects.equals(secondDigit, countryCode)) || (Objects.equals(thirdDigit, countryCode))) {
                                     Phone_number = "+" + Phone_number;
                                 } else // check for locally saved number without zero
-                                    if (numberLength >= 10){
+                                    if (numberLength > 10){
                                     Phone_number = "+" + noZeroZero;
                                     }else if ((Objects.equals(firstDigit, "0")) && (!Objects.equals(secondDigit, "00"))) {
+                                        noZeroZero = noZeroZero.substring(1);
                                         Phone_number = countryCode + noZeroZero;
                                     } else {
                                         Phone_number = null;
@@ -238,16 +239,33 @@ public class ContactService extends IntentService {
                         if (Phone_number == null){
 
                         } else {
+
                             // save to sorted phone contact list table
                             getPhoneContacts newContact = new getPhoneContacts(name, Phone_number, contactType);
                             arrayOfContacts.add(newContact);
-                            dbRef.child("SortedPhoneContacts").child(rawPhoneNumber).child("name").setValue(name);
-                            dbRef.child("SortedPhoneContacts").child(rawPhoneNumber).child("phoneNumber").setValue(Phone_number);
-                            dbRef.child("SortedPhoneContacts").child(rawPhoneNumber).child("contactType").setValue(contactType);
+                            // check for availability to avoid double saving
+                            DatabaseReference users = rootdbRef.child("users");
+                            final String finalPhone_number1 = Phone_number;
+                            users.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.child(finalPhone_number1).exists()) {
+
+                                    } else {
+                                        dbRef.child("phoneSortedContacts").child(rawPhoneNumber).child("name").setValue(name);
+                                        dbRef.child("phoneSortedContacts").child(rawPhoneNumber).child("phoneNumber").setValue(finalPhone_number1);
+                                        dbRef.child("phoneSortedContacts").child(rawPhoneNumber).child("contactType").setValue(contactType);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
 
                             // save to sorted leap contacts table. this is used to populate friend list / contacts
-                            DatabaseReference users = rootdbRef.child("users");
                             final String finalPhone_number = Phone_number;
                             users.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

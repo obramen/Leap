@@ -21,13 +21,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.antrixgaming.leap.R.id.detailsMatchContainer;
+
 
 public class leapDetailsActivity extends AppCompatActivity {
 
 
-    TabLayout tabLayout;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,34 +44,22 @@ public class leapDetailsActivity extends AppCompatActivity {
         String leapID = bundle.getString("leapID");
 
         String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("leaps").child(myUID).child(leapID);
-
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("leaps").child(myUID);
 
         ListView listOfDetails = (ListView)findViewById(R.id.list_of_Leap_details);
         FirebaseListAdapter<UserLeap> adapter;
         adapter = new FirebaseListAdapter<UserLeap>(this, UserLeap.class,
                 R.layout.activity_leap_details_listview,
-                dbRef) {
+                dbRef.orderByKey().equalTo(leapID)) {
+
+
+
+
+
 
 
             @Override
             protected void populateView(View v, final UserLeap model, int position) {
-
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-                // Set up the ViewPager with the sections adapter.
-                mViewPager = (ViewPager) findViewById(R.id.detailsMatchContainer);
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-
-                //Tab layout with tabs
-                tabLayout = (TabLayout) findViewById(R.id.detailsMatchTabs);
-                tabLayout.setupWithViewPager(mViewPager);
-
-
-
-
-
-
 
                 // Get references to the views of message.xml
                 //final TextView leapID = (TextView)v.findViewById(R.id.leapID);
@@ -113,7 +102,89 @@ public class leapDetailsActivity extends AppCompatActivity {
 
 
 
+
+                TabLayout tabLayout;
+                SectionsPagerAdapter mSectionsPagerAdapter;
+                ViewPager mViewPager;
+
+
+                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+                mViewPager = (ViewPager) v.findViewById(detailsMatchContainer);
+
+
+
+
+                // Set up the ViewPager with the sections adapter.
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+
+                //Tab layout with tabs
+                tabLayout = (TabLayout) v.findViewById(R.id.detailsMatchTabs);
+                tabLayout.setupWithViewPager(mViewPager);
+
+
+
             }
+
+            class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+
+
+
+                public SectionsPagerAdapter(android.support.v4.app.FragmentManager fm) {
+                    super(fm);
+                }
+
+                @Override
+                public android.support.v4.app.Fragment getItem(int position) {
+                    switch (position) {
+                        case 0:
+                            return new game1Fragment();
+                        case 1:
+                            return new game2Fragment();
+                        case 2:
+                            return new game3Fragment();
+                        case 3:
+                            return new game4Fragment();
+                        case 4:
+                            return new game5Fragment();
+                        default:
+                            return null;
+                    }
+                }
+
+                @Override
+                public int getCount() {
+                    // Show 4 total pages.
+                    return 5;
+                }
+
+                @Override
+                public CharSequence getPageTitle(int position) {
+                    switch (position) {
+                        case 0:
+                            return "Game 1";
+                        case 1:
+                            return "Game 2";
+                        case 2:
+                            return "Game 3";
+                        case 3:
+                            return "Game 4";
+                        case 4:
+                            return "Game 5";
+                        default:
+                            return null;
+
+                    }
+                }
+            }
+
+
+
+
+
+
+
         };
 
         listOfDetails.setAdapter(adapter);
@@ -121,15 +192,10 @@ public class leapDetailsActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
     }
+
+
+
 
     @Override
     public boolean onSupportNavigateUp(){
@@ -137,53 +203,5 @@ public class leapDetailsActivity extends AppCompatActivity {
         return true;
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(android.support.v4.app.FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public android.support.v4.app.Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new game1Fragment();
-                case 1:
-                    return new game2Fragment();
-                case 2:
-                    return new game3Fragment();
-                case 3:
-                    return new game4Fragment();
-                case 4:
-                    return new game5Fragment();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 4 total pages.
-            return 5;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Game 1";
-                case 1:
-                    return "Game 2";
-                case 2:
-                    return "Game 3";
-                case 3:
-                    return "Game 4";
-                case 4:
-                    return "Game 5";
-                default:
-                    return null;
-
-            }
-        }
-    }
 }

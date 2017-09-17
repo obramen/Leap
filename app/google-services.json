@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "619145924038-ei9so2u9qrma2qb50juishdb4bd68lps.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.antrixgaming.leap",
+            "certificate_hash": "a2685cce5ecd27f84535bac140447f54448d4c56"
+          }
+        },
+        {
           "client_id": "619145924038-ajfae5d5nauj7vau0q7g82567qf0kssf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

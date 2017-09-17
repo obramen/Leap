@@ -236,7 +236,7 @@ public class registerLogin extends AppCompatActivity {
 
                 // get phone number with country code and plus
                 String phoneNumberAndCode = ccp.getFullNumber().toString().trim();
-                Toast.makeText(registerLogin.this, "The Full Number is " + phoneNumberAndCode, Toast.LENGTH_LONG).show();
+                Toast.makeText(registerLogin.this, "Verifying +" + phoneNumberAndCode, Toast.LENGTH_LONG).show();
 
 
                 PhoneAuthProvider.getInstance().verifyPhoneNumber(

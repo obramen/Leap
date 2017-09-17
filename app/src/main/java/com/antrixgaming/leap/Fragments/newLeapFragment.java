@@ -1,9 +1,11 @@
 package com.antrixgaming.leap.Fragments;
 
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -27,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class newLeapFragment extends Fragment {
 
@@ -38,6 +43,9 @@ public class newLeapFragment extends Fragment {
     private String myUID;
     private TextView gameType;
     private Spinner gameFormat;
+    private CircleImageView leaperOneImage;
+    private CircleImageView leaperTwoImage;
+
 
 
 
@@ -57,6 +65,10 @@ public class newLeapFragment extends Fragment {
         leaperTwo = (TextView) view.findViewById(R.id.leaperTwo);
         gameType = (TextView) view.findViewById(R.id.freeLeapGameType);
         gameFormat = (Spinner) view.findViewById(R.id.freeLeapGameFormat);
+        leaperOneImage = (CircleImageView) view.findViewById(R.id.freeLeapLeaper1Image);
+        leaperTwoImage = (CircleImageView) view.findViewById(R.id.freeLeapLeaper2Image);
+
+
 
         leaperOne.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
@@ -117,17 +129,6 @@ public class newLeapFragment extends Fragment {
                 //newFragment.show(getFragmentManager(), "datePicker");
 
 
-                if (TextUtils.isEmpty(dateTextView.getText().toString())) {
-                    //mVerificationField.setError("Cannot be empty.");
-                    dateTextView.setHintTextColor(getResources().getColor(R.color.cherry));
-                    timeTextView.setHintTextColor(getResources().getColor(R.color.cherry));
-                    Snackbar.make(getView(), "Day and Time required", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-
-
-                    return;
-                }
 
 
                 // Get Current Date
@@ -199,6 +200,22 @@ public class newLeapFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+
+                if (TextUtils.isEmpty(dateTextView.getText().toString())) {
+                    //mVerificationField.setError("Cannot be empty.");
+                    dateTextView.setHintTextColor(getResources().getColor(R.color.cherry));
+                    timeTextView.setHintTextColor(getResources().getColor(R.color.cherry));
+                    Snackbar.make(getView(), "Day and Time required", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
+
+
+                    return;
+                }
+
+
+
+
                 String mGameType = gameType.getText().toString();
                 String mGameFormat = gameFormat.getSelectedItem().toString();
                 String mLeaperOne = leaperOne.getText().toString();
@@ -227,7 +244,16 @@ public class newLeapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent openSelectLeaperIntent = new Intent(getActivity(), selectLeaperContact.class);
-                startActivity(openSelectLeaperIntent);
+                startActivityForResult(openSelectLeaperIntent, 1);
+            }
+        });
+
+        leaperTwoImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openSelectLeaperIntent = new Intent(getActivity(), selectLeaperContact.class);
+                openSelectLeaperIntent.putExtra("SourceActivity", "2");
+                startActivityForResult(openSelectLeaperIntent, 1);
             }
         });
 
@@ -241,6 +267,23 @@ public class newLeapFragment extends Fragment {
 
 
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    // TODO Extract the data returned from the child Activity.
+                    String leaperTwoResult = data.getStringExtra("SecondLeaper");
+                    leaperTwo.setText(leaperTwoResult);
+                }
+                break;
+            }
+        }
+    }
+
 
 }
 

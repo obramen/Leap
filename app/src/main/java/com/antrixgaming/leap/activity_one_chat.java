@@ -54,7 +54,7 @@ public class activity_one_chat extends AppCompatActivity {
         //TODO put error check here
         // One Circle second user details ***phone number and UID***
         Bundle bundle = getIntent().getExtras();
-        oneCircleSecondUserPhoneNumber = "+233242366623"; // bundle.getString("oneCircleSecondUser"); //phone number
+        oneCircleSecondUserPhoneNumber = bundle.getString("oneCircleSecondUser"); //phone number
         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
         getSupportActionBar().setTitle(oneCircleSecondUserPhoneNumber);
         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////

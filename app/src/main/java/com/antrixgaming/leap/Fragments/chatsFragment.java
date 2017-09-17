@@ -18,6 +18,7 @@ import com.antrixgaming.leap.NewClasses.ChatMessage;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.activity_one_chat;
 import com.antrixgaming.leap.phoneContactList;
+import com.antrixgaming.leap.selectLeaperContact;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -61,7 +62,8 @@ public class chatsFragment extends Fragment {
             public void onClick(View v) {
 
                 //Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
-                Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
+                Intent openOneChat = new Intent(getActivity(), selectLeaperContact.class);
+                openOneChat.putExtra("SourceActivity", "1");
                 startActivity(openOneChat);
 
             }

@@ -27,6 +27,7 @@ import com.antrixgaming.leap.Fragments.circlesFragment;
 import com.antrixgaming.leap.Fragments.leapsFragment;
 
 import com.antrixgaming.leap.Fragments.userProfileFragment;
+import com.antrixgaming.leap.LeapServices.ContactService;
 import com.antrixgaming.leap.LeapServices.LeapService;
 import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.antrixgaming.leap.NewClasses.createGroupCircle;
@@ -47,6 +48,8 @@ public class Leap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+
+
     public final String userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
     public final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private FirebaseAuth mAuth;
@@ -55,7 +58,7 @@ public class Leap extends AppCompatActivity
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     TabLayout tabLayout;
-    private long messageTime;
+    private long loginTime;
 
 
     private int[] tabIcons = {
@@ -66,10 +69,13 @@ public class Leap extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leap);
 
+        Intent startContactService = new Intent(this, ContactService.class);
+        //startService(startContactService);
+
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
-        messageTime = new Date().getTime();
+        loginTime = new Date().getTime();
 
         // get bundled country code from registerLogin activity
         Bundle bundle = getIntent().getExtras();
@@ -83,13 +89,11 @@ public class Leap extends AppCompatActivity
         // add phone number to phone numbers table with section named as user's phone number
         dbRef.child("phonenumbers").child(userPhoneNumber).child("uid").setValue(UID);
         // add last login time under phone numbers table with section logins
-        dbRef.child("phonenumbers").child(userPhoneNumber).child("logins").push().setValue(messageTime);
+        dbRef.child("phonenumbers").child(userPhoneNumber).child("logins").push().setValue(loginTime);
         // add phone number under uid table
         dbRef.child("uid").child(UID).child("phoneNumber").setValue(userPhoneNumber);
         // add country code under uid table
-        //////dbRef.child("uid").child(UID).child(countryCode).setValue("true");
-        // add the phone number to user table under phone numbers. this table contains phone numbers only
-        // for check all contacts available
+        dbRef.child("users").child(userPhoneNumber).setValue(userPhoneNumber);
 
         int x = Integer.parseInt(countryCodeStatus);
         if (x == 1) {

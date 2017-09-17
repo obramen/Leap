@@ -144,8 +144,8 @@ public class phoneContactList extends AppCompatActivity {
             }
         });
 
-        //getContactRetrievalPermission();
-        //gettingPhoneContacts();
+        getContactRetrievalPermission();
+        gettingPhoneContacts();
 
         ListView listView = (ListView) findViewById(R.id.phone_ContactList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

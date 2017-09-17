@@ -236,7 +236,7 @@ public class leapsFragment extends Fragment {
                         } else if (Objects.equals(recordScoreButton.getText().toString(), "CANCEL")){
 
                             FirebaseDatabase.getInstance().getReference().child("leaps").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child(leapID.getText().toString()).child("leapStatus").setValue("3");
+                                    .child(leapID.getText().toString()).removeValue();
 
                             Toast.makeText(getActivity(), "LEAP CANCELLED", Toast.LENGTH_SHORT).show();
 

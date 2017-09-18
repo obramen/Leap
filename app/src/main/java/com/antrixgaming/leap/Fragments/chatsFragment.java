@@ -43,7 +43,6 @@ public class chatsFragment extends Fragment {
                                     long id) {
 
 
-                //TODO change +233242366623 to PHONE NUMBER FROM View selected - DONE
                 TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
                 //String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
                 TextView sendToPhoneNumber = (TextView) view.findViewById(R.id.leaperName);

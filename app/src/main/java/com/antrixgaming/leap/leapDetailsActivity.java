@@ -94,6 +94,7 @@ public class leapDetailsActivity extends AppCompatActivity {
 
                     public void onFinish() {
                         countdownTimer.setText("LIVE!");
+                        countdownTimer.setTextColor(getResources().getColor(R.color.white));
                         //countdownTimer.setTextColor(getResources().getColor(R.color.colorPrimary));
                         countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     }
@@ -155,7 +156,7 @@ public class leapDetailsActivity extends AppCompatActivity {
 
                 @Override
                 public int getCount() {
-                    // Show 4 total pages.
+
                     return 5;
                 }
 

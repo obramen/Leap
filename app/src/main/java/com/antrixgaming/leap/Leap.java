@@ -1,11 +1,15 @@
 package com.antrixgaming.leap;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,16 +40,23 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 
 import java.util.Date;
+import java.util.Objects;
 
 
 public class Leap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
 
 
     //TODO CHANGE ALL FIREBASE INSTANCES TO dbRef
@@ -59,6 +70,8 @@ public class Leap extends AppCompatActivity
     private ViewPager mViewPager;
     TabLayout tabLayout;
     private long loginTime;
+
+    public String deviceOnlinekey = null;
 
 
     private int[] tabIcons = {
@@ -85,7 +98,7 @@ public class Leap extends AppCompatActivity
 
         /////////////// ADD USER'S UID TO PHONE NUMBERS TABLE TOGETHER WITH UID /////////////////
         /////////// CHECK FOR AVAILABILITY ON TABLE FIRST ////////////////////////
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         // add phone number to phone numbers table with section named as user's phone number
         dbRef.child("phonenumbers").child(userPhoneNumber).child("uid").setValue(UID);
         // add last login time under phone numbers table with section logins
@@ -104,6 +117,8 @@ public class Leap extends AppCompatActivity
 
         }
         /////////////// ADDING ENDS HERE /////////////////
+
+
 
 
         //initialize database reference
@@ -147,13 +162,117 @@ public class Leap extends AppCompatActivity
         leapOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // since I can connect from multiple devices, we store each connection instance separately
+                // any time that connectionsRef's value is null (i.e. has no children) I am offline
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference myConnectionsRef = database.getReference().child("connections").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
+                // stores the timestamp of my last disconnect (the last time I was seen online)
+                final DatabaseReference lastOnlineRef = database.getReference().child("connections").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("lastOnline");
+
+                                            // when this device disconnects, remove it
+                            dbRef.child("connections").child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child(deviceOnlinekey).removeValue();
+
+                            // when I disconnect, update the last time I was seen online
+                            lastOnlineRef.setValue(ServerValue.TIMESTAMP);
+
+                            // add this device to my connections list
+                            // this value could contain info about the device or a timestamp too
+
+
+
+
+
+
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 Intent logoutIntent = new Intent(Leap.this, registerLogin.class);
                 logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logoutIntent);
+
+
+
+
             }
         });
+
+
+
+
+
+        // since I can connect from multiple devices, we store each connection instance separately
+        // any time that connectionsRef's value is null (i.e. has no children) I am offline
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myConnectionsRef = database.getReference().child("connections").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
+        // stores the timestamp of my last disconnect (the last time I was seen online)
+        final DatabaseReference lastOnlineRef = database.getReference().child("connections").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("lastOnline");
+
+        final DatabaseReference connectedRef = database.getReference().child(".info").child("connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    DatabaseReference con = myConnectionsRef.push();
+                    deviceOnlinekey = con.getKey().toString();
+
+                    // when this device disconnects, remove it
+                    con.onDisconnect().removeValue();
+
+                    // when I disconnect, update the last time I was seen online
+                    lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+
+                    // add this device to my connections list
+                    // this value could contain info about the device or a timestamp too
+                    con.setValue(Boolean.TRUE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.err.println("Listener was cancelled at .info/connected");
+            }
+        });
+
+
+
+
+
+        final DatabaseReference onlineStatus = dbRef.child("connections").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
+        onlineStatus.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.child("statusPermission").getValue() == null){
+                    onlineStatus.child("lastOnline").setValue("true");
+                    onlineStatus.child("statusPermission").setValue("1"); // 1 - for allow last see // default value if nothing set in settings
+                }
+                else {
+                    onlineStatus.child("lastOnline").setValue("true");
+                    //String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
+                    //String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
 
     }
 
@@ -381,6 +500,11 @@ public class Leap extends AppCompatActivity
     @Override
     protected void onResume() {
 
+
+
+
+        // TODO PUT CHECK FOR INTERNET AVAILABILITY
+
         FirebaseAuth mAuth;
 
         //Recheck for user availability in database
@@ -393,7 +517,6 @@ public class Leap extends AppCompatActivity
                             //String idToken = task.getResult().getToken();
                             // Send token to your backend via HTTPS
                             // ...
-
 
                             Toast.makeText(Leap.this, "This works, already signed in", Toast.LENGTH_LONG).show();
 
@@ -413,7 +536,12 @@ public class Leap extends AppCompatActivity
                     }
 
                 });
+
+
+
     }
+
+
 }
 
 

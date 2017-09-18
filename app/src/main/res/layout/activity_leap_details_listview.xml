@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.antrixgaming.leap.leapDetailsActivity"
-    android:background="@color/verylightblack"
+    android:background="@color/grey"
     android:descendantFocusability="blocksDescendants">
 
 
@@ -22,16 +22,15 @@
                 android:id="@+id/leapFormatCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/grey">
+                    android:paddingTop="10dp">
 
 
                     <RelativeLayout
@@ -48,8 +47,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:text="Game Type"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/hyphen"
@@ -57,8 +55,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
                             android:layout_toRightOf="@id/detailsGameType"
-                            android:text="-"
-                            android:textColor="@color/white"/>
+                            android:text="-" />
 
                         <TextView
                             android:id="@+id/detailsGameFormat"
@@ -66,12 +63,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
                             android:layout_toRightOf="@id/hyphen"
-                            android:text="Game Format"
-                            android:textColor="@color/white"/>
-
+                            android:text="Game Format" />
 
 
                     </RelativeLayout>
+
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
@@ -82,9 +78,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
-                            android:text="00:00"
-                            android:textColor="@color/white"
-                            android:padding="5dp"/>
+                            android:padding="5dp"
+                            android:text="00:00"/>
 
 
                     </RelativeLayout>
@@ -100,9 +95,9 @@
                             android:id="@+id/detailsLeapTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
                             android:text="01-JAN-1970, 12:00"
-                            android:textColor="@color/white"/>
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentStart="true" />
 
 
                     </RelativeLayout>
@@ -115,62 +110,60 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/leapersCard"
-                android:layout_below="@id/leapFormatCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_below="@id/leapFormatCard"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:weightSum="2"
                     android:orientation="vertical"
                     android:paddingBottom="20dp"
-                    android:paddingTop="20dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/grey">
+                    android:paddingTop="20dp"
+                    android:weightSum="2">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/detailsLeaperOneImage"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
                             android:src="@drawable/profile_picture"
                             app:civ_border_color="#EEE"
-                            app:civ_border_width="2dp"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true" />
+                            app:civ_border_width="2dp" />
 
                         <TextView
                             android:id="@+id/detailsLeaperOne"
-                            android:layout_toRightOf="@id/detailsLeaperOneImage"
-                            android:layout_marginStart="15dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
+                            android:layout_marginStart="15dp"
+                            android:layout_toRightOf="@id/detailsLeaperOneImage"
                             android:text="Leaper One"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/detailsLeaperOneScore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:text="5"
-                            android:textColor="@color/white"
                             android:layout_alignBaseline="@+id/detailsLeaperOne"
                             android:layout_alignBottom="@+id/detailsLeaperOne"
-                            android:layout_alignParentEnd="true" />
-
+                            android:layout_alignParentEnd="true"
+                            android:text="5"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
 
                     </RelativeLayout>
@@ -199,9 +192,9 @@
                             android:layout_marginStart="15dp"
                             android:layout_toRightOf="@id/detailsLeaperTwoImage"
                             android:text="Leaper Two"
+                            android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/detailsLeaperTwoScore"
@@ -211,7 +204,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="5dp"
                             android:text="5"
-                            android:textColor="@color/white"
+                            android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -226,10 +219,10 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/detailsCard"
-                android:layout_below="@id/leapersCard"
-                android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_below="@id/leapersCard"
+                android:layout_margin="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -248,12 +241,12 @@
                             style="@style/tabsStyle"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
-                            android:background="@color/grey"
+                            android:background="@color/colorPrimary"
+                            app:layout_scrollFlags="scroll|enterAlways"
                             app:tabGravity="fill"
                             app:tabIndicatorColor="@color/white"
                             app:tabMode="fixed"
-                            app:tabTextColor="@color/white"
-                            app:layout_scrollFlags="scroll|enterAlways" />
+                            app:tabTextColor="@color/white" />
 
 
                     </android.support.design.widget.AppBarLayout>
@@ -261,7 +254,7 @@
                     <android.support.v4.view.ViewPager
                         android:id="@+id/detailsMatchContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="match_parent"
                         android:layout_below="@+id/detailsTabSection"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         app:layout_scrollFlags="scroll|enterAlways" />
@@ -270,20 +263,13 @@
                 </RelativeLayout>
 
 
-
             </android.support.v7.widget.CardView>
 
 
         </RelativeLayout>
 
 
-
-
     </ScrollView>
-
-
-
-
 
 
 </LinearLayout>

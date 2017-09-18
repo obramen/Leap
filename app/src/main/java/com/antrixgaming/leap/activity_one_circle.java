@@ -140,15 +140,15 @@ public class activity_one_circle extends AppCompatActivity {
                 String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .push().getKey();
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                        .child(key).setValue(new circleMessage(input.getText().toString(), circleID,
+                        .child(key).setValue(new circleMessage(input.getText().toString().trim(), circleID,
                                 myPhoneNumber, myUid, "0"));
                 FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
-                        .child("lastgroupmessage").setValue(new circleMessage(input.getText().toString(), circleID,
+                        .child("lastgroupmessage").setValue(new circleMessage(input.getText().toString().trim(), circleID,
                                 myPhoneNumber, myUid, "0"));
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .child(key).child("members").setValue(memberList);
                 FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
-                        .setValue(new circleMessage(input.getText().toString(), circleID,
+                        .setValue(new circleMessage(input.getText().toString().trim(), circleID,
                         myPhoneNumber, myUid, "0"));
 
 
@@ -187,21 +187,26 @@ public class activity_one_circle extends AppCompatActivity {
                         RelativeLayout groupTxtBracketBottom = (RelativeLayout) v.findViewById(R.id.groupTextBracketBottom);
 
 
-                        String messageType = model.getmessageType();
 
-                        switch(messageType){
-                            case "0":
-                                groupNotificationMessage.setVisibility(v.GONE);
-                                groupTxtBracketTop.setVisibility(v.VISIBLE);
-                                groupTxtBracketBottom.setVisibility(v.VISIBLE);
-                                messageText.setText(model.getMessageText());
-                                break;
-                            case "1":
-                                groupNotificationMessage.setVisibility(v.VISIBLE);
-                                groupTxtBracketTop.setVisibility(v.GONE);
-                                groupTxtBracketBottom.setVisibility(v.GONE);
-                                groupNotificationMessage.setText(model.getMessageText());
-                                break;
+                        if (model.getmessageType() == null){
+
+                        } else {
+                            String messageType = model.getmessageType();
+                            switch (messageType) {
+                                case "0":
+                                    groupNotificationMessage.setVisibility(v.GONE);
+                                    groupTxtBracketTop.setVisibility(v.VISIBLE);
+                                    groupTxtBracketBottom.setVisibility(v.VISIBLE);
+                                    messageText.setText(model.getMessageText());
+                                    break;
+                                case "1":
+                                    groupNotificationMessage.setVisibility(v.VISIBLE);
+                                    groupTxtBracketTop.setVisibility(v.GONE);
+                                    groupTxtBracketBottom.setVisibility(v.GONE);
+                                    groupNotificationMessage.setText(model.getMessageText());
+                                    break;
+                            }
+
                         }
 
                         // Set their text

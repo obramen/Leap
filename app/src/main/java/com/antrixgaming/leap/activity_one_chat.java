@@ -22,9 +22,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class activity_one_chat extends AppCompatActivity {
 
@@ -53,8 +55,6 @@ public class activity_one_chat extends AppCompatActivity {
         oneCircleFirstUserPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         oneCircleFirstUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        //TODO change +233242100903 to oneCircleSecondUserPhoneNumber
-        //TODO put error check here
         // One Circle second user details ***phone number and UID***
         Bundle bundle = getIntent().getExtras();
         oneCircleSecondUserPhoneNumber = bundle.getString("oneCircleSecondUser"); //phone number
@@ -77,7 +77,7 @@ public class activity_one_chat extends AppCompatActivity {
         } else if (oneCircleFirstUserPhoneNumber.compareTo(oneCircleSecondUserPhoneNumber) > 0) {
             numberA = oneCircleSecondUserPhoneNumber;
             numberB = oneCircleFirstUserPhoneNumber;
-        } else if (oneCircleFirstUserUid.compareTo(oneCircleSecondUserPhoneNumber) == 0) {
+        } else if (Objects.equals(oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber)) {
             numberA = oneCircleFirstUserPhoneNumber;
             numberB = oneCircleFirstUserPhoneNumber;
         }
@@ -143,6 +143,7 @@ public class activity_one_chat extends AppCompatActivity {
         ////////////////////////////////////////////////////////////////////////
         /////////////////////////// NEW MESSAGE START //////////////////////////
 
+
         //Send key functions start here
         FloatingActionButton sendFab =
                 (FloatingActionButton) findViewById(R.id.send_chat_fab);
@@ -165,7 +166,7 @@ public class activity_one_chat extends AppCompatActivity {
                         .push().getKey();
                 //next update the message using the key stored
                 FirebaseDatabase.getInstance().getReference().child("onecirclemessages").child(oneCircleUid).child(key)
-                        .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
+                        .setValue(new ChatMessage(input.getText().toString().trim(), oneCircleUid,
                                 oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "0"));
                 //get the just sent messageid and add to one circle with UID of sender attached
                 //FirebaseDatabase.getInstance().getReference().child("onecircles").child(oneCircleUid).child("onecirclemessages").child(key).setValue(oneCircleFirstUserUid);
@@ -176,7 +177,7 @@ public class activity_one_chat extends AppCompatActivity {
                 /////////////////////// THE PHONE NUMBER FIELD IS SET TO THE RECEIVER'S PHONE
                 /// /////////////////// NUMBER SO AS TO SHOW IN FIRST USER'S CHAT LIST AS WHO IT WAS SENT TO
                 FirebaseDatabase.getInstance().getReference().child("userchatlist").child(oneCircleFirstUserUid).child(oneCircleUid)
-                        .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
+                        .setValue(new ChatMessage(input.getText().toString().trim(), oneCircleUid,
                                 oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "0"));
                 //// tell the data where to be loaded with sender name or not. this affects how it appears in chat list
                 //dbRef.child("userchatlist").child(oneCircleFirstUserUid).child(oneCircleUid).child("loadname")
@@ -189,7 +190,7 @@ public class activity_one_chat extends AppCompatActivity {
                 //save into second user's chat list ----- this uses the "chatlist" table to populate list of chats
                 /////////////////////// NOTE THIS WILL SHOW IN DATABASE AS SENDER'S NUMBER
                 FirebaseDatabase.getInstance().getReference().child("userchatlist").child(oneCircleSecondUserUid).child(oneCircleUid)
-                        .setValue(new ChatMessage(input.getText().toString(), oneCircleUid,
+                        .setValue(new ChatMessage(input.getText().toString().trim(), oneCircleUid,
                                 oneCircleFirstUserPhoneNumber, oneCircleSecondUserPhoneNumber, oneCircleFirstUserUid, "1"));
                 //update with sender number / sender name to user chatList location
                 //dbRef.child("userchatlist").child(oneCircleSecondUserUid).child(oneCircleUid).child("loadname")
@@ -212,8 +213,6 @@ public class activity_one_chat extends AppCompatActivity {
         /////////////////////////// READ DATA START /////////////////////
 
 
-        //TODO filter messages for only those involved for the one chat screen - DONE
-        //TODO sort messages with time
         //TODO optimize sorting to 200 messages for fast listing
 
         // TODO PUT CATCH EXCEPTION HERE FOR ERROR HANDLING
@@ -247,6 +246,60 @@ public class activity_one_chat extends AppCompatActivity {
             };
 
             listOfMessages.setAdapter(adapter);
+
+
+
+
+
+        DatabaseReference secondLeaperOnlineStatus = dbRef.child("connections").child(oneCircleSecondUserPhoneNumber);
+
+        secondLeaperOnlineStatus.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("statusPermission").getValue() == null){
+                    //if unable to retrieve the value, do nothing
+                }
+                else {
+                    String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
+                    switch(statusPermission){
+
+                        case "0":  // 0 - false // don't allow last seen
+                            break;
+                        case "1":  // 1 - true  // allow last seen
+                            String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
+
+                            if (currentStatus == "true"){
+                                getSupportActionBar().setSubtitle("Online");
+                            } else{
+
+                                if ((DateFormat.format("dd-MM-yyyy", Long.parseLong(currentStatus))  == (DateFormat.format("dd-MM-yyyy", new Date().getTime())))){
+                                    getSupportActionBar().setSubtitle("Today, " + DateFormat.format("HH:mm", Long.parseLong(currentStatus)));
+
+                                } else {
+
+                                    getSupportActionBar().setSubtitle(DateFormat.format("dd-MMM-yyyy, HH:mm", Long.parseLong(currentStatus)));
+
+                                }
+
+
+
+                            }
+                            break;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
         }
 
 
@@ -257,84 +310,89 @@ public class activity_one_chat extends AppCompatActivity {
             /////////////////////////// READ DATA END ///////////////////////
 
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_one_chat, menu);
+        @Override
+        public boolean onCreateOptionsMenu(final Menu menu) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_one_chat, menu);
 
-        ////////////////////////////////// SEARCH BUTTON START /////////////////////////////
-        MenuItem searchItem = menu.findItem(R.id.action_one_chat_search);
-        SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
-
-
-        // Define the listener
-        MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Do something when action item collapses
-
-                return true;  // Return true to collapse action view
-            }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                // Do something when expanded
-
-                return true;  // Return true to expand action view
-            }
-        };
-
-        // Get the MenuItem for the action item
-        //MenuItem actionMenuItem = menu.findItem(R.id.action_contacts_search);
-
-        // Assign the listener to that action item
-        //MenuItemCompat.setOnActionExpandListener(actionMenuItem, expandListener);
-        ////////////////////////////////// SEARCH BUTTON END /////////////////////////////
+            ////////////////////////////////// SEARCH BUTTON START /////////////////////////////
+            MenuItem searchItem = menu.findItem(R.id.action_one_chat_search);
+            SearchView searchView =
+                    (SearchView) MenuItemCompat.getActionView(searchItem);
 
 
-        ////////////////////////////////// SHARE BUTTON START /////////////////////////////
-        //MenuItem shareItem = menu.findItem(R.id.action_one_chat_share);
-        //ShareActionProvider myShareActionProvider =
-          //      (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-        //Intent myShareIntent = new Intent(Intent.ACTION_SEND);
-        //myShareIntent.setType("text/*");
-        //myShareIntent.putExtra(Intent.EXTRA_STREAM, "Text");
+            // Define the listener
+            MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    // Do something when action item collapses
 
-        //myShareActionProvider.setShareIntent(myShareIntent);
+                    return true;  // Return true to collapse action view
+                }
 
-        // Image has changed! Update the intent:
-        //myShareIntent.putExtra(Intent.EXTRA_STREAM, "My new Text");
-        //myShareActionProvider.setShareIntent(myShareIntent);
-        ////////////////////////////////// SHARE BUTTON END /////////////////////////////
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    // Do something when expanded
 
-        return super.onCreateOptionsMenu(menu);
-    }
+                    return true;  // Return true to expand action view
+                }
+            };
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+            // Get the MenuItem for the action item
+            //MenuItem actionMenuItem = menu.findItem(R.id.action_contacts_search);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_one_chat_search) {
-            return true;
-        }
-        else if (id == R.id.action_one_chat_leap_history) {
-            return true;
+            // Assign the listener to that action item
+            //MenuItemCompat.setOnActionExpandListener(actionMenuItem, expandListener);
+            ////////////////////////////////// SEARCH BUTTON END /////////////////////////////
+
+
+            ////////////////////////////////// SHARE BUTTON START /////////////////////////////
+            //MenuItem shareItem = menu.findItem(R.id.action_one_chat_share);
+            //ShareActionProvider myShareActionProvider =
+              //      (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+            //Intent myShareIntent = new Intent(Intent.ACTION_SEND);
+            //myShareIntent.setType("text/*");
+            //myShareIntent.putExtra(Intent.EXTRA_STREAM, "Text");
+
+            //myShareActionProvider.setShareIntent(myShareIntent);
+
+            // Image has changed! Update the intent:
+            //myShareIntent.putExtra(Intent.EXTRA_STREAM, "My new Text");
+            //myShareActionProvider.setShareIntent(myShareIntent);
+            ////////////////////////////////// SHARE BUTTON END /////////////////////////////
+
+            return super.onCreateOptionsMenu(menu);
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
 
-    }
+            //noinspection SimplifiableIfStatement
+            if (id == R.id.action_one_chat_search) {
+                return true;
+            }
+            else if (id == R.id.action_one_chat_leap_history) {
+                return true;
+            }
 
-    @Override
-    public boolean onSupportNavigateUp(){
-        finish();
-        return true;
-    }
+            return super.onOptionsItemSelected(item);
+
+        }
+
+        @Override
+        public boolean onSupportNavigateUp(){
+            finish();
+            return true;
+        }
+
+
+
+
+
 
 
 }

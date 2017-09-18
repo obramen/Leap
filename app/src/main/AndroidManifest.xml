@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -44,17 +47,25 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".leapDetailsActivity"
-            android:label=""></activity>
+            android:label="Leap details">
+
+        </activity>
         <activity
             android:name=".selectLeaperContact"
-            android:label="Select leaper"></activity>
+            android:label="Select leaper">
+
+        </activity>
 
         <service
             android:name=".LeapServices.LeapService"
-            android:exported="false"></service>
+            android:exported="false">
+
+        </service>
         <service
             android:name=".LeapServices.ContactService"
-            android:exported="false"></service>
+            android:exported="false">
+
+        </service>
 
         <activity android:name=".receivedNotifications"
             android:label="Notifications">

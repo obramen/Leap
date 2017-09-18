@@ -1,7 +1,10 @@
 package com.antrixgaming.leap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -30,11 +33,6 @@ public class splashScreen extends Activity {
 
 
 
-
-
-
-
-
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable(){
@@ -55,23 +53,8 @@ public class splashScreen extends Activity {
                     splashScreen.this.startActivity(openRegisterLoginIntent);
                     splashScreen.this.finish();
 
-
-
-
-                    //Intent CCC = new Intent(splashScreen.this, selectLeaperContact.class);
-                    //startActivity(CCC);
-
-                    //Intent CCC1 = new Intent(splashScreen.this, leapDetailsActivity.class);
-                    //startActivity(CCC1);
-
-
-                    //finish();
-
-
-
-
-
                 } else {
+
 
                     //if there's a user, check if his token is valid
 
@@ -126,6 +109,8 @@ public class splashScreen extends Activity {
 
         }, SPLASH_DISPLAY_LENGTH);
     }
+
+
 }
 
 

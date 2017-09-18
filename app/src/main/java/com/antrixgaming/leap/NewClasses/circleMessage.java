@@ -14,15 +14,17 @@ public class circleMessage {
     private String phoneNumber;
     private String uid;
     private String circleid;
+    private String messageType;
 
 
 
-    public circleMessage(String messageText, String circleid, String phoneNumber, String uid ) {
+    public circleMessage(String messageText, String circleid, String phoneNumber, String uid, String messageType) {
         this.uid = uid;
         this.messageText = messageText;
         //this.messageUser = FirebaseDatabase.getInstance().getReference().child("uid").child(uid).child("name").toString();
         this.circleid = circleid;
         this.phoneNumber = phoneNumber;
+        this.messageType = messageType;
 
         // Initialize to current time
         messageTime = new Date().getTime();
@@ -67,6 +69,10 @@ public class circleMessage {
     public String getCircleid(){return circleid;}
 
     public void setCircleid(String circleid){this.circleid = circleid;}
+
+    public String getmessageType(){return messageType;}
+
+    public void setmessageType(String messageType){this.messageType = messageType;}
 
 
 }

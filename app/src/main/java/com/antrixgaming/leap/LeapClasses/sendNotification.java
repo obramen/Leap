@@ -11,17 +11,19 @@ public class sendNotification {
     private String leaperInvited;
     private String inviteMessage;
     public String inviteType;
+    public String notificationStatus;
     private long inviteTime;
 
 
 
-    public sendNotification(String notificationID, String inviteType, String circleID, String inviteBy, String leaperInvited, String inviteMessage) {
+    public sendNotification(String notificationID, String inviteType, String circleID, String inviteBy, String leaperInvited, String inviteMessage, String notificationStatus) {
         this.notificationID = notificationID;
         this.circleID = circleID;
         this.inviteBy = inviteBy;
         this.leaperInvited = leaperInvited;
         this.inviteMessage = inviteMessage;
         this.inviteType = inviteType;
+        this.notificationStatus = notificationStatus;
 
         // Initialize to current time
         inviteTime = new Date().getTime();
@@ -65,6 +67,9 @@ public class sendNotification {
 
     public Long getinviteTime(){return inviteTime;}
     public void setinviteTime(Long inviteTime){this.inviteTime = inviteTime;}
+
+    public String getnotificationStatus(){return notificationStatus;}
+    public void setnotificationStatus(String notificationStatus){this.notificationStatus = notificationStatus;}
 
 
 }

@@ -4,6 +4,7 @@ package com.antrixgaming.leap.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -91,12 +92,11 @@ public class circlesFragment extends Fragment {
                                 // Lastly add the admin status
                                 FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
-                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
                                 FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
                                         .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
-                                                "Leap Bot", "LEAPBOT"));
-                                Toast.makeText(getActivity(), "Circle added", Toast.LENGTH_SHORT).show();
+                                                "Leap Bot", "LEAPBOT", "1"));
+                                Snackbar.make(getView(), "New circle added", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
 
 
                             }

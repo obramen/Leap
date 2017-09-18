@@ -155,15 +155,18 @@ public class selectLeaperContact extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                // 0 - notification status
+                // 1 - type of notification
+
                 String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedContact)
                         .push().getKey();
                 FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedContact)
                         .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedContact,
-                        "1"));
+                        "1", "0"));
 
                 FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(myPhoneNumber)
                         .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedContact,
-                        "1"));
+                        "1", "0"));
 
                 Toast.makeText(selectLeaperContact.this, "Invitation sent", Toast.LENGTH_SHORT).show();
 

@@ -81,6 +81,17 @@
                 android:layout_marginStart="10dp"
                 android:textSize="10sp"
                 android:layout_toRightOf="@id/notificationLeapInButton"/>
+
+            <TextView
+                android:id="@+id/notificationConfirmText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/notificationLeapOutButton"
+                android:text="Accepted"
+                android:textStyle="italic"
+                android:textColor="@color/grey"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
         </RelativeLayout>
 
 

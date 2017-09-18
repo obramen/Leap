@@ -304,7 +304,7 @@ public class Leap extends AppCompatActivity
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
                             FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
                                     .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
-                                            "Leap Bot", "LEAPBOT"));
+                                            "Leap Bot", "LEAPBOT", "0"));
                             Toast.makeText(Leap.this, "Circle added", Toast.LENGTH_SHORT).show();
 
 

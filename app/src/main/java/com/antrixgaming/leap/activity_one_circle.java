@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -12,7 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.antrixgaming.leap.NewClasses.circleMessage;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -46,7 +49,8 @@ public class activity_one_circle extends AppCompatActivity {
 
 
         // get the created date and user who created the group
-        ValueEventListener listener = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).addValueEventListener(new ValueEventListener() {
+        ValueEventListener listener = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String groupCreatedBy = dataSnapshot.child("createdBy").getValue().toString();
@@ -137,15 +141,15 @@ public class activity_one_circle extends AppCompatActivity {
                         .push().getKey();
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .child(key).setValue(new circleMessage(input.getText().toString(), circleID,
-                                myPhoneNumber, myUid));
+                                myPhoneNumber, myUid, "0"));
                 FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
                         .child("lastgroupmessage").setValue(new circleMessage(input.getText().toString(), circleID,
-                                myPhoneNumber, myUid));
+                                myPhoneNumber, myUid, "0"));
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .child(key).child("members").setValue(memberList);
                 FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
                         .setValue(new circleMessage(input.getText().toString(), circleID,
-                        myPhoneNumber, myUid));
+                        myPhoneNumber, myUid, "0"));
 
 
                 // Clear the input
@@ -178,9 +182,29 @@ public class activity_one_circle extends AppCompatActivity {
                         //TextView messageUser = (TextView)v.findViewById(R.id.group_message_user);
                         TextView phoneNumber = (TextView) v.findViewById(R.id.group_phoneNumber);
                         TextView messageTime = (TextView) v.findViewById(R.id.group_message_time);
+                        TextView groupNotificationMessage = (TextView) v.findViewById(R.id.groupNotificationMessage);
+                        LinearLayout groupTxtBracketTop = (LinearLayout) v.findViewById(R.id.groupTextBracketTop);
+                        RelativeLayout groupTxtBracketBottom = (RelativeLayout) v.findViewById(R.id.groupTextBracketBottom);
+
+
+                        String messageType = model.getmessageType();
+
+                        switch(messageType){
+                            case "0":
+                                groupNotificationMessage.setVisibility(v.GONE);
+                                groupTxtBracketTop.setVisibility(v.VISIBLE);
+                                groupTxtBracketBottom.setVisibility(v.VISIBLE);
+                                messageText.setText(model.getMessageText());
+                                break;
+                            case "1":
+                                groupNotificationMessage.setVisibility(v.VISIBLE);
+                                groupTxtBracketTop.setVisibility(v.GONE);
+                                groupTxtBracketBottom.setVisibility(v.GONE);
+                                groupNotificationMessage.setText(model.getMessageText());
+                                break;
+                        }
 
                         // Set their text
-                        messageText.setText(model.getMessageText());
                         phoneNumber.setText(model.getPhoneNumber());
                         //messageUser.setText(model.getMessageUser());
 

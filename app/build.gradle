@@ -41,8 +41,18 @@ dependencies {
 
 
 
+
+
+
+
+
+
+
+
     compile 'com.google.firebase:firebase-auth:11.0.4'
     compile 'com.google.firebase:firebase-database:11.0.4'
+    compile 'com.google.firebase:firebase-core:11.0.4'
+    compile 'com.firebaseui:firebase-ui-storage:0.6.0'
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.0.0-alpha1'
@@ -57,7 +67,12 @@ dependencies {
     compile 'com.terrakok.phonematter:phonematter:1.0@aar'
     compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     compile 'com.github.badoualy:datepicker-timeline:c6dcd05737'
+    compile 'com.github.StevenDXC:DxLoadingButton:1.5'
+    compile 'com.dewarder:holdingbutton:0.0.9'
+    compile 'com.gordonwong:material-sheet-fab:1.2.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
 }
 
 

@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -37,39 +37,37 @@
         <activity
             android:name=".newLeap"
             android:label="@string/title_activity_new_leap"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activity_one_chat" />
         <activity android:name=".phoneContactList" />
-        <activity android:name=".activity_one_circle" />
+        <activity
+            android:name=".activity_one_circle"
+            android:label="@string/leapers_circle"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".groupInfoActivity"
             android:label="@string/title_activity_group_info"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".leapDetailsActivity"
-            android:label="Leap details">
-
-        </activity>
+            android:label="Leap details"></activity>
         <activity
             android:name=".selectLeaperContact"
-            android:label="Select leaper">
-
-        </activity>
+            android:label="Select leaper"></activity>
 
         <service
             android:name=".LeapServices.LeapService"
-            android:exported="false">
-
-        </service>
+            android:exported="false"></service>
         <service
             android:name=".LeapServices.ContactService"
-            android:exported="false">
+            android:exported="false"></service>
 
-        </service>
-
-        <activity android:name=".receivedNotifications"
-            android:label="Notifications">
-        </activity>
+        <activity
+            android:name=".receivedNotifications"
+            android:label="Notifications"></activity>
+        <activity android:name=".BaseActivity"></activity>
+        <activity android:name=".leaperProfileActivity"></activity>
     </application>
 
 </manifest>

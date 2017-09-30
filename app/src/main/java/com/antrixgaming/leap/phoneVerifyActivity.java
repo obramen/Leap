@@ -154,6 +154,7 @@ public class phoneVerifyActivity extends AppCompatActivity {
 
                     // Save verification ID and resending token so we can use them later
                     String mVerificationId = verificationId;
+                    verificationCode.setText("");
                     verificationCode.setHint("- - - - - -");
 
 
@@ -206,6 +207,8 @@ public class phoneVerifyActivity extends AppCompatActivity {
                             TimeUnit.SECONDS,   // Unit of timeout
                             phoneVerifyActivity.this,  // Activity (for callback binding)
                             mCallbacks);        // OnVerificationStateChangedCallbacks
+
+
 
 
                 }

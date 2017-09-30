@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <item
+        android:id="@+id/action_one_group_chat_memberlist"
+        android:icon="@drawable/ic_action_leapers"
+        android:title="Leapers"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="never"/>
+
+    <item
+        android:id="@+id/action_one_group_chat_Group_info"
+        android:icon="@drawable/ic_action_leapers"
+        android:title="Group info"
+        app:showAsAction="never"
+        app:actionViewClass="never"/>
+
+        <item
+        android:id="@+id/action_group_chat_leap_history"
+        android:orderInCategory="100"
+        android:title="Leap history"
+        app:showAsAction="never" />
+
+
+
+
+
+
+
+</menu>

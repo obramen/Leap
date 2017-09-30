@@ -8,11 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.antrixgaming.leap.LeapClasses.sendNotification;
-import com.antrixgaming.leap.NewClasses.circleMessage;
-import com.antrixgaming.leap.NewClasses.createGroupCircle;
+import com.antrixgaming.leap.Models.CircleMember;
+import com.antrixgaming.leap.Models.sendNotification;
+import com.antrixgaming.leap.Models.circleMessage;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,15 +20,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class receivedNotifications extends AppCompatActivity {
+public class receivedNotifications extends BaseActivity {
 
     String groupName;
+    String myPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_received_notifications);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
 
 
@@ -123,8 +125,8 @@ public class receivedNotifications extends AppCompatActivity {
                         // using the new key update members list under same table with the creator of the group setting status to true
                         /// true = admin
                         /// false = not admin
-                        FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).child("members")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("false");
+                        FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("currentmembers").child(myPhoneNumber)
+                                .setValue(new CircleMember(myPhoneNumber,"false","1"));
                         // update the usergroupcirclelist (a list containing all groups a leaper is part of
 
 
@@ -141,17 +143,20 @@ public class receivedNotifications extends AppCompatActivity {
 
 
                         //push new messages using Circle ID stored
+                        /// 1 - shows it's a notification message // 0 - normal message
+                        String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                                .push().getKey();
                         FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                                .child(circleID).setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
-                                circleID, "", "", "1"));
+                                .child(key).push().setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "- joined circle",
+                                circleID, "", "", "1", "false"));
                         FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
                                 .child("lastgroupmessage").setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
-                                circleID, "", "", "1"));
+                                circleID, "", "", "1", "true"));
                         //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                                 //.child(circleID).child("members").setValue(memberList);
                         FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
                                 .setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle", circleID,
-                                        "", "", ""));
+                                        "", "", "1", "true"));
 
 
 

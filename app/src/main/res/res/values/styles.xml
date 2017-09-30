@@ -1,0 +1,117 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textSize">12dp</item>
+        <item name="colorPrimary">@color/appleRedLight</item>
+        <item name="colorPrimaryDark">@color/appleRed</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NightRed">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/appleRed</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="splashScreenTheme">
+        <item name="android:windowBackground">@drawable/ic_ag_logo</item>
+    </style>
+
+    <style name="lightButton">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/leap_button_hollow</item>
+        <item name="android:textColor">@color/lightBlue</item>
+    </style>
+
+    <style name="whiteButton">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/white_button</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <style name="greyButton">
+            <item name="android:layout_width">fill_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:background">@drawable/grey_button</item>
+            <item name="android:textColor">@color/darkgrey</item>
+        </style>
+
+    <style name="darkButton">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/leap_button</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
+    <style name="redButtonLight">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/redbuttonlight</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
+    <style name="redButtonDark">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/redbutton</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="squareButton">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/square_buttons</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="squareButtonHollow">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/square_buttons_hollow</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="tabsStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--item RadioButton or CheckBox color-->
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <!--item text color-->
+        <item name="textColorAlertDialogListItem">@android:color/white</item>
+        <!--buttons color-->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--title and message color-->
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <!--dialog background-->
+        <item name="android:windowBackground">@drawable/background_dialogue</item>
+    </style>
+
+</resources>

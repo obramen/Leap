@@ -1,48 +1,93 @@
 package com.antrixgaming.leap;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
-import com.antrixgaming.leap.NewClasses.circleMessage;
+
+import com.antrixgaming.leap.Fragments.CircleFragments.circleLeaperListFragment;
+import com.antrixgaming.leap.Fragments.CircleFragments.circleLiveLeapsFragment;
+import com.antrixgaming.leap.Fragments.CircleFragments.circleOpenLeapsFragment;
+import com.antrixgaming.leap.Models.circleMessage;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Objects;
 
-public class activity_one_circle extends AppCompatActivity {
+public class activity_one_circle extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     String groupID;
+    DrawerLayout drawer;
+    TabLayout tabLayout;
+
+    private int[] tabIcons = {
+            R.drawable.ic_action_leapers,
+            R.drawable.ic_circle,
+            R.drawable.ic_action_live};
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_circle);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.circleListToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //useUpButton(true, toolbar);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
+
+
+
+
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_leapers);
 
         Bundle bundle = getIntent().getExtras();
         //final String groupName = bundle.getString("groupName");
         final String circleID = bundle.getString("circleID");
         groupID = circleID;
+
+        editor.putString("currentCircleID", groupID);
+        editor.apply();
+
 
         final String myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -72,6 +117,123 @@ public class activity_one_circle extends AppCompatActivity {
 
 
 
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.circle_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        View header = navigationView.getHeaderView(0);
+
+        Button circleLeapListNewLeapButton = (Button) header.findViewById(R.id.circleLeapListNewLeapButton);
+        final Switch leapStatusSwitch = (Switch) header.findViewById(R.id.leapStatusSwitch);
+
+        leapStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
+                            .child("currentmembers").child(myPhoneNumber).child("leapStatus").setValue("1");
+                }else{
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
+                            .child("currentmembers").child(myPhoneNumber).child("leapStatus").setValue("0");
+                }
+            }
+        });
+
+
+
+        //Setting Drawers
+        drawer = (DrawerLayout) findViewById(R.id.circle_leaper_list_drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+                FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
+                        .child("currentmembers").child(myPhoneNumber).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                       int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+                        if (mleapStatusSwitch == 1)
+                            leapStatusSwitch.setChecked(true);
+                        else
+                            leapStatusSwitch.setChecked(false);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+
+
+
+
+        circleLeapListNewLeapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent startNewLeapIntent = new Intent(activity_one_circle.this, newLeap.class);
+                startNewLeapIntent.putExtra("leapedPhoneNumber", myPhoneNumber);
+                startNewLeapIntent.putExtra("SourceActivity", "2");  // to be used to identify that the extras came from here
+                startNewLeapIntent.putExtra("circleID", circleID);
+                startActivity(startNewLeapIntent);
+
+            }
+        });
+
+
+
+
+
+
+        //TabLayout tabLayout;
+        SectionsPagerAdapter mSectionsPagerAdapter;
+        ViewPager mViewPager;
+
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        mViewPager = (ViewPager) findViewById(R.id.circleLeaperListContainer);
+
+
+
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        //Tab layout with tabs
+        tabLayout = (TabLayout) findViewById(R.id.circleLeaperListTabs);
+        tabLayout.setupWithViewPager(mViewPager);
+        setupTabIcons();
+
+
+
+        //ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name)
 
 
 
@@ -141,15 +303,15 @@ public class activity_one_circle extends AppCompatActivity {
                         .push().getKey();
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .child(key).setValue(new circleMessage(input.getText().toString().trim(), circleID,
-                                myPhoneNumber, myUid, "0"));
+                                myPhoneNumber, myUid, "0", "false"));
                 FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
                         .child("lastgroupmessage").setValue(new circleMessage(input.getText().toString().trim(), circleID,
-                                myPhoneNumber, myUid, "0"));
+                                myPhoneNumber, myUid, "0", "true"));
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                         .child(key).child("members").setValue(memberList);
                 FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
                         .setValue(new circleMessage(input.getText().toString().trim(), circleID,
-                        myPhoneNumber, myUid, "0"));
+                        myPhoneNumber, myUid, "0", "true"));
 
 
                 // Clear the input
@@ -187,6 +349,14 @@ public class activity_one_circle extends AppCompatActivity {
                         RelativeLayout groupTxtBracketBottom = (RelativeLayout) v.findViewById(R.id.groupTextBracketBottom);
 
 
+
+
+
+                        ///// populate unread message list
+                        /*if(Objects.equals(model.getReadFlag(), "false")){
+                            model.setReadFlag("true");
+
+                        } */
 
                         if (model.getmessageType() == null){
 
@@ -243,8 +413,10 @@ public class activity_one_circle extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_group_chat, menu);
 
         ////////////////////////////////// SEARCH BUTTON START /////////////////////////////
-        MenuItem searchItem = menu.findItem(R.id.action_one_group_chat_memberlist);
-        new DrawerBuilder().withActivity(this).build();
+        //MenuItem leaperListButton = menu.findItem(R.id.action_one_group_chat_memberlist);
+
+
+
 
 
         return super.onCreateOptionsMenu(menu);
@@ -257,11 +429,17 @@ public class activity_one_circle extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_one_group_chat_memberlist) {
 
-            return true;
-        }else if (id == R.id.action_one_group_chat_Group_info) {
+        //noinspection SimplifiableIfStatement
+        if(item != null && id == R.id.action_one_group_chat_memberlist) {
+            if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+                drawer.closeDrawer(Gravity.RIGHT);
+            } else {
+                drawer.openDrawer(Gravity.RIGHT);
+            }
+        }
+
+           else if (id == R.id.action_one_group_chat_Group_info) {
 
             Intent groupInfoIntent = new Intent(this, groupInfoActivity.class);
             groupInfoIntent.putExtra("circleID", groupID);
@@ -276,6 +454,74 @@ public class activity_one_circle extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
+
+
+    class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+
+
+
+        public SectionsPagerAdapter(android.support.v4.app.FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new circleLeaperListFragment();
+                case 1:
+                    return new circleOpenLeapsFragment();
+                case 2:
+                    return new circleLiveLeapsFragment();
+                case 3:
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+            //TextView quantity = new TextView(activity_one_circle.this);
+            //quantity.setTextColor(getResources().getColor(R.color.white));
+            //quantity.setBackground(getResources().getDrawable(R.drawable.redbutton));
+
+            //quantity.setText("5");
+
+            switch (position) {
+                case 0:
+                    return "";
+                case 1:
+                    return "";
+                case 2:
+                    return "";
+                case 3:
+                default:
+                    return null;
+
+            }
+        }
+    }
+
+    private void setupTabIcons() {
+
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+    }
+
+
 
 
 
@@ -286,6 +532,73 @@ public class activity_one_circle extends AppCompatActivity {
         finish();
         return true;
     }
+
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.circle_leaper_list_drawer);
+        if (drawer.isDrawerOpen(GravityCompat.END)) {
+            drawer.closeDrawer(GravityCompat.END);
+        } else{
+            super.onBackPressed();
+
+        }
+
+    }
+
+
+    public void useUpButton(boolean value, Toolbar toolbar) {
+
+        drawer = (DrawerLayout) findViewById(R.id.circle_leaper_list_drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+
+        ActionBar actionBar = getSupportActionBar();
+        if (value) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            toggle.setDrawerIndicatorEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        } else {
+            toggle.setDrawerIndicatorEnabled(true);
+            toggle.setToolbarNavigationClickListener(null);
+        }
+
+    }
+
 
 
 }

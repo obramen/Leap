@@ -8,7 +8,11 @@
     tools:context="com.antrixgaming.leap.groupInfoActivity"
     tools:showIn="@layout/activity_group_info">
 
+
+
+
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -57,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0.5dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/white"
             android:padding="@dimen/text_margin">
             <ImageView
@@ -74,22 +78,43 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0.5dp"
-            android:layout_marginBottom="0.5dp"
-            android:background="@color/white">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-            </ListView>
-        </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:dividerHeight="1dp"
+                android:divider="@color/grey"
+                android:id="@+id/list_of_groupInfoLeapers"
+                android:layout_marginBottom="10dp"
+                android:scrollbarSize="5dp"
+                android:transcriptMode="alwaysScroll"/>
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
 
 
 
     </LinearLayout>
 
+
+
+
+
+
 </android.support.v4.widget.NestedScrollView>
+
+

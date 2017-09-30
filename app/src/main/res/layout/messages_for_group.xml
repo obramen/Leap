@@ -1,6 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:padding="6dp">
+    android:padding="6dp"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    >
 
     <TextView
         android:id="@+id/groupNotificationMessage"
@@ -11,7 +16,7 @@
         android:textSize="12sp"
         android:visibility="gone"
         android:maxWidth="230dp"
-        android:background="@color/colorPrimary"
+        style="@style/redButtonDark"
         android:padding="5dp"
         android:textColor="@color/white"
         />

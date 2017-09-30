@@ -1,0 +1,477 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.antrixgaming.leap.newLeap$PlaceholderFragment"
+    android:background="@color/grey">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/freeLeapTypeCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="40dp"
+                        android:weightSum="5"
+                        android:orientation="horizontal"
+                        android:background="@color/grey">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="0.5dp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:elevation="3dp">
+
+                            <ImageView
+                                android:id="@+id/freeLeapTypeIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_game" />
+
+                        </RelativeLayout>
+
+
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.75"
+                            android:background="@color/white">
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:layout_centerHorizontal="true"
+                                android:text="game"
+                                android:textSize="12sp"
+                                android:layout_marginTop="15dp"
+                                android:visibility="invisible"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/freeLeapGameImage"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_centerInParent="true"
+                                android:layout_centerVertical="true"
+                                android:clickable="true"
+                                android:src="@drawable/games_fifa_17"
+                                app:civ_border_color="@color/grey"
+                                app:civ_border_width="1dp"
+                                android:layout_marginBottom="5dp"/>
+
+                            <TextView
+                                android:id="@+id/freeLeapGameType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/freeLeapGameImage"
+                                android:layout_centerHorizontal="true"
+                                android:text="FIFA 17"
+                                android:textStyle="bold"
+                                android:textSize="12sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.25"
+                            android:background="@color/white">
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:layout_centerHorizontal="true"
+                                android:text="format"
+                                android:textSize="12sp"
+                                android:layout_marginTop="15dp"
+                                android:visibility="invisible"/>
+
+                            <Spinner
+                                android:id="@+id/freeLeapGameFormat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/match_type"
+                                android:layout_marginStart="20dp"
+                                android:textStyle="bold"
+                                android:layout_centerInParent="true"
+                                android:spinnerMode="dropdown" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/freeLeapTypeHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimary">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:text="Game / Format"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+
+                </android.support.v7.widget.CardView>
+
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/freeLeapTimeCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_below="@id/freeLeapTypeCard"
+                    android:layout_marginTop="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="40dp"
+                        android:weightSum="5"
+                        android:orientation="horizontal"
+                        android:background="@color/grey">
+
+
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:elevation="3dp"
+                            android:background="@color/white"
+                            android:layout_marginEnd="0.5dp">
+
+                            <ImageView
+                                android:id="@+id/freeLeapDateIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_date"
+                                android:layout_centerInParent="true"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:background="@color/white">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:weightSum="4"
+                                android:orientation="horizontal">
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1.75"
+                                    android:layout_height="match_parent">
+
+                                    <EditText
+                                        android:id="@+id/freeLeapDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@null"
+                                        android:ems="10"
+                                        android:hint="select day"
+                                        android:textStyle="bold"
+                                        android:inputType="datetime"
+                                        android:textSize="14sp"
+                                        android:focusable="false"
+                                        android:onClick="showDatePickerDialog"
+                                        android:clickable="true"
+                                        android:layout_centerInParent="true"
+                                        android:textAlignment="center"/>
+
+                                </RelativeLayout>
+
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2.25">
+
+                                    <EditText
+                                        android:id="@+id/freeLeapTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:background="@null"
+                                        android:clickable="true"
+                                        android:ems="10"
+                                        android:focusable="false"
+                                        android:hint="select time"
+                                        android:inputType="time"
+                                        android:onClick="showDatePickerDialog"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:textAlignment="center"/>
+
+
+                                </RelativeLayout>
+
+
+                            </LinearLayout>
+
+
+
+
+
+
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/freeLeapTimeHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimary">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:text="Leap time"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/freeLeapOpponent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/freeLeapTimeCard"
+                    android:layout_marginTop="10dp">
+
+                    <RelativeLayout
+                        android:id="@+id/freeLeapOpponentHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimary">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Leapers"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="40dp"
+                        android:orientation="horizontal"
+                        android:weightSum="5"
+                        android:background="@color/grey">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:layout_marginEnd="0.5dp">
+
+                            <ImageView
+                                android:id="@+id/freeLeapLeapersIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_persons"
+                                android:layout_centerInParent="true"/>
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.75"
+                            android:background="@color/white">
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:layout_centerHorizontal="true"
+                                android:text="leaper/circle"
+                                android:textSize="12sp"
+                                android:visibility="invisible"
+                                android:layout_marginTop="15dp"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/freeLeapLeaper1Image"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_centerInParent="true"
+                                android:layout_centerVertical="true"
+                                android:clickable="true"
+                                android:src="@drawable/profile_picture"
+                                app:civ_border_color="@color/grey"
+                                app:civ_border_width="1dp"
+                                android:layout_marginBottom="5dp"/>
+
+                            <TextView
+                                android:id="@+id/leaperOne"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Leaper One"
+                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:layout_below="@+id/freeLeapLeaper1Image"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"
+                            android:background="@color/white">
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_weight="1"
+                                android:text="vs"
+                                android:textAlignment="center"
+                                android:textSize="16sp" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.75"
+                            android:background="@color/white">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:text="leaper/circle"
+                                android:visibility="invisible"
+                                android:layout_marginTop="15dp"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="5dp"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/freeLeapLeaper2Image"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_centerVertical="true"
+                                android:layout_centerInParent="true"
+                                android:clickable="true"
+                                android:src="@drawable/profile_picture"
+                                app:civ_border_color="@color/grey"
+                                app:civ_border_width="1dp"
+                                android:layout_marginBottom="5dp"/>
+
+                            <TextView
+                                android:id="@+id/leaperTwo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Leaper Two"
+                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:layout_below="@id/freeLeapLeaper2Image"
+                                android:layout_centerHorizontal="true"/>
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+
+
+                </android.support.v7.widget.CardView>
+
+
+
+                <Button
+                    android:id="@+id/freeLeapConfirmButton"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Leap"
+                    style="@style/redButtonDark"
+                    android:layout_below="@id/freeLeapOpponent"
+                    android:layout_alignEnd="@id/freeLeapOpponent"
+                    android:layout_marginTop="10dp"
+                    android:elevation="5dp"/>
+
+
+
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+
+
+
+    </ScrollView>
+
+
+
+
+
+</RelativeLayout>

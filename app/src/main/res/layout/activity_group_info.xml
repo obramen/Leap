@@ -11,7 +11,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -24,9 +24,9 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
+                android:id="@+id/groupProfileImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/profilebackground2"/>
+                android:layout_height="300dp" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -40,16 +40,125 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
+
     <include layout="@layout/content_group_info" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_leaper_add"
-        android:elevation="3dp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Your FAB implementation -->
+        <com.antrixgaming.leap.LeapClasses.MenuFAB
+            android:id="@+id/leapDetailsMenuFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:tint="@color/white"
+            android:background="@color/colorPrimary"
+            app:rippleColor="@android:color/black"
+            app:borderWidth="0dp"
+            app:elevation="2dp"
+            android:soundEffectsEnabled="false" />
+
+        <!-- Overlay that dims the screen -->
+        <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+            android:id="@+id/leapDetailsDimOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Circular reveal container for the sheet -->
+        <io.codetail.widget.RevealLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end|bottom"
+            android:orientation="vertical">
+
+            <!-- Sheet that contains your items -->
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/leapDetailsFab_sheet"
+                android:layout_width="200dp"
+                android:layout_height="120dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/leapDetailsLeapInLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="3"
+                    >
+                    <LinearLayout
+                        android:id="@+id/groupInfoNewLeaper"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="1dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="20dp"
+                            android:textColor="@color/white"
+                            android:text="Add new member"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/groupInfoNewNotice"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_marginStart="20dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/white"
+                            android:text="Send new notice"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/white"
+                            android:text="Admin Menu"/>
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+
+
+
+                <!-- TODO: Put your sheet items here -->
+
+            </android.support.v7.widget.CardView>
+
+
+
+        </io.codetail.widget.RevealLinearLayout>
+
+
+    </RelativeLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -137,5 +137,13 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="leapers_circle">Leapers Circle</string>
+    <string name="open_leap">Open Leap</string>
+    <string name="type">Type</string>
+    <string name="format">Format</string>
+    <string name="time">Time</string>
+    <string name="cancel">CANCEL</string>
+    <string name="leaper_two">Leaper Two</string>
+    <string name="leaper_one">Leaper One</string>
 
 </resources>

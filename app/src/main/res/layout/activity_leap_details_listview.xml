@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.antrixgaming.leap.leapDetailsActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey"
-    android:descendantFocusability="blocksDescendants">
-
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -21,12 +19,12 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/leapFormatCard"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -36,7 +34,7 @@
                     <RelativeLayout
                         android:id="@+id/formatLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:paddingBottom="2dp">
@@ -87,7 +85,7 @@
                     <RelativeLayout
                         android:id="@+id/timeLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/formatLayout"
                         android:paddingTop="2dp">
 
@@ -98,6 +96,20 @@
                             android:text="01-JAN-1970, 12:00"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentStart="true" />
+
+                        <TextView
+                            android:id="@+id/circleID"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/detailsLeapTime"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="circle ID"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorPrimaryDark"
+                            />
 
 
                     </RelativeLayout>
@@ -111,14 +123,13 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/leapersCard"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/leapFormatCard"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
@@ -147,8 +158,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="15dp"
-                            android:layout_toRightOf="@id/detailsLeaperOneImage"
-                            android:text="Leaper One"
+                            android:layout_toEndOf="@id/detailsLeaperOneImage"
+                            android:text="@string/leaper_one"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -163,7 +174,8 @@
                             android:text="5"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:layout_marginEnd="10dp"/>
 
 
                     </RelativeLayout>
@@ -190,8 +202,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="15dp"
-                            android:layout_toRightOf="@id/detailsLeaperTwoImage"
-                            android:text="Leaper Two"
+                            android:layout_toEndOf="@id/detailsLeaperTwoImage"
+                            android:text="@string/leaper_two"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -202,7 +214,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginEnd="5dp"
+                            android:layout_marginEnd="10dp"
                             android:text="5"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
@@ -217,59 +229,54 @@
 
             </android.support.v7.widget.CardView>
 
+
+
             <android.support.v7.widget.CardView
                 android:id="@+id/detailsCard"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/leapersCard"
+                android:layout_height="200dp"
                 android:layout_margin="5dp">
 
-                <RelativeLayout
+
+
+
+                <android.support.design.widget.AppBarLayout
+                    android:id="@+id/detailsTabSection"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.AppBarOverlay">
 
 
-                    <android.support.design.widget.AppBarLayout
-                        android:id="@+id/detailsTabSection"
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/detailsMatchTabs"
+                        style="@style/tabsStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/AppTheme.AppBarOverlay">
+                        android:layout_height="35dp"
+                        android:background="@color/colorPrimary"
+                        app:layout_scrollFlags="scroll|enterAlways"
+                        app:tabGravity="fill"
+                        app:tabIndicatorColor="@color/white"
+                        app:tabMode="fixed"
+                        app:tabTextColor="@color/white" />
 
 
-                        <android.support.design.widget.TabLayout
-                            android:id="@+id/detailsMatchTabs"
-                            style="@style/tabsStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:background="@color/colorPrimary"
-                            app:layout_scrollFlags="scroll|enterAlways"
-                            app:tabGravity="fill"
-                            app:tabIndicatorColor="@color/white"
-                            app:tabMode="fixed"
-                            app:tabTextColor="@color/white" />
+                </android.support.design.widget.AppBarLayout>
 
-
-                    </android.support.design.widget.AppBarLayout>
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/detailsMatchContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@+id/detailsTabSection"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                        app:layout_scrollFlags="scroll|enterAlways" />
-
-
-                </RelativeLayout>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/detailsMatchContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
             </android.support.v7.widget.CardView>
 
 
-        </RelativeLayout>
-
+        </LinearLayout>
 
     </ScrollView>
 
 
-</LinearLayout>
+
+</RelativeLayout>

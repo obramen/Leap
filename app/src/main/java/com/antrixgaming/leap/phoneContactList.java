@@ -26,10 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.antrixgaming.leap.LeapServices.LeapService;
-import com.antrixgaming.leap.NewClasses.circleMessage;
-import com.antrixgaming.leap.NewClasses.createGroupCircle;
-import com.antrixgaming.leap.NewClasses.getPhoneContacts;
-import com.antrixgaming.leap.NewClasses.phoneContactsImport;
+import com.antrixgaming.leap.Models.circleMessage;
+import com.antrixgaming.leap.Models.createGroupCircle;
+import com.antrixgaming.leap.Models.getPhoneContacts;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.database.DataSnapshot;
@@ -44,14 +43,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class phoneContactList extends AppCompatActivity {
+public class phoneContactList extends BaseActivity {
 
 
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     //private ArrayList<String> ContactList;
 
-    public DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    public String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public DatabaseReference dbRef;
+    public String UID;
 
 
     public String mContactName;
@@ -128,6 +127,9 @@ public class phoneContactList extends AppCompatActivity {
         setContentView(R.layout.activity_phone_contact_list);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        dbRef = FirebaseDatabase.getInstance().getReference();
+        UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseDatabase.getInstance().getReference().child("uid").child(FirebaseAuth.getInstance()
                 .getCurrentUser().getUid()).child("countrycode").addValueEventListener(new ValueEventListener() {
@@ -221,7 +223,7 @@ public class phoneContactList extends AppCompatActivity {
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
                                 FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
                                         .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
-                                                "Leap Bot", "LEAPBOT", "0"));
+                                                "Leap Bot", "LEAPBOT", "0", "true"));
                                 Toast.makeText(phoneContactList.this, "Circle added", Toast.LENGTH_SHORT).show();
 
 

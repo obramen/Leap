@@ -1,56 +1,134 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:padding="6dp"
-    android:layout_marginEnd="20dp"
-    android:background="@drawable/chat_background_2">
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin">
 
-    <LinearLayout
-        android:id="@+id/textBracketTop"
+    <RelativeLayout
+        android:padding="6dp"
+        android:id="@+id/receivedMessageLayout"
+        android:visibility="gone"
+        android:background="@drawable/shape_incoming_message"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="20dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/textBracketTop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/phoneNumber"
-            android:textStyle="normal|bold"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/message_user"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/phoneNumber"
+                android:textStyle="normal|bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/message_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:gravity="bottom|end"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="bottom|end"
-            android:textSize="12sp" />
+            android:layout_below="@id/textBracketTop"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="14sp" />
 
-
+            <TextView
+                android:id="@+id/message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/message_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:padding="6dp"
+        android:id="@+id/sentMessageLayout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_alignParentEnd="true"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textBracketTop"
-        android:orientation="horizontal">
+        android:background="@drawable/shape_outcoming_message">
 
-        <TextView
-            android:id="@+id/message_text"
+        <LinearLayout
+            android:id="@+id/textBracketTop1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="14sp" />
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/message_time"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/phoneNumber1"
+                android:textStyle="normal|bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/message_user1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:gravity="bottom|end"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+
+
+        <RelativeLayout
+            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/message_text"
-            android:textSize="12sp" />
+            android:layout_below="@id/textBracketTop1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_alignParentEnd="true"
+                android:id="@+id/message_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_alignParentEnd="true"
+                android:id="@+id/message_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/message_text1"
+                android:textSize="12sp" />
+        </RelativeLayout>
     </RelativeLayout>
+
+
 
 
 </RelativeLayout>

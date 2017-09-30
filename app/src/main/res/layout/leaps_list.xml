@@ -7,11 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:descendantFocusability="blocksDescendants">
     
-    <TextView
-        android:id="@+id/leapsLeaperTwoUID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/leapCard"
@@ -28,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/verylightblack">
+            android:background="@color/colorPrimaryDark"
+            >
 
 
             <LinearLayout
@@ -45,33 +42,7 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="7">
-
-                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/gameImage"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:src="@drawable/games_fifa_17"
-                        app:civ_border_color="#EEE"
-                        app:civ_border_width="2dp" />
-
-
-                    <TextView
-                        android:id="@+id/gameType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_toRightOf="@id/gameImage"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="Type"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="12sp" />
+                    android:layout_weight="10">
 
                     <TextView
                         android:id="@+id/gameFormat"
@@ -79,11 +50,11 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="10dp"
-                        android:layout_toRightOf="@id/gameType"
+                        android:layout_alignParentStart="true"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="Format"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="12sp" />
 
                     <TextView
@@ -97,7 +68,21 @@
                         android:maxLines="1"
                         android:text="Time"
                         android:textStyle="bold"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/circleID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_toRightOf="@id/gameTime"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="12sp" />
 
 
@@ -107,48 +92,27 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone" />
 
+                    <TextView
+                        android:id="@+id/countdownTimer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="00:00"
+                        android:layout_marginEnd="10dp"
+                        android:layout_toStartOf="@+id/optionsImage"
+                        android:padding="5dp"/>
+                    <ImageView
+                        android:id="@+id/optionsImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0.2dp"
+                        android:padding="4dp"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/ic_more"
+                        />
+
                 </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:weightSum="4"
-                    android:orientation="horizontal"
-                    android:layout_weight="3">
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:background="@color/verylightblack">
-
-                        <TextView
-                            android:id="@+id/countdownTimer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="00:00"
-                            android:textColor="@color/white"
-                            android:padding="5dp"/>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@color/verylightblack"
-                        android:layout_marginStart="0.2dp">
-
-
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
 
 
 
@@ -164,17 +128,18 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="7">
 
                     <LinearLayout
                         android:id="@+id/leaperOneSection"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentStart="true"
                         android:layout_below="@id/gameDetails"
                         android:orientation="horizontal"
                         android:weightSum="10"
-                        android:paddingTop="10dp"
                         android:background="@color/white">
 
                         <RelativeLayout
@@ -235,13 +200,12 @@
                     <LinearLayout
                         android:id="@+id/leaperTwoSection"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentStart="true"
                         android:layout_below="@id/leaperOneSection"
                         android:layout_marginTop="0.5dp"
                         android:background="@color/white"
                         android:orientation="horizontal"
-                        android:paddingBottom="10dp"
                         android:weightSum="10">
 
                         <RelativeLayout
@@ -302,99 +266,36 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:orientation="horizontal"
-                    android:weightSum="4">
+                    android:layout_weight="3">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/gameType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="Type"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
-                        <RelativeLayout
-                            android:id="@+id/leapInButtonLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="3"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp">
-
-                            <Button
-                                android:id="@+id/leapInButton"
-                                style="@style/redButtonDark"
-                                android:layout_width="60dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentBottom="true"
-                                android:layout_centerHorizontal="true"
-                                android:background="@drawable/redbutton"
-                                android:text="Leap in"
-                                android:textSize="9sp" />
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/gameImage"
+                        android:layout_below="@id/gameType"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/games_fifa_17"
+                        app:civ_border_color="#EEE"
+                        app:civ_border_width="2dp" />
 
 
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="3"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp">
-
-                            <Button
-                                android:id="@+id/recordScoreButton"
-                                style="@style/whiteButton"
-                                android:layout_width="60dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentTop="true"
-                                android:layout_centerHorizontal="true"
-                                android:text="Score"
-                                android:textSize="9sp" />
-
-                        </RelativeLayout>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:weightSum="2"
-                        android:orientation="vertical"
-                        android:background="@color/white">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:paddingTop="5dp"
-                            android:layout_marginStart="0.2dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_more1"
-                            android:background="@color/verylightblack"/>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_marginStart="0.2dp"
-
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:background="@color/verylightblack">
-
-                        </RelativeLayout>
-
-
-                    </LinearLayout>
-
-
-
-
-
-
-                </LinearLayout>
+                </RelativeLayout>
 
 
             </LinearLayout>

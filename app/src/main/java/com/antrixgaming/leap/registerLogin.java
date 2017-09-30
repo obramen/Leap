@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import android.support.annotation.NonNull;
 
+import com.dx.dxloadingbutton.lib.LoadingButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -50,12 +51,17 @@ public class registerLogin extends AppCompatActivity {
     public PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     public ProgressBar spinner;
 
+    LoadingButton btnSignIn;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_login);
 
         getSupportActionBar().hide();
+
+        btnSignIn = (LoadingButton) findViewById(R.id.btnSignIn);
 
 
         //assign progress bar
@@ -93,7 +99,6 @@ public class registerLogin extends AppCompatActivity {
 
 
         //assign Leap button
-        Button btnSignIn = (Button) findViewById(R.id.btnSignIn);
 
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -107,6 +112,8 @@ public class registerLogin extends AppCompatActivity {
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
                 //Log.d(TAG, "onVerificationCompleted:" + credential);
+                btnSignIn.loadingSuccessful();
+
                 Toast.makeText(registerLogin.this, "Verification Successful", Toast.LENGTH_LONG).show();
                 signInWithPhoneAuthCredential(credential);
 
@@ -118,6 +125,9 @@ public class registerLogin extends AppCompatActivity {
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
                 //Log.w(TAG, "onVerificationFailed", e);
+
+                btnSignIn.loadingFailed();
+
 
                 Toast.makeText(registerLogin.this, "Account Problem, Contact Admin", Toast.LENGTH_LONG).show();
 
@@ -149,6 +159,9 @@ public class registerLogin extends AppCompatActivity {
                 // now need to ask the user to enter the code and then construct a credential
                 // by combining the code with a verification ID.
                 //Log.d(TAG, "onCodeSent:" + verificationId);
+
+                btnSignIn.loadingSuccessful();
+
                 Toast.makeText(registerLogin.this, "Sent: Check for verification code", Toast.LENGTH_LONG).show();
 
                 // Save verification ID and resending token so we can use them later
@@ -204,6 +217,8 @@ public class registerLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                btnSignIn.startLoading(); //start loading
+
 
 
 
@@ -218,6 +233,8 @@ public class registerLogin extends AppCompatActivity {
                     //mVerificationField.setError("Cannot be empty.");
                     phoneNumber.setHint("Cannot be empty");
                     phoneNumber.setHintTextColor(getResources().getColor(R.color.cherry));
+                    btnSignIn.cancelLoading();
+                    btnSignIn.cancelLoading();
 
 
                     return;
@@ -225,13 +242,15 @@ public class registerLogin extends AppCompatActivity {
 
 
 
+                btnSignIn.startLoading(); //start loading
+
                 spinner.setVisibility(View.VISIBLE);
 
                 //remove "0" from number if any
                 int firstDigit = Integer.parseInt((phoneNumber.getText().toString()).substring(0, 1));
 
                 if (firstDigit < 1){
-                    phoneNumber.setText(phoneNumber.getText().toString().substring(1));
+                    phoneNumber.setText(phoneNumber.getText().toString().trim().substring(1));
                 }
 
                 //assign phone number to variable CarrierNumberEditText inside CountryCodePicker class.
@@ -281,6 +300,8 @@ public class registerLogin extends AppCompatActivity {
                             openLeapIntent.putExtra("countryCodeStatus", "1");
 
 
+                            btnSignIn.loadingSuccessful();
+
                             registerLogin.this.startActivity(openLeapIntent);
                             finish();
 
@@ -288,6 +309,9 @@ public class registerLogin extends AppCompatActivity {
 
 
                         } else {
+
+                            btnSignIn.loadingFailed();
+
                             // Sign in failed, display a message and update the UI
                             //Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(registerLogin.this, "Unexpected error, retry login", Toast.LENGTH_LONG).show();
@@ -300,6 +324,8 @@ public class registerLogin extends AppCompatActivity {
                         }
                     }
                 });
+
+
 
         spinner.setVisibility(View.GONE);
 

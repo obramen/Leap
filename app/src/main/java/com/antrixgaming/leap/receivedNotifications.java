@@ -128,6 +128,7 @@ public class receivedNotifications extends BaseActivity {
                         FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("currentmembers").child(myPhoneNumber)
                                 .setValue(new CircleMember(myPhoneNumber,"false","1"));
                         // update the usergroupcirclelist (a list containing all groups a leaper is part of
+                        FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(circleID).child("leapStatus").setValue("1");
 
 
                         // This list is used to load the circles fragment

@@ -336,33 +336,36 @@ public class activity_one_chat extends BaseActivity {
                 }
                 else {
                     String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
-                    switch(statusPermission){
-
-                        case "0":  // 0 - false // don't allow last seen
-                            break;
-                        case "1":  // 1 - true  // allow last seen
-                            String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
-
-                            if (currentStatus == "true"){
-                                getSupportActionBar().setSubtitle("Online");
-                            } else{
-
-                                if ((DateFormat.format("dd-MM-yyyy", Long.parseLong(currentStatus))  == (DateFormat.format("dd-MM-yyyy", new Date().getTime())))){
-                                    getSupportActionBar().setSubtitle("Today, " + DateFormat.format("HH:mm", Long.parseLong(currentStatus)));
-
-                                } else {
-
-                                    getSupportActionBar().setSubtitle(DateFormat.format("dd-MMM-yyyy, HH:mm", Long.parseLong(currentStatus)));
-
-                                }
+                    if (Objects.equals(statusPermission, "0")) {
 
 
+                    } else if (Objects.equals(statusPermission, "1")) {
+
+                        String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
+
+                        if (Objects.equals(currentStatus, "true")) {
+                            getSupportActionBar().setSubtitle("Online");
+                        } else {
+
+                            if ((DateFormat.format("dd-MM-yyyy", Long.parseLong(currentStatus)) == (DateFormat.format("dd-MM-yyyy", new Date().getTime())))) {
+                                getSupportActionBar().setSubtitle("Today, " + DateFormat.format("HH:mm", Long.parseLong(currentStatus)));
+
+                            } else {
+
+                                getSupportActionBar().setSubtitle(DateFormat.format("dd-MMM-yyyy, HH:mm", Long.parseLong(currentStatus)));
 
                             }
-                            break;
-                    }
 
+                        }
+                    }
                 }
+
+
+
+
+
+
+
             }
 
             @Override

@@ -66,7 +66,15 @@ public class circleLeaperListFragment extends Fragment {
 
         ListView listOfContacts = (ListView) view.findViewById(R.id.list_of_circleLeapers);
 
-        DatabaseReference dbRefLeaper = FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("currentmembers");
+        DatabaseReference dbRefLeaper = FirebaseDatabase.getInstance().getReference().child("groupcirclemembers")
+                .child(circleID).child("currentmembers");
+
+
+
+
+
+
+
 
 
         FirebaseListAdapter<CircleMember> adapter;
@@ -93,21 +101,25 @@ public class circleLeaperListFragment extends Fragment {
 
 
 
-                final DatabaseReference leapStatus = FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
-                        .child("currentmembers").child(leaperPhoneNumber);
+
+
+                DatabaseReference leapStatus =  FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(leaperPhoneNumber)
+                        .child(circleID);
                 leapStatus.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         mLeapStatus = dataSnapshot.child("leapStatus").getValue().toString();
 
-                        switch (mLeapStatus){
-                            case "0": // DON'T ALLOW LEAPS
-                                circleLeaperListButton.setVisibility(View.GONE);
-                                leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
-                            case "1": // ALLOW LEAPS
-                                circleLeaperListButton.setVisibility(View.VISIBLE);
+                        if(Objects.equals(mLeapStatus, "0")){
+                            circleLeaperListButton.setVisibility(v.GONE);
+
+                        } else if (Objects.equals(mLeapStatus, "1")){
+
+                            circleLeaperListButton.setVisibility(v.VISIBLE);
+
 
                         }
+
                     }
 
                     @Override
@@ -115,6 +127,10 @@ public class circleLeaperListFragment extends Fragment {
 
                     }
                 });
+
+
+
+
 
                 circleLeaperListButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -135,6 +151,8 @@ public class circleLeaperListFragment extends Fragment {
 
 
 
+
+
                 /// SHOWING LAST ONLINE STATUS FOR CHAT
                 DatabaseReference secondLeaperOnlineStatus = dbRef.child("connections").child(leaperPhoneNumber);
 
@@ -147,26 +165,23 @@ public class circleLeaperListFragment extends Fragment {
                         }
                         else {
 
+
+
+
                             if(Objects.equals(mLeapStatus, "0")){  /// DON'T ALLOW LEAPS
                                 leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
                             } else if(Objects.equals(mLeapStatus, "1")) { // ALLOW LEAPS
 
-                                String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
-                                switch(statusPermission){
 
-                                    case "0":  // 0 - false // don't allow last seen
-                                        break;
-                                    case "1":  // 1 - true  // allow last seen
                                         String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
 
-                                        if (currentStatus == "true"){
+                                        if (Objects.equals(currentStatus, "true")){
                                             leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
                                         } else{
                                             leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
 
                                         }
-                                        break;
-                                }
+
                             }
 
 
@@ -182,6 +197,15 @@ public class circleLeaperListFragment extends Fragment {
 
                     }
                 });
+
+
+
+
+
+
+
+
+
 
             }
 

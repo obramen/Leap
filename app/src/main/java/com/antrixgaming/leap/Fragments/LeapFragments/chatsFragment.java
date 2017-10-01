@@ -60,6 +60,9 @@ public class chatsFragment extends Fragment {
 
         leapUtilities = new LeapUtilities();
 
+        mLeaperStorageRef = FirebaseStorage.getInstance().getReference();
+
+
 
 
 
@@ -191,6 +194,10 @@ public class chatsFragment extends Fragment {
                     //don't change number or name in chat list so that it shows from the other leaper
                     phoneNumber.setText(model.getReceiverPhoneNumber());
 
+                    mStorage = FirebaseStorage.getInstance().getReference();
+                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getReceiverPhoneNumber()).child(model.getReceiverPhoneNumber());
+
+
 
                     /// SHOWING LAST ONLINE STATUS FOR CHAT
                     DatabaseReference secondLeaperOnlineStatus = dbRef.child("connections").child(model.getReceiverPhoneNumber());
@@ -205,22 +212,23 @@ public class chatsFragment extends Fragment {
                             else {
 
                                 String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
-                                switch(statusPermission){
+                                if (Objects.equals(statusPermission, "0")){
 
-                                    case "0":  // 0 - false // don't allow last seen
-                                        break;
-                                    case "1":  // 1 - true  // allow last seen
-                                        String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
 
-                                        if (currentStatus == "true"){
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
-                                        } else{
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
-
-                                        }
-                                        break;
                                 }
+                                else if (Objects.equals(statusPermission, "1")){
 
+                                    String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
+
+                                    if (Objects.equals(currentStatus, "true")){
+                                        leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
+                                    } else{
+                                        leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS OFFLINE
+
+                                    }
+
+
+                                }
                             }
                         }
 
@@ -263,22 +271,23 @@ public class chatsFragment extends Fragment {
                             else {
 
                                 String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
-                                switch(statusPermission){
+                                if (Objects.equals(statusPermission, "0")){
 
-                                    case "0":  // 0 - false // don't allow last seen
-                                        break;
-                                    case "1":  // 1 - true  // allow last seen
-                                        String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
 
-                                        if (currentStatus == "true"){
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
-                                        } else{
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
-
-                                        }
-                                        break;
                                 }
+                                else if (Objects.equals(statusPermission, "1")){
 
+                                    String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
+
+                                    if (Objects.equals(currentStatus, "true")){
+                                        leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
+                                    } else{
+                                        leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS OFFLINE
+
+                                    }
+
+
+                                }
                             }
                         }
 

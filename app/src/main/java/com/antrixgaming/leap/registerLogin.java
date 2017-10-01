@@ -264,7 +264,7 @@ public class registerLogin extends AppCompatActivity {
 
 
                 PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        phoneNumberAndCode,        // Phone number to verify
+                        "+" + phoneNumberAndCode,        // Phone number to verify
                         60,                 // Timeout duration
                         TimeUnit.SECONDS,   // Unit of timeout
                         registerLogin.this,  // Activity (for callback binding)

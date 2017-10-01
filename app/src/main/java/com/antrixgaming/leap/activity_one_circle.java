@@ -126,24 +126,35 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         View header = navigationView.getHeaderView(0);
 
         Button circleLeapListNewLeapButton = (Button) header.findViewById(R.id.circleLeapListNewLeapButton);
+
+
+
+
+
+
+
+
         final Switch leapStatusSwitch = (Switch) header.findViewById(R.id.leapStatusSwitch);
 
         leapStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
-                            .child("currentmembers").child(myPhoneNumber).child("leapStatus").setValue("1");
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
+                            .child(circleID).child("leapStatus").setValue("1");
                     Toast.makeText(activity_one_circle.this, "Leap status changed", Toast.LENGTH_SHORT).show();
-
                 }else{
-                    FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
-                            .child("currentmembers").child(myPhoneNumber).child("leapStatus").setValue("0");
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
+                            .child(circleID).child("leapStatus").setValue("0");
                     Toast.makeText(activity_one_circle.this, "Leap status changed", Toast.LENGTH_SHORT).show();
 
                 }
             }
         });
+
+
+
+
 
 
 
@@ -164,25 +175,33 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
             @Override
             public void onDrawerOpened(View drawerView) {
 
-                FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
-                        .child("currentmembers").child(myPhoneNumber).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                       int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
-
-                        if (mleapStatusSwitch == 1)
-                            leapStatusSwitch.setChecked(true);
-                        else
-                            leapStatusSwitch.setChecked(false);
 
 
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
+                        .child(circleID)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+                                if (mleapStatusSwitch == 1)
+                                    leapStatusSwitch.setChecked(true);
+                                else
+                                    leapStatusSwitch.setChecked(false);
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
 
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 super.onDrawerOpened(drawerView);
@@ -193,6 +212,23 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -257,6 +293,8 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         // long lastGroupOpenTime = new Date().getTime();
         // FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).child("members").child(myUid).child("lastOpenTime").setValue(lastGroupOpenTime);
 
+
+        /*
         //// CREATE AN ARRAY FOR THE LIST OF MEMBERS AND UPDATE IT ON DATA CHANGE
         final ArrayList<ArrayList<String >> memberList = new ArrayList<ArrayList<String>>();
         final ArrayList<String> loadedMember = new ArrayList<String>();
@@ -277,6 +315,10 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+
+
+
+          */
 
 
 
@@ -313,7 +355,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                         .child("lastgroupmessage").setValue(new circleMessage(input.getText().toString().trim(), circleID,
                                 myPhoneNumber, myUid, "0", "true"));
                 FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                        .child(key).child("members").setValue(memberList);
+                        .child(key).child("members").setValue(0);
                 FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
                         .setValue(new circleMessage(input.getText().toString().trim(), circleID,
                         myPhoneNumber, myUid, "0", "true"));
@@ -444,7 +486,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
             }
         }
 
-           else if (id == R.id.action_one_group_chat_Group_info) {
+        if (id == R.id.action_one_group_chat_Group_info) {
 
             Intent groupInfoIntent = new Intent(this, groupInfoActivity.class);
             groupInfoIntent.putExtra("circleID", groupID);

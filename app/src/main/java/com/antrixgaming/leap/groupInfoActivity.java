@@ -16,10 +16,12 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -256,6 +258,62 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                         .setAction("Action", null).show();
             }
         });
+
+
+
+
+
+
+
+
+
+        final Switch leapStatusSwitch = (Switch) findViewById(R.id.leapStatusSwitch);
+
+        leapStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
+                            .child(circleID).child("leapStatus").setValue("1");
+                    Toast.makeText(groupInfoActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+                }else{
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
+                            .child(circleID).child("leapStatus").setValue("0");
+                    Toast.makeText(groupInfoActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
+                .child(circleID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+                        if (mleapStatusSwitch == 1)
+                            leapStatusSwitch.setChecked(true);
+                        else
+                            leapStatusSwitch.setChecked(false);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
 
 
 

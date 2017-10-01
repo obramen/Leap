@@ -105,6 +105,7 @@ public class circlesFragment extends Fragment {
                                 /// 1 - shows it's a notification message // 0 - normal message
                                 FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(key).child("currentmembers").child(myPhoneNumber)
                                         .setValue(new CircleMember(myPhoneNumber,"true","1"));
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(key).child("leapStatus");
 
                                 // This list is used to load the circles fragment
                                 // First add the group id

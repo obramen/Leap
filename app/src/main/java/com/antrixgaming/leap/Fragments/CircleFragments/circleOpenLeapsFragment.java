@@ -78,7 +78,7 @@ public class circleOpenLeapsFragment extends Fragment {
                 // 2 - declined leap
                 // 3 - cancelled leap
 
-                if (model.getleaperOne() == myPhoneNumber){
+                if (Objects.equals(model.getleaperOne(), myPhoneNumber)){
 
                     switch (leapStatus){
                         case "0":

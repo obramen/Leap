@@ -117,7 +117,7 @@ public class Leap extends BaseActivity
             //getContactRetrievalPermission();
             //contactPermissionStartService.ContactPermissionStartService(this);
         } else {
-            Intent startContactService = new Intent(this, ContactService.class);
+            //Intent startContactService = new Intent(this, ContactService.class);
             //startService(startContactService);
         }
 
@@ -525,6 +525,8 @@ public class Leap extends BaseActivity
                 if (dataSnapshot.child("statusPermission").getValue() == null) {
                     onlineStatus.child("lastOnline").setValue("true");
                     onlineStatus.child("statusPermission").setValue("1"); // 1 - for allow last see // default value if nothing set in settings
+                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                            .child("leapStatus").setValue("1");
                 } else {
                     onlineStatus.child("lastOnline").setValue("true");
                     //String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
@@ -620,7 +622,7 @@ public class Leap extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.leap, menu);
+        //getMenuInflater().inflate(R.menu.leap, menu);
 
         return true;
     }

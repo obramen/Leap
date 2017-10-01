@@ -231,7 +231,7 @@ public class registerLogin extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(phoneNumber.getText().toString())) {
                     //mVerificationField.setError("Cannot be empty.");
-                    phoneNumber.setHint("Cannot be empty");
+                    phoneNumber.setHint("Phone Number");
                     phoneNumber.setHintTextColor(getResources().getColor(R.color.cherry));
                     btnSignIn.cancelLoading();
                     btnSignIn.cancelLoading();

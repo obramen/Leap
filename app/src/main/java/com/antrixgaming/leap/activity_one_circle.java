@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.antrixgaming.leap.Fragments.CircleFragments.circleLeaperListFragment;
 import com.antrixgaming.leap.Fragments.CircleFragments.circleLiveLeapsFragment;
@@ -133,9 +134,13 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                 if(isChecked){
                     FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
                             .child("currentmembers").child(myPhoneNumber).child("leapStatus").setValue("1");
+                    Toast.makeText(activity_one_circle.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+
                 }else{
                     FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
                             .child("currentmembers").child(myPhoneNumber).child("leapStatus").setValue("0");
+                    Toast.makeText(activity_one_circle.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });

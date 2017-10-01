@@ -59,7 +59,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_above="@id/chatLayout"
-        android:dividerHeight="8dp"
+        android:dividerHeight="5dp"
         android:divider="@android:color/transparent"
         android:id="@+id/list_of_messages"
         android:layout_marginBottom="10dp"

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -24,7 +25,10 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.common.annotation.KeepForSdkWithFieldsAndMethods;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,17 +57,23 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class leaperProfileActivity extends BaseActivity implements ImageUtils.ImageAttachmentListener {
 
     private String myUID;
+    private String myPhoneNumber;
     private CircleImageView profileImage;
+    private CircleImageView changeBackgroundImage;
+    private CircleImageView changeProfileImage;
+    ImageView profileImageBackground;
     private TextView profileLeaperName;
 
     private StorageReference mStorage;
     private StorageReference mLeaperStorageRef;
+    private StorageReference mLeaperProfileStorageRef;
 
     ProgressDialog progressDialog;
 
@@ -76,6 +87,15 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
     DatabaseReference dbRef;
 
 
+    int uploadflag = 0;
+    int editFlag = 0;
+
+    TextView editProfile;
+    Switch leapStatusSwitch;
+    ImageView leaperProfileNewLeap;
+    ImageView leaperProfileNewMessage;
+
+
 
 
 
@@ -86,7 +106,9 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
-        String leaperPhoneNumber = bundle.getString("leaperPhoneNumber");
+        final String leaperPhoneNumber = bundle.getString("leaperPhoneNumber");
+
+
 
         getSupportActionBar().setTitle(leaperPhoneNumber);
         imageutils = new ImageUtils(this);
@@ -94,16 +116,63 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
         mStorage = FirebaseStorage.getInstance().getReference();
         dbRef = FirebaseDatabase.getInstance().getReference();
+        myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+
+        if (Objects.equals(leaperPhoneNumber, myPhoneNumber))
+        {
+            editFlag = 1;
+        } else {
+            editFlag = 0;
+        }
 
 
 
 
 
         profileImage = (CircleImageView) findViewById(R.id.profileImage);
+        changeBackgroundImage = (CircleImageView) findViewById(R.id.changeBackgroundImage);
+        profileImageBackground = (ImageView) findViewById(R.id.profileImageBackground);
+
+
         profileLeaperName = (TextView) findViewById(R.id.profileLeaperName);
         profileLeaperName.setText(leaperPhoneNumber);
+        leapStatusSwitch = (Switch) findViewById(R.id.leapStatusSwitch);
+        editProfile = (TextView) findViewById(R.id.editProfle);
+        changeProfileImage = (CircleImageView) findViewById(R.id.changeProfileImage);
+        leaperProfileNewLeap = (ImageView) findViewById(R.id.leaperProfileNewLeap);
+        leaperProfileNewMessage = (ImageView) findViewById(R.id.leaperProfileNewMessage);
+
 
         progressDialog = new ProgressDialog(this);
+
+        if (editFlag == 0){
+
+            profileImage.setEnabled(false);
+            changeBackgroundImage.setVisibility(View.GONE);
+            editProfile.setVisibility(View.GONE);
+            leapStatusSwitch.setEnabled(false);
+            changeProfileImage.setVisibility(View.GONE);
+            leaperProfileNewLeap.setVisibility(View.VISIBLE);
+            leaperProfileNewMessage.setVisibility(View.VISIBLE);
+
+
+
+
+        } else if (editFlag == 1){
+
+            profileImage.setEnabled(true);
+            profileImage.setEnabled(true);
+            changeBackgroundImage.setVisibility(View.VISIBLE);
+            editProfile.setVisibility(View.VISIBLE);
+            leapStatusSwitch.setEnabled(true);
+            changeProfileImage.setVisibility(View.VISIBLE);
+            leaperProfileNewLeap.setVisibility(View.GONE);
+            leaperProfileNewMessage.setVisibility(View.GONE);
+
+
+        }
+
+
 
 
 
@@ -111,90 +180,221 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         leapUtilities.CircleImageFromFirebase(leaperProfileActivity.this, mLeaperStorageRef, profileImage);
 
 
+        mLeaperProfileStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child("backgroundImage");
+        leapUtilities.SquareImageFromFirebase(leaperProfileActivity.this, mLeaperProfileStorageRef, profileImageBackground);
 
 
 
 
-        //loadProfileImageFromFirebase();
 
 
-        profileImage.setOnClickListener(new View.OnClickListener() {
+
+        changeBackgroundImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                uploadflag = 1;
+
+                 mLeaperProfileStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child("backgroundImage");
+
 
                 if (imageutils.isDeviceSupportCamera())
                     imageutils.imagepicker(1);
                 else imageutils.imagepicker(0);
 
 
+
+
+            }
+        });
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                uploadflag = 2;
+
+                mLeaperStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child(leaperPhoneNumber);
+
+
+                if (imageutils.isDeviceSupportCamera())
+                    imageutils.imagepicker(1);
+                else imageutils.imagepicker(0);
+
+
+
             }
         });
 
 
+
+
+        leapStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                            .child("leapStatus").setValue("1");
+                    Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+                }else{
+                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                            .child("leapStatus").setValue("0");
+                    Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("connections").child(leaperPhoneNumber)
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+                if (mleapStatusSwitch == 1)
+                    leapStatusSwitch.setChecked(true);
+                else
+                    leapStatusSwitch.setChecked(false);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
-    private void loadProfileImageFromFirebase(){
 
-        Glide.with(leaperProfileActivity.this).using(new FirebaseImageLoader()).load(mLeaperStorageRef)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                .error(R.drawable.profile_picture).centerCrop().into(profileImage);
-
-    }
 
 
 
     @Override
     public void image_attachment(int from, String filename, Bitmap file, Uri uri) {
-        this.bitmap=file;
-        this.file_name=filename;
-        profileImage.setImageBitmap(file);
 
-        String path =  Environment.getExternalStorageDirectory() + File.separator + "ImageAttach" + File.separator;
-        imageutils.createImage(file,filename,path,false);
+        if (uploadflag == 1){
+            this.bitmap=file;
+            this.file_name=filename;
+            profileImageBackground.setImageBitmap(file);
 
-
-        // Get the data from an ImageView as bytes
-        profileImage.setDrawingCacheEnabled(true);
-        profileImage.buildDrawingCache();
-        Bitmap bitmap = profileImage.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        progressDialog.setMessage("Image uploading...");
-        progressDialog.show();
+            String path =  Environment.getExternalStorageDirectory() + File.separator + "ImageAttach" + File.separator;
+            imageutils.createImage(file,filename,path,false);
 
 
+            // Get the data from an ImageView as bytes
+            profileImageBackground.setDrawingCacheEnabled(true);
+            profileImageBackground.buildDrawingCache();
+            Bitmap bitmap = profileImageBackground.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = mLeaperStorageRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-
-
-                progressDialog.dismiss();
-                Toast.makeText(leaperProfileActivity.this, "error encountered, retry", Toast.LENGTH_SHORT).show();
-
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-                Toast.makeText(leaperProfileActivity.this, "Profile picture changed", Toast.LENGTH_SHORT).show();
-                Glide.with(leaperProfileActivity.this).using(new FirebaseImageLoader()).load(mLeaperStorageRef)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                        .error(R.drawable.profile_picture).centerCrop().into(profileImage);
-                progressDialog.dismiss();
+            progressDialog.setMessage("Image uploading...");
+            progressDialog.show();
 
 
-            }
-        });
+
+            UploadTask uploadTask = mLeaperProfileStorageRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+
+
+                    progressDialog.dismiss();
+                    Toast.makeText(leaperProfileActivity.this, "error encountered, retry", Toast.LENGTH_SHORT).show();
+
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    Toast.makeText(leaperProfileActivity.this, "Profile banner changed", Toast.LENGTH_SHORT).show();
+                    Glide.with(leaperProfileActivity.this).using(new FirebaseImageLoader()).load(mLeaperProfileStorageRef)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                            .error(R.drawable.profile_picture).centerCrop().into(profileImageBackground);
+                    progressDialog.dismiss();
+
+
+                }
+            });
+
+
+        } else if (uploadflag == 2) {
+
+            this.bitmap=file;
+            this.file_name=filename;
+            profileImage.setImageBitmap(file);
+
+            String path =  Environment.getExternalStorageDirectory() + File.separator + "ImageAttach" + File.separator;
+            imageutils.createImage(file,filename,path,false);
+
+
+            // Get the data from an ImageView as bytes
+            profileImage.setDrawingCacheEnabled(true);
+            profileImage.buildDrawingCache();
+            Bitmap bitmap = profileImage.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            progressDialog.setMessage("Image uploading...");
+            progressDialog.show();
+
+
+
+            UploadTask uploadTask = mLeaperStorageRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+
+
+                    progressDialog.dismiss();
+                    Toast.makeText(leaperProfileActivity.this, "error encountered, retry", Toast.LENGTH_SHORT).show();
+
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    Toast.makeText(leaperProfileActivity.this, "Profile picture changed", Toast.LENGTH_SHORT).show();
+                    Glide.with(leaperProfileActivity.this).using(new FirebaseImageLoader()).load(mLeaperStorageRef)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                            .error(R.drawable.profile_picture).centerCrop().into(profileImage);
+                    progressDialog.dismiss();
+
+
+                }
+            });
+
+
+        }
+
+
+
+
+
+
 
 
     }

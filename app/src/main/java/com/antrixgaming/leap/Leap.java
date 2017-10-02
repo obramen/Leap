@@ -390,8 +390,9 @@ public class Leap extends BaseActivity
                                         /// true = admin
                                         /// false = not admin
                                         /// 1 - shows it's a notification message // 0 - normal message
-                                        FirebaseDatabase.getInstance().getReference().child("circlemembers").child(key).child("currentmembers").child(myPhoneNumber)
+                                        FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(key).child("currentmembers").child(myPhoneNumber)
                                                 .setValue(new CircleMember(myPhoneNumber,"true","1"));
+                                        FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(key).child("leapStatus").setValue("1");
 
                                         // This list is used to load the circles fragment
                                         // First add the group id

@@ -203,6 +203,15 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
 
 
+
+
+
+
+
+
+
+
+
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 super.onDrawerOpened(drawerView);
                 InputMethodManager inputMethodManager = (InputMethodManager)

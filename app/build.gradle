@@ -52,16 +52,19 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:11.0.4'
     compile 'com.google.firebase:firebase-database:11.0.4'
     compile 'com.google.firebase:firebase-core:11.0.4'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
     compile 'com.firebaseui:firebase-ui-storage:0.6.0'
+    compile 'com.firebaseui:firebase-ui:2.0.1'
+    compile 'com.google.firebase:firebase-storage:11.0.4'
+    compile 'com.google.android.gms:play-services-auth:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.0.0-alpha1'
-    compile 'com.google.firebase:firebase-storage:11.0.4'
     compile 'com.hbb20:ccp:2.0.3'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.firebaseui:firebase-ui:2.0.1'
     compile 'com.github.stfalcon:chatkit:0.2.2'
     compile 'com.yarolegovich:lovely-dialog:1.0.7'
     compile 'com.terrakok.phonematter:phonematter:1.0@aar'
@@ -72,7 +75,7 @@ dependencies {
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.android.gms:play-services-auth:11.0.4'
+
 
 
 }

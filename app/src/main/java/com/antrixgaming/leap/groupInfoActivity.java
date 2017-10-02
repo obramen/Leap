@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.antrixgaming.leap.LeapClasses.ImageUtils;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.LeapClasses.MenuFAB;
+import com.antrixgaming.leap.LeapClasses.OnlinePressence;
 import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.Models.savePhoneContacts;
 import com.antrixgaming.leap.Models.circleMessage;
@@ -65,7 +66,6 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
     private StorageReference mGroupStorageRef;
     private StorageReference mLeaperStorageRef;
 
-    String mLeapStatus = "1";
 
     ImageUtils imageutils;
 
@@ -97,6 +97,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
     private ImageView groupProfileImage;
 
     LeapUtilities leapUtilities;
+    OnlinePressence onlinePressence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         leapUtilities = new LeapUtilities();
+        onlinePressence = new OnlinePressence();
         mStorage = FirebaseStorage.getInstance().getReference();
         TrueAdmin = "true";
         FalseAdmin = "false";
@@ -275,6 +277,10 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                 if(isChecked){
                     FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
                             .child(circleID).child("leapStatus").setValue("1");
+
+
+
+
                     Toast.makeText(groupInfoActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
                 }else{
                     FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber)
@@ -294,7 +300,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
                         if (mleapStatusSwitch == 1)
                             leapStatusSwitch.setChecked(true);
-                        else
+                        else if (mleapStatusSwitch == 0)
                             leapStatusSwitch.setChecked(false);
 
 
@@ -350,28 +356,47 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
-                final DatabaseReference leapStatus = FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID)
-                        .child("currentmembers").child(leaperPhoneNumber);
-                leapStatus.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        mLeapStatus = dataSnapshot.child("leapStatus").getValue().toString();
 
-                        switch (mLeapStatus){
-                            case "0": // DON'T ALLOW LEAPS
-                                circleLeaperListButton.setVisibility(View.GONE);
-                                leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
-                            case "1": // ALLOW LEAPS
-                                circleLeaperListButton.setVisibility(View.VISIBLE);
+
+
+                    final DatabaseReference leapStatus = FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(model.getPhoneNumber())
+                            .child(circleID);
+                    leapStatus.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int mLeapStatus = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+
+
+                            if(Objects.equals(mLeapStatus, 0)){
+
+                                circleLeaperListButton.setVisibility(v.GONE);
+                                //leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
+                            }
+                            else if (Objects.equals(mLeapStatus, 1))
+                                circleLeaperListButton.setVisibility(v.VISIBLE);
+                            //leaperImage.setBorderColor(getResources().getColor(R.color.green));
+
 
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+
+
+
+                onlinePressence.circleLeaperOnlinePrescence(groupInfoActivity.this, model.getPhoneNumber(), circleID, leaperImage);
+
+
+
+
+
+
+
+
 
                 circleLeaperListButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -390,55 +415,6 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
-
-
-                /// SHOWING LAST ONLINE STATUS FOR CHAT
-                DatabaseReference secondLeaperOnlineStatus = FirebaseDatabase.getInstance().getReference().child("connections").child(leaperPhoneNumber);
-
-                secondLeaperOnlineStatus.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child("statusPermission").getValue() == null){
-                            //if unable to retrieve the value, do nothing
-                            leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
-                        }
-                        else {
-
-                            if(Objects.equals(mLeapStatus, "0")){  /// DON'T ALLOW LEAPS
-                                leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
-                            } else if(Objects.equals(mLeapStatus, "1")) { // ALLOW LEAPS
-
-                                String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
-                                switch(statusPermission){
-
-                                    case "0":  // 0 - false // don't allow last seen
-                                        break;
-                                    case "1":  // 1 - true  // allow last seen
-                                        String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
-
-                                        if (currentStatus == "true"){
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
-                                        } else{
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
-
-                                        }
-                                        break;
-                                }
-                            }
-
-
-
-
-
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
             }
 

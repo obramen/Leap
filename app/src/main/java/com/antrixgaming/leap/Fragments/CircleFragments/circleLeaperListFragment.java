@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
+import com.antrixgaming.leap.LeapClasses.OnlinePressence;
 import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.leaperProfileActivity;
@@ -43,6 +44,7 @@ public class circleLeaperListFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     LeapUtilities leapUtilities;
+    OnlinePressence onlinePressence;
     private StorageReference mLeaperStorageRef;
 
     StorageReference mStorage;
@@ -54,10 +56,11 @@ public class circleLeaperListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_circle_leaper_list, container, false);
 
         leapUtilities = new LeapUtilities();
+        onlinePressence = new OnlinePressence();
         mStorage = FirebaseStorage.getInstance().getReference();
 
 
-        String myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        final String myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         //DatabaseReference dbRefLeaper= dbRef.child("ContactList").child(myUID).child("leapSortedContacts");
@@ -103,17 +106,17 @@ public class circleLeaperListFragment extends Fragment {
 
 
 
-                DatabaseReference leapStatus =  FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(leaperPhoneNumber)
+                DatabaseReference leapStatus =  FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(model.getPhoneNumber())
                         .child(circleID);
                 leapStatus.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        mLeapStatus = dataSnapshot.child("leapStatus").getValue().toString();
+                        String xLeapStatus = dataSnapshot.child("leapStatus").getValue().toString();
 
-                        if(Objects.equals(mLeapStatus, "0")){
+                        if(Objects.equals(xLeapStatus, "0")){
                             circleLeaperListButton.setVisibility(v.GONE);
 
-                        } else if (Objects.equals(mLeapStatus, "1")){
+                        } else if (Objects.equals(xLeapStatus, "1")){
 
                             circleLeaperListButton.setVisibility(v.VISIBLE);
 
@@ -147,59 +150,7 @@ public class circleLeaperListFragment extends Fragment {
                 });
 
 
-
-
-
-
-
-
-                /// SHOWING LAST ONLINE STATUS FOR CHAT
-                DatabaseReference secondLeaperOnlineStatus = dbRef.child("connections").child(leaperPhoneNumber);
-
-                secondLeaperOnlineStatus.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child("statusPermission").getValue() == null){
-                            //if unable to retrieve the value, do nothing
-                            leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
-                        }
-                        else {
-
-
-
-
-                            if(Objects.equals(mLeapStatus, "0")){  /// DON'T ALLOW LEAPS
-                                leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
-                            } else if(Objects.equals(mLeapStatus, "1")) { // ALLOW LEAPS
-
-
-                                        String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
-
-                                        if (Objects.equals(currentStatus, "true")){
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.green)); /// LEAPER IS ONLINE
-                                        } else{
-                                            leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
-
-                                        }
-
-                            }
-
-
-
-
-
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
+                onlinePressence.circleLeaperOnlinePrescence(getActivity(), model.getPhoneNumber(), circleID, leaperImage);
 
 
 

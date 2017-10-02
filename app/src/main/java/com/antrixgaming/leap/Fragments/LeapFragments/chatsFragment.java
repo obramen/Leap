@@ -46,6 +46,7 @@ public class chatsFragment extends Fragment {
 
     StorageReference mStorage;
     StorageReference mLeaperStorageRef;
+    String myPhoneNumber;
 
 
     @Override
@@ -60,7 +61,9 @@ public class chatsFragment extends Fragment {
 
         leapUtilities = new LeapUtilities();
 
-        mLeaperStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorage = FirebaseStorage.getInstance().getReference();
+
+        myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
 
 
@@ -130,6 +133,23 @@ public class chatsFragment extends Fragment {
                 final CircleImageView leaperImage = (CircleImageView)v.findViewById(R.id.leaper_image);
 
 
+                if (Objects.equals(myPhoneNumber, model.getSenderPhoneNumber())){
+
+                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getReceiverPhoneNumber())
+                            .child(model.getReceiverPhoneNumber());
+                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
+
+                } else if(Objects.equals(myPhoneNumber, model.getReceiverPhoneNumber())) {
+
+
+
+                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getSenderPhoneNumber())
+                            .child(model.getSenderPhoneNumber());
+                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
+
+                }
+
+
 
 
 
@@ -194,10 +214,6 @@ public class chatsFragment extends Fragment {
                     //don't change number or name in chat list so that it shows from the other leaper
                     phoneNumber.setText(model.getReceiverPhoneNumber());
 
-                    mStorage = FirebaseStorage.getInstance().getReference();
-                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getReceiverPhoneNumber()).child(model.getReceiverPhoneNumber());
-
-
 
                     /// SHOWING LAST ONLINE STATUS FOR CHAT
                     DatabaseReference secondLeaperOnlineStatus = dbRef.child("connections").child(model.getReceiverPhoneNumber());
@@ -250,15 +266,8 @@ public class chatsFragment extends Fragment {
                     // change number or name in chat list so it shows as from other leaper
                     phoneNumber.setText(model.getSenderPhoneNumber());
 
-                    mStorage = FirebaseStorage.getInstance().getReference();
-                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getSenderPhoneNumber()).child(model.getSenderPhoneNumber());
 
-
-                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
-
-
-
-                    /// SHOWING LAST ONLINE STATUS FOR CHAT
+                   /// SHOWING LAST ONLINE STATUS FOR CHAT
                     DatabaseReference secondLeaperOnlineStatus = dbRef.child("connections").child(model.getSenderPhoneNumber());
 
                     secondLeaperOnlineStatus.addValueEventListener(new ValueEventListener() {

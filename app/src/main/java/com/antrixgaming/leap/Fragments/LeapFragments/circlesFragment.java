@@ -60,6 +60,8 @@ public class circlesFragment extends Fragment {
 
 
         leapUtilities = new LeapUtilities();
+        mStorage = FirebaseStorage.getInstance().getReference();
+
 
 
         FloatingActionButton circleFAB = (FloatingActionButton) view.findViewById(R.id.circle_fab);
@@ -67,66 +69,6 @@ public class circlesFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                new LovelyTextInputDialog(getActivity(), R.style.MyDialogTheme)
-                        .setTopColorRes(R.color.colorPrimary)
-                        .setTitle(R.string.new_leapers_circle)
-                        .setMessage(R.string.new_circle_message)
-                        .setIcon(R.drawable.ic_circle_add)
-                        .setInputFilter("Enter circle name", new LovelyTextInputDialog.TextFilter() {
-                            @Override
-                            public boolean check(String text) {
-                                //return text.matches("\\w{3,23}\\b");     //("\\w+");
-                                return text.matches("^\\w+( +\\w+)*$");     //("\\w+");
-                                //return text.matches("\\w+");
-                            }
-
-                        })
-                        .setCancelable(false)
-                        .setNegativeButton("Cancel", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                return;
-                            }
-                        })
-                        .setConfirmButton("Create circle", new LovelyTextInputDialog.OnTextInputConfirmListener() {
-                            @Override
-                            public void onTextInputConfirmed(String text) {
-
-                                // push and get the key for new group under "groupcircles" table
-                                String key = FirebaseDatabase.getInstance().getReference().child("groupcircles").push().getKey();
-                                // using the new key, update group info with group creator, group name and group key under same table
-                                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key)
-                                        .setValue(new createGroupCircle(FirebaseAuth.getInstance()
-                                                .getCurrentUser().getUid(), text, key));
-
-                                // using the new key create members list under "circlemembers" table with the creator of the group setting status to true
-                                /// true = admin
-                                /// false = not admin
-                                /// 1 - shows it's a notification message // 0 - normal message
-                                FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(key).child("currentmembers").child(myPhoneNumber)
-                                        .setValue(new CircleMember(myPhoneNumber,"true","1"));
-                                FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(key).child("leapStatus");
-
-                                // This list is used to load the circles fragment
-                                // First add the group id
-                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupid").setValue(key);
-                                // Next add the group name
-                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupName").setValue(text);
-                                // Lastly add the admin status
-                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
-                                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
-                                        .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
-                                                "Leap Bot", "LEAPBOT", "1", "true"));
-                                Snackbar.make(getView(), "New circle added", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
-
-
-                            }
-                        })
-                        .show();
 
             }
         });
@@ -152,7 +94,6 @@ public class circlesFragment extends Fragment {
 
 
 
-                mStorage = FirebaseStorage.getInstance().getReference();
                 mLeaperStorageRef = mStorage.child("groupCircleProfileImage").child(model.getGroupid()).child(model.getGroupid());
                 circleImageView = (CircleImageView)v.findViewById(R.id.circle_image_1);
 

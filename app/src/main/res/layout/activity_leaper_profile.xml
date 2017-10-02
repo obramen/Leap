@@ -16,13 +16,14 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="50dp">
 
 
             <RelativeLayout
                 android:id="@+id/topLayout"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="350dp"
                 android:background="@color/white">
 
 
@@ -33,7 +34,7 @@
                 <ImageView
                     android:id="@+id/profileImageBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp" />
+                    android:layout_height="400dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/changeBackgroundImage"
@@ -57,36 +58,54 @@
                     android:background="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:layout_alignParentBottom="true"
-                    android:layout_height="50dp">
-
-
-                </RelativeLayout>
-
-
-
-                <RelativeLayout
-                    android:id="@+id/card1"
-                    android:layout_toRightOf="@+id/profileImage"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/colorPrimary"
-                    android:layout_width="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_height="50dp">
+                    android:layout_height="150dp">
 
                     <TextView
                         android:id="@+id/profileLeaperName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:layout_marginStart="10dp"
                         android:textStyle="bold"
                         android:text="Profile Name"
+                        android:layout_marginTop="90dp"
+                        android:textSize="20sp"
                         android:maxLines="1"
                         android:ellipsize="end"
-                        android:layout_centerVertical="true"
-                         />
+
+                        android:layout_centerHorizontal="true" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/profileLeaperName"
+                        android:layout_centerHorizontal="true">
+
+                        <ImageView
+                            android:id="@+id/leaperProfileNewMessage"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_chat"
+                            android:padding="5dp"
+                            android:layout_alignParentStart="true" />
+
+                        <ImageView
+                            android:id="@+id/leaperProfileNewLeap"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_add_attachment"
+                            android:padding="5dp"
+                            android:layout_marginStart="10dp"
+                            android:tint="@color/white"
+                            android:layout_toEndOf="@+id/leaperProfileNewMessage" />
+
+
+                    </RelativeLayout>
+
+
 
                 </RelativeLayout>
+
+
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profileImage"
@@ -95,24 +114,22 @@
                     android:src="@drawable/games_fifa_17"
                     app:civ_border_color="#EEE"
                     app:civ_border_width="2dp"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="78dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_centerHorizontal="true" />
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/changeProfileImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:visibility="visible"
                     android:src="@drawable/ic_add_attachment"
-                    app:civ_border_color="@color/white"
-
+                    app:civ_border_color="@color/colorPrimary"
                     app:civ_fill_color="@color/white"
-                    app:civ_border_width="1dp"
-                    android:layout_below="@+id/profileImageBackground"
-                    android:layout_toStartOf="@+id/card1"
-                    android:layout_marginEnd="14dp" />
+                    app:civ_border_width="2dp"
+                    android:layout_margin="5dp"
+                    android:layout_alignBottom="@+id/profileImage"
+                    android:layout_alignEnd="@+id/profileImage" />
 
 
 
@@ -125,52 +142,6 @@
 
 
 
-                <RelativeLayout
-                    android:id="@+id/layout1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/leaperProfileNewMessage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_chat"
-                        android:tint="@color/colorPrimary"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:padding="5dp"
-                        android:layout_alignParentStart="true" />
-
-                    <ImageView
-                        android:id="@+id/leaperProfileNewLeap"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_add_attachment"
-                        android:tint="@color/colorPrimary"
-                        android:padding="5dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@+id/leaperProfileNewMessage" />
-
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Leaps"
-                        android:layout_toStartOf="@+id/leapStatusSwitch"
-                        android:layout_margin="10dp"/>
-
-                    <Switch
-                        android:id="@+id/leapStatusSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_centerVertical="true"
-                        android:checked="true" />
-
-                </RelativeLayout>
-
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -179,28 +150,25 @@
 
                     <RelativeLayout
                         android:id="@+id/layout2"
-                        android:layout_below="@id/layout1"
+                        android:layout_below="@+id/layout1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-
-
                         <TextView
-                            android:id="@+id/textView2"
+                            android:id="@+id/textView1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@+id/onlinePermissionSwitch"
-                            android:text="Show Online"
+                            android:text="Leaps"
+                            android:layout_toStartOf="@+id/leapStatusSwitch"
                             android:layout_margin="10dp"/>
 
                         <Switch
-                            android:id="@+id/onlinePermissionSwitch"
+                            android:id="@+id/leapStatusSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginEnd="10dp"
                             android:layout_centerVertical="true"
                             android:checked="true" />
-
 
 
 
@@ -218,13 +186,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp">
 
 
                     <TextView
+                        android:id="@+id/tauntHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Taunt:"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp" />
+
+                    <EditText
+                        android:id="@+id/tauntEditText"
+                        android:layout_below="@+id/tauntHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:hint="Taunt"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_margin="5dp"
+                        android:textSize="16sp"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/tauntTexView"
+                        android:layout_toRightOf="@+id/tauntHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
                         android:layout_margin="10dp"/>
 
                     <TextView
@@ -264,6 +255,7 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="10dp"
                                 android:paddingEnd="10dp"
+                                android:paddingBottom="10dp"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -272,17 +264,41 @@
                                     android:text="BIO"
                                     android:textStyle="bold"
                                     android:textColor="@color/colorPrimary"
-                                    android:layout_margin="10dp"/>
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="10dp"/>
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp">
 
 
                                     <TextView
+                                        android:id="@+id/nameHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Name"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"/>
+
+                                    <EditText
+                                        android:id="@+id/nameEditText"
+                                        android:visibility="gone"
+                                        android:layout_below="@+id/nameHeader"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_margin="5dp"
+                                        android:textSize="16sp"
+                                        android:text=""
+                                        android:hint="Name"
+                                        />
+                                    <TextView
+                                        android:id="@+id/nameTextView"
+                                        android:layout_toRightOf="@+id/nameHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
                                         android:layout_margin="10dp"/>
 
 
@@ -290,13 +306,35 @@
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp">
 
 
                                     <TextView
+                                        android:id="@+id/genderHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Gender"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"/>
+                                    <EditText
+                                        android:id="@+id/genderEditText"
+                                        android:layout_below="@+id/genderHeader"
+                                        android:visibility="gone"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_margin="5dp"
+                                        android:textSize="16sp"
+                                        android:text=""
+                                        android:hint="Gender"
+                                        />
+                                    <TextView
+                                        android:id="@+id/genderTextView"
+                                        android:layout_toRightOf="@+id/genderHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
                                         android:layout_margin="10dp"/>
 
 
@@ -324,6 +362,7 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="10dp"
                                 android:paddingEnd="10dp"
+                                android:paddingBottom="10dp"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -332,30 +371,77 @@
                                     android:text="PROFILES (Unconfirmed)"
                                     android:textStyle="bold"
                                     android:textColor="@color/colorPrimary"
-                                    android:layout_margin="10dp"/>
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="10dp"/>
+
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp">
 
 
                                     <TextView
+                                        android:id="@+id/psnHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="PSN:"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"/>
+                                    <EditText
+                                        android:id="@+id/psnEditText"
+                                        android:layout_below="@id/psnHeader"
+                                        android:visibility="gone"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_margin="5dp"
+                                        android:textSize="16sp"
+                                        android:text=""
+                                        android:hint="PSN"
+                                        />
+                                    <TextView
+                                        android:id="@+id/psnTextView"
+                                        android:layout_toRightOf="@+id/psnHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
                                         android:layout_margin="10dp"/>
 
 
                                 </RelativeLayout>
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp">
 
 
                                     <TextView
+                                        android:id="@+id/xboxliveHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Xbox Live:"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"
+                                        />
+                                    <EditText
+                                        android:id="@+id/xboxliveEditText"
+                                        android:visibility="gone"
+                                        android:layout_below="@+id/xboxliveHeader"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_margin="5dp"
+                                        android:textSize="16sp"
+                                        android:text=""
+                                        android:hint="Xbox Live"
+                                        />
+                                    <TextView
+                                        android:id="@+id/xboxliveTextView"
+                                        android:layout_toRightOf="@+id/xboxliveHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
                                         android:layout_margin="10dp"/>
 
 
@@ -363,26 +449,70 @@
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp">
 
 
                                     <TextView
+                                        android:id="@+id/steamHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Steam:"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"/>
+                                    <EditText
+                                        android:id="@+id/steamEditText"
+                                        android:visibility="gone"
+                                        android:layout_below="@+id/steamHeader"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_margin="5dp"
+                                        android:textSize="16sp"
+                                        android:text=""
+                                        android:hint="Steam"
+                                        />
+                                    <TextView
+                                        android:id="@+id/steamTextView"
+                                        android:layout_toRightOf="@+id/steamHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
                                         android:layout_margin="10dp"/>
 
 
                                 </RelativeLayout>
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp"
+                                    android:layout_marginBottom="10dp">
 
 
                                     <TextView
+                                        android:id="@+id/originHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Origin:"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"/>
+                                    <EditText
+                                        android:id="@+id/originEditText"
+                                        android:visibility="gone"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_margin="5dp"
+                                        android:textSize="16sp"
+                                        android:text=""
+                                        android:hint="Origin"
+                                        />
+                                    <TextView
+                                        android:id="@+id/originTextView"
+                                        android:layout_toRightOf="@+id/originHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
                                         android:layout_margin="10dp"/>
 
 
@@ -397,6 +527,37 @@
 
 
                         </android.support.v7.widget.CardView>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:id="@+id/saveProfileButton"
+                                android:visibility="visible"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/redButtonDark"
+                                android:layout_margin="20dp"
+                                android:layout_alignParentEnd="true"
+                                android:textColor="@color/white"
+                                android:text="save"/>
+
+                            <Button
+                                android:id="@+id/cancelProfileButton"
+                                android:visibility="visible"
+                                android:layout_toLeftOf="@id/saveProfileButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/redButtonDark"
+                                android:layout_marginTop="20dp"
+                                android:layout_gravity="end"
+                                android:textColor="@color/white"
+                                android:text="@string/cancel"/>
+
+                        </RelativeLayout>
+
+
 
                     </LinearLayout>
 

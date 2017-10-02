@@ -379,17 +379,18 @@ public class Leap extends BaseActivity
                                     @Override
                                     public void onTextInputConfirmed(String text) {
 
+
                                         // push and get the key for new group under "groupcircles" table
                                         String key = FirebaseDatabase.getInstance().getReference().child("groupcircles").push().getKey();
                                         // using the new key, update group info with group creator, group name and group key under same table
-                                        FirebaseDatabase.getInstance().getReference().child("groupcircles").child(key)
+                                        dbRef.child("groupcircles").child(key)
                                                 .setValue(new createGroupCircle(FirebaseAuth.getInstance()
                                                         .getCurrentUser().getUid(), text, key));
 
                                         // Save group UID and name in different list
-                                        FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(key)
+                                        dbRef.child("groupcirclenames").child(key)
                                                 .child("circleName").setValue(text);
-                                        FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(key)
+                                        dbRef.child("groupcirclenames").child(key)
                                                 .child("circleID").setValue(key);
 
 
@@ -398,21 +399,21 @@ public class Leap extends BaseActivity
                                         /// true = admin
                                         /// false = not admin
                                         /// 1 - shows it's a notification message // 0 - normal message
-                                        FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(key).child("currentmembers").child(myPhoneNumber)
+                                        dbRef.child("groupcirclemembers").child(key).child("currentmembers").child(myPhoneNumber)
                                                 .setValue(new CircleMember(myPhoneNumber,"true","1"));
-                                        FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(key).child("leapStatus").setValue("1");
+                                        dbRef.child("groupcirclesettings").child(myPhoneNumber).child(key).child("leapStatus").setValue("1");
 
                                         // This list is used to load the circles fragment
                                         // First add the group id
-                                        FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        dbRef.child("usergroupcirclelist")
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupid").setValue(key);
                                         // Next add the group name
-                                        FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        dbRef.child("usergroupcirclelist")
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("groupName").setValue(text);
                                         // Lastly add the admin status
-                                        FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        dbRef.child("usergroupcirclelist")
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).child("admin").setValue("true");
-                                        FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(key)
+                                        dbRef.child("groupcirclelastmessages").child(key)
                                                 .setValue(new circleMessage("Welcome to your new circle, add your other leapers now", key,
                                                         "Leap Bot", "LEAPBOT", "1", "true"));
                                         Snackbar.make(v, "New circle added", Snackbar.LENGTH_LONG)

@@ -193,6 +193,15 @@ public class leapDetailsActivity extends BaseActivity {
                     }
                 });
 
+                detailsLeaperOneImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(leapDetailsActivity.this, leaperProfileActivity.class);
+                        intent.putExtra("leaperPhoneNumber", leaperOne.getText().toString());
+                        startActivity(intent);
+                    }
+                });
+
 
 
                 mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
@@ -217,6 +226,17 @@ public class leapDetailsActivity extends BaseActivity {
                             intent.putExtra("leaperPhoneNumber", leaperTwo.getText().toString());
                             startActivity(intent);
 
+
+                        }
+                    });
+
+                    detailsLeaperTwoImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(leapDetailsActivity.this, leaperProfileActivity.class);
+                            intent.putExtra("leaperPhoneNumber", leaperTwo.getText().toString());
+                            startActivity(intent);
 
                         }
                     });

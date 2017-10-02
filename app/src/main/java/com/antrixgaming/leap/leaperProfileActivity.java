@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 import com.antrixgaming.leap.LeapClasses.ImageUtils;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.Models.CircleMember;
+import com.antrixgaming.leap.Models.UserProfile;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
@@ -85,6 +87,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
     LeapUtilities leapUtilities;
 
     DatabaseReference dbRef;
+    DatabaseReference userProfileDbRef;
 
 
     int uploadflag = 0;
@@ -94,6 +97,36 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
     Switch leapStatusSwitch;
     ImageView leaperProfileNewLeap;
     ImageView leaperProfileNewMessage;
+
+
+    EditText tauntEditText;
+    EditText nameEditText;
+    EditText genderEditText;
+    EditText psnEditText;
+    EditText xboxliveEditText;
+    EditText originEditText;
+    EditText steamEditText;
+
+    TextView tauntTextView;
+    TextView nameTextView;
+    TextView genderTextView;
+    TextView psnTextView;
+    TextView xboxliveTextView;
+    TextView originTextView;
+    TextView steamTextView;
+
+    Button saveProfileButton;
+    Button cancelProfileButton;
+
+    String taunt;
+    String name;
+    String gender;
+    String psn;
+    String xboxlive;
+    String origin;
+    String steam;
+
+    ProgressDialog progressDialogSaveProfile;
 
 
 
@@ -116,6 +149,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
         mStorage = FirebaseStorage.getInstance().getReference();
         dbRef = FirebaseDatabase.getInstance().getReference();
+        userProfileDbRef = dbRef.child("userprofiles").child(leaperPhoneNumber);
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         if (Objects.equals(leaperPhoneNumber, myPhoneNumber))
@@ -143,14 +177,78 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         leaperProfileNewMessage = (ImageView) findViewById(R.id.leaperProfileNewMessage);
 
 
+
+        /// FOR EDITING INFORMATION
+        tauntEditText = (EditText) findViewById(R.id.tauntEditText);
+        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        genderEditText = (EditText) findViewById(R.id.genderEditText);
+        psnEditText = (EditText) findViewById(R.id.psnEditText);
+        xboxliveEditText = (EditText) findViewById(R.id.xboxliveEditText);
+        originEditText = (EditText) findViewById(R.id.originEditText);
+        steamEditText = (EditText) findViewById(R.id.steamEditText);
+
+        /// FOR DISPLAYING INFORMATION
+        tauntTextView = (TextView) findViewById(R.id.tauntTexView);
+        nameTextView = (TextView) findViewById(R.id.nameTextView);
+        genderTextView = (TextView) findViewById(R.id.genderTextView);
+        psnTextView = (TextView) findViewById(R.id.psnTextView);
+        xboxliveTextView = (TextView) findViewById(R.id.xboxliveTextView);
+        originTextView = (TextView) findViewById(R.id.originTextView);
+        steamTextView = (TextView) findViewById(R.id.steamTextView);
+
+        saveProfileButton = (Button) findViewById(R.id.saveProfileButton);
+        cancelProfileButton = (Button) findViewById(R.id.cancelProfileButton);
+
+
+
+
+
+
+
+        /// HIDE INFORMATION
+        tauntTextView.setVisibility(View.VISIBLE);
+        nameTextView.setVisibility(View.VISIBLE);
+        genderTextView.setVisibility(View.VISIBLE);
+        psnTextView.setVisibility(View.VISIBLE);
+        xboxliveTextView.setVisibility(View.VISIBLE);
+        originTextView.setVisibility(View.VISIBLE);
+        steamTextView.setVisibility(View.VISIBLE);
+        editProfile.setVisibility(View.VISIBLE);
+
+
+        tauntEditText.setVisibility(View.GONE);
+        nameEditText.setVisibility(View.GONE);
+        genderEditText.setVisibility(View.GONE);
+        psnEditText.setVisibility(View.GONE);
+        xboxliveEditText.setVisibility(View.GONE);
+        originEditText.setVisibility(View.GONE);
+        steamEditText.setVisibility(View.GONE);
+
+
+        saveProfileButton.setVisibility(View.GONE);
+        cancelProfileButton.setVisibility(View.GONE);
+
+
+
+
+
+
+
+
+
+
+
+
+
         progressDialog = new ProgressDialog(this);
+        progressDialogSaveProfile = new ProgressDialog(this);
 
         if (editFlag == 0){
 
             profileImage.setEnabled(false);
             changeBackgroundImage.setVisibility(View.GONE);
             editProfile.setVisibility(View.GONE);
-            leapStatusSwitch.setEnabled(false);
+            leapStatusSwitch.setVisibility(View.GONE);
             changeProfileImage.setVisibility(View.GONE);
             leaperProfileNewLeap.setVisibility(View.VISIBLE);
             leaperProfileNewMessage.setVisibility(View.VISIBLE);
@@ -161,16 +259,15 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         } else if (editFlag == 1){
 
             profileImage.setEnabled(true);
-            profileImage.setEnabled(true);
             changeBackgroundImage.setVisibility(View.VISIBLE);
             editProfile.setVisibility(View.VISIBLE);
-            leapStatusSwitch.setEnabled(true);
+            leapStatusSwitch.setVisibility(View.VISIBLE);
             changeProfileImage.setVisibility(View.VISIBLE);
             leaperProfileNewLeap.setVisibility(View.GONE);
             leaperProfileNewMessage.setVisibility(View.GONE);
 
-
         }
+
 
 
 
@@ -182,6 +279,208 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
         mLeaperProfileStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child("backgroundImage");
         leapUtilities.SquareImageFromFirebase(leaperProfileActivity.this, mLeaperProfileStorageRef, profileImageBackground);
+
+
+
+
+
+
+        userProfileDbRef.child(leaperPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() == null){
+
+                    dbRef.child("userprofiles").child(leaperPhoneNumber).setValue(new UserProfile(leaperPhoneNumber, "",
+                            "", "","",
+                            "" , "",
+                            "", "",
+                            "", ""));
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+        userProfileDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                taunt = dataSnapshot.child("taunt").getValue().toString();
+                name = dataSnapshot.child("name").getValue().toString();
+                gender = dataSnapshot.child("gender").getValue().toString();
+                psn = dataSnapshot.child("taunt").getValue().toString();
+                xboxlive = dataSnapshot.child("xboxlive").getValue().toString();
+                origin = dataSnapshot.child("origin").getValue().toString();
+                steam = dataSnapshot.child("steam").getValue().toString();
+
+
+
+                /// DISPLAYING INFORMATION
+                tauntTextView.setText(taunt);
+                nameTextView.setText(name);
+                genderTextView.setText(gender);
+                psnTextView.setText(psn);
+                xboxliveTextView.setText(xboxlive);
+                originTextView.setText(origin);
+                steamTextView.setText(steam);
+
+                tauntEditText.setText(taunt);
+                nameEditText.setText(name);
+                genderEditText.setText(gender);
+                psnEditText.setText(psn);
+                xboxliveEditText.setText(xboxlive);
+                originEditText.setText(origin);
+                steamEditText.setText(steam);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                /// HIDE INFORMATION
+                tauntTextView.setVisibility(View.GONE);
+                nameTextView.setVisibility(View.GONE);
+                genderTextView.setVisibility(View.GONE);
+                psnTextView.setVisibility(View.GONE);
+                xboxliveTextView.setVisibility(View.GONE);
+                originTextView.setVisibility(View.GONE);
+                steamTextView.setVisibility(View.GONE);
+                editProfile.setVisibility(View.GONE);
+
+
+
+                /// SHOW EDIT TEXT
+                tauntEditText.setVisibility(View.VISIBLE);
+                nameEditText.setVisibility(View.VISIBLE);
+                genderEditText.setVisibility(View.VISIBLE);
+                psnEditText.setVisibility(View.VISIBLE);
+                xboxliveEditText.setVisibility(View.VISIBLE);
+                originEditText.setVisibility(View.VISIBLE);
+                steamEditText.setVisibility(View.VISIBLE);
+
+                saveProfileButton.setVisibility(View.VISIBLE);
+                cancelProfileButton.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        saveProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                progressDialogSaveProfile.setMessage("Saving information");
+                progressDialogSaveProfile.show();
+
+                dbRef.child("userprofiles").child(leaperPhoneNumber).setValue(new UserProfile(leaperPhoneNumber, nameEditText.getText().toString(),
+                        tauntEditText.getText().toString(), genderEditText.getText().toString(),"" ,
+                        "" , "",
+                        psnEditText.getText().toString(), xboxliveEditText.getText().toString(),
+                        steamEditText.getText().toString(), originEditText.getText().toString()));
+
+
+
+                /// HIDE INFORMATION
+                tauntTextView.setVisibility(View.VISIBLE);
+                nameTextView.setVisibility(View.VISIBLE);
+                genderTextView.setVisibility(View.VISIBLE);
+                psnTextView.setVisibility(View.VISIBLE);
+                xboxliveTextView.setVisibility(View.VISIBLE);
+                originTextView.setVisibility(View.VISIBLE);
+                steamTextView.setVisibility(View.VISIBLE);
+                editProfile.setVisibility(View.VISIBLE);
+
+
+                tauntEditText.setVisibility(View.GONE);
+                nameEditText.setVisibility(View.GONE);
+                genderEditText.setVisibility(View.GONE);
+                psnEditText.setVisibility(View.GONE);
+                xboxliveEditText.setVisibility(View.GONE);
+                originEditText.setVisibility(View.GONE);
+                steamEditText.setVisibility(View.GONE);
+
+
+                saveProfileButton.setVisibility(View.GONE);
+                cancelProfileButton.setVisibility(View.GONE);
+
+                progressDialogSaveProfile.dismiss();
+                Toast.makeText(leaperProfileActivity.this, "Changes saved", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+            }
+        });
+
+
+
+        cancelProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+
+
+                /// HIDE INFORMATION
+                tauntTextView.setVisibility(View.VISIBLE);
+                nameTextView.setVisibility(View.VISIBLE);
+                genderTextView.setVisibility(View.VISIBLE);
+                psnTextView.setVisibility(View.VISIBLE);
+                xboxliveTextView.setVisibility(View.VISIBLE);
+                originTextView.setVisibility(View.VISIBLE);
+                steamTextView.setVisibility(View.VISIBLE);
+                editProfile.setVisibility(View.VISIBLE);
+
+
+                tauntEditText.setVisibility(View.GONE);
+                nameEditText.setVisibility(View.GONE);
+                genderEditText.setVisibility(View.GONE);
+                psnEditText.setVisibility(View.GONE);
+                xboxliveEditText.setVisibility(View.GONE);
+                originEditText.setVisibility(View.GONE);
+                steamEditText.setVisibility(View.GONE);
+
+
+                saveProfileButton.setVisibility(View.GONE);
+                cancelProfileButton.setVisibility(View.GONE);
+
+
+            }
+        });
+
+
+
+
+
 
 
 
@@ -264,6 +563,21 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

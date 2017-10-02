@@ -294,7 +294,11 @@ public class LeapUtilities {
 
 
 
-    public String returnedChildValue(){return returnedChildValue;}
+
+
+    public void setReturnedChildValue(String returnedChildValue){this.returnedChildValue = returnedChildValue;}
+
+    public String getReturnedChildValue(){return returnedChildValue;}
 
 
 

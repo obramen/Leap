@@ -23,6 +23,10 @@
             android:id="@+id/nav_declined_leaps"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Declined leaps" />
+        <item
+            android:id="@+id/nav_antrix_events"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="AnTrix Events" />
 
     </group>
 

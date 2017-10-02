@@ -125,16 +125,39 @@ public class leapsFragment extends Fragment {
                 final CardView leapCard = (CardView) v.findViewById(R.id.leapCard);
                 final TextView mcircleID = (TextView)v.findViewById(R.id.circleID);
                 LinearLayout leapsDetails = (LinearLayout)v.findViewById(R.id.leapDetails);
+                final LinearLayout circleDetailsLayout = (LinearLayout)v.findViewById(R.id.circleDetailsLayout);
 
                 final CircleImageView leaperOneImage = (CircleImageView)v.findViewById(R.id.leaperOneImage);
                 final CircleImageView leaperTwoImage = (CircleImageView)v.findViewById(R.id.leaperTwoImage);
 
 
+
                 final String circleID = model.getCircleID();
                 if (Objects.equals(circleID, "null")){
                     mcircleID.setText("");
+                    circleDetailsLayout.setVisibility(v.GONE);
+
+
                 } else{
-                    mcircleID.setText(circleID);
+
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(circleID)
+                            .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            String circleName = dataSnapshot.child("circleName").getValue().toString();
+
+                            mcircleID.setText(circleName);
+                            circleDetailsLayout.setVisibility(v.VISIBLE);
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
 
                 }
 

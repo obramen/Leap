@@ -14,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -132,6 +133,8 @@ public class leapDetailsActivity extends BaseActivity {
                 final TextView leaperOne = (TextView)v.findViewById(R.id.detailsLeaperOne);
                 final TextView leaperTwo = (TextView)v.findViewById(R.id.detailsLeaperTwo);
                 TextView gameTime = (TextView)v.findViewById(R.id.detailsLeapTime);
+                final CardView circleDetailsLayout = (CardView) v.findViewById(R.id.circleDetailsLayout);
+
 
 
 
@@ -240,15 +243,39 @@ public class leapDetailsActivity extends BaseActivity {
                 final String lTime = model.getleapTime();
 
 
+
+
                 mGameFormat = model.getgameFormat();
 
                 final String circleID = model.getCircleID();
                 if (Objects.equals(circleID, "null")){
                     mcircleID.setText("");
+                    circleDetailsLayout.setVisibility(v.GONE);
+
                 } else{
-                    mcircleID.setText(circleID);
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(circleID)
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    String circleName = dataSnapshot.child("circleName").getValue().toString();
+
+                                    mcircleID.setText(circleName);
+                                    circleDetailsLayout.setVisibility(v.VISIBLE);
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                    mcircleID.setText(leapUtilities.getReturnedChildValue());
+
 
                 }
+
 
 
 

@@ -26,7 +26,8 @@
             <ImageView
                 android:id="@+id/groupProfileImage"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="wrap_content"
+                android:minHeight="400dp"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -100,6 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:background="@color/white"
                         android:layout_marginBottom="1dp">
 
                         <TextView
@@ -107,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="20dp"
-                            android:textColor="@color/white"
+                            android:textColor="@color/colorPrimaryDark"
                             android:text="Add new member"/>
                     </LinearLayout>
                     <LinearLayout
@@ -115,6 +117,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginBottom="1dp"
+                        android:background="@color/white"
                         android:layout_weight="1">
 
                         <TextView
@@ -122,7 +125,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:textColor="@color/white"
+                            android:textColor="@color/colorPrimaryDark"
                             android:text="Send new notice"/>
                     </LinearLayout>
                     <LinearLayout
@@ -137,7 +140,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:textColor="@color/white"
-                            android:text="Admin Menu"/>
+                            android:text="ADMIN MENU"/>
                     </LinearLayout>
 
 

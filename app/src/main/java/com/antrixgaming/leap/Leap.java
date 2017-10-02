@@ -386,6 +386,14 @@ public class Leap extends BaseActivity
                                                 .setValue(new createGroupCircle(FirebaseAuth.getInstance()
                                                         .getCurrentUser().getUid(), text, key));
 
+                                        // Save group UID and name in different list
+                                        FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(key)
+                                                .child("circleName").setValue(text);
+                                        FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(key)
+                                                .child("circleID").setValue(key);
+
+
+
                                         // using the new key create members list under "circlemembers" table with the creator of the group setting status to true
                                         /// true = admin
                                         /// false = not admin

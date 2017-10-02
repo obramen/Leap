@@ -71,19 +71,6 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/circleID"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_toRightOf="@id/gameTime"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text=""
-                        android:textStyle="bold"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="12sp" />
 
 
                     <TextView
@@ -299,6 +286,45 @@
 
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/circleDetailsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_marginBottom="0.5dp">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10">
+
+
+
+                    <TextView
+                        android:id="@+id/circleID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+
+
+
+            </LinearLayout>
+
 
 
 

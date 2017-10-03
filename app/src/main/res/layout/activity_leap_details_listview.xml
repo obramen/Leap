@@ -116,7 +116,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:paddingBottom="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp">
@@ -131,7 +131,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="circle ID"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/colorPrimaryDark"
                             />

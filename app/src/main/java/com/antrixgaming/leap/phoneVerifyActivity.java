@@ -202,7 +202,7 @@ public class phoneVerifyActivity extends AppCompatActivity {
                     spinner.setVisibility(View.VISIBLE);
 
                     PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                            phoneNumber,        // Phone number to verify
+                           "+" + phoneNumber,        // Phone number to verify
                             60,                 // Timeout duration
                             TimeUnit.SECONDS,   // Unit of timeout
                             phoneVerifyActivity.this,  // Activity (for callback binding)

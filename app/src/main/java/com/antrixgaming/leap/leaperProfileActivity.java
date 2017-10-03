@@ -29,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,6 +118,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
     Button saveProfileButton;
     Button cancelProfileButton;
+    RelativeLayout leapLayout;
 
     String taunt;
     String name;
@@ -198,6 +200,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
         saveProfileButton = (Button) findViewById(R.id.saveProfileButton);
         cancelProfileButton = (Button) findViewById(R.id.cancelProfileButton);
+        leapLayout = (RelativeLayout) findViewById(R.id.leapLayout);
 
 
 
@@ -249,6 +252,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
             changeBackgroundImage.setVisibility(View.GONE);
             editProfile.setVisibility(View.GONE);
             leapStatusSwitch.setVisibility(View.GONE);
+            leapLayout.setVisibility(View.GONE);
             changeProfileImage.setVisibility(View.GONE);
             leaperProfileNewLeap.setVisibility(View.VISIBLE);
             leaperProfileNewMessage.setVisibility(View.VISIBLE);
@@ -262,6 +266,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
             changeBackgroundImage.setVisibility(View.VISIBLE);
             editProfile.setVisibility(View.VISIBLE);
             leapStatusSwitch.setVisibility(View.VISIBLE);
+            leapLayout.setVisibility(View.VISIBLE);
             changeProfileImage.setVisibility(View.VISIBLE);
             leaperProfileNewLeap.setVisibility(View.GONE);
             leaperProfileNewMessage.setVisibility(View.GONE);
@@ -285,7 +290,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
-        userProfileDbRef.child(leaperPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+        userProfileDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -399,11 +404,11 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                 progressDialogSaveProfile.setMessage("Saving information");
                 progressDialogSaveProfile.show();
 
-                dbRef.child("userprofiles").child(leaperPhoneNumber).setValue(new UserProfile(leaperPhoneNumber, nameEditText.getText().toString(),
-                        tauntEditText.getText().toString(), genderEditText.getText().toString(),"" ,
+                dbRef.child("userprofiles").child(leaperPhoneNumber).setValue(new UserProfile(leaperPhoneNumber, nameEditText.getText().toString().trim(),
+                        tauntEditText.getText().toString().trim(), genderEditText.getText().toString().trim(),"" ,
                         "" , "",
-                        psnEditText.getText().toString(), xboxliveEditText.getText().toString(),
-                        steamEditText.getText().toString(), originEditText.getText().toString()));
+                        psnEditText.getText().toString().trim(), xboxliveEditText.getText().toString().trim(),
+                        steamEditText.getText().toString().trim(), originEditText.getText().toString().trim()));
 
 
 

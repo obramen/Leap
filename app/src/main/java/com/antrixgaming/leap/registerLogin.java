@@ -1,11 +1,16 @@
 package com.antrixgaming.leap;
 
+import android.animation.Animator;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -37,6 +42,7 @@ import com.hbb20.CountryCodePicker;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static android.view.ViewAnimationUtils.createCircularReveal;
 
 
 public class registerLogin extends AppCompatActivity {
@@ -53,6 +59,8 @@ public class registerLogin extends AppCompatActivity {
 
     LoadingButton btnSignIn;
 
+    private View animateView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +71,21 @@ public class registerLogin extends AppCompatActivity {
 
         btnSignIn = (LoadingButton) findViewById(R.id.btnSignIn);
 
+
+/*
+        btnSignIn.setAnimationEndListener(new LoadingButton.AnimationEndListener() {
+            @Override
+            public void onAnimationEnd(LoadingButton.AnimationType animationType) {
+                if(animationType == LoadingButton.AnimationType.SUCCESSFUL){
+                    startActivity(new Intent(registerLogin.this, Leap.class));
+                }
+            }
+        });
+
+*/
+
+
+        animateView = findViewById(R.id.animate_view);
 
         //assign progress bar
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
@@ -115,6 +138,10 @@ public class registerLogin extends AppCompatActivity {
                 btnSignIn.loadingSuccessful();
 
                 Toast.makeText(registerLogin.this, "Verification Successful", Toast.LENGTH_LONG).show();
+
+
+
+
                 signInWithPhoneAuthCredential(credential);
 
 
@@ -127,6 +154,9 @@ public class registerLogin extends AppCompatActivity {
                 //Log.w(TAG, "onVerificationFailed", e);
 
                 btnSignIn.loadingFailed();
+                btnSignIn.setEnabled(true);
+
+
 
 
                 Toast.makeText(registerLogin.this, "Account Problem, Contact Admin", Toast.LENGTH_LONG).show();
@@ -136,11 +166,19 @@ public class registerLogin extends AppCompatActivity {
                     // Invalid request
                     // ...
                     Toast.makeText(registerLogin.this, "Invalid phone number provided", Toast.LENGTH_LONG).show();
+                    btnSignIn.reset();
+                    btnSignIn.setEnabled(true);
+
+
 
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     // ...
                     Toast.makeText(registerLogin.this, "SMS quota for project has been exceeded", Toast.LENGTH_LONG).show();
+                    btnSignIn.reset();
+                    btnSignIn.setEnabled(true);
+
+
                 }
 
                 spinner.setVisibility(View.GONE);
@@ -160,7 +198,9 @@ public class registerLogin extends AppCompatActivity {
                 // by combining the code with a verification ID.
                 //Log.d(TAG, "onCodeSent:" + verificationId);
 
-                btnSignIn.loadingSuccessful();
+                //btnSignIn.loadingSuccessful();
+
+
 
                 Toast.makeText(registerLogin.this, "Sent: Check for verification code", Toast.LENGTH_LONG).show();
 
@@ -217,7 +257,7 @@ public class registerLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                btnSignIn.startLoading(); //start loading
+
 
 
 
@@ -243,8 +283,8 @@ public class registerLogin extends AppCompatActivity {
 
 
                 btnSignIn.startLoading(); //start loading
-
-                spinner.setVisibility(View.VISIBLE);
+                btnSignIn.setEnabled(false);
+                //spinner.setVisibility(View.VISIBLE);
 
                 //remove "0" from number if any
                 int firstDigit = Integer.parseInt((phoneNumber.getText().toString()).substring(0, 1));
@@ -288,6 +328,11 @@ public class registerLogin extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
+
+
+
+
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
@@ -300,7 +345,9 @@ public class registerLogin extends AppCompatActivity {
                             openLeapIntent.putExtra("countryCodeStatus", "1");
 
 
-                            btnSignIn.loadingSuccessful();
+                            //btnSignIn.reset();
+                            //btnSignIn.setEnabled(true);
+
 
                             registerLogin.this.startActivity(openLeapIntent);
                             finish();
@@ -308,9 +355,14 @@ public class registerLogin extends AppCompatActivity {
 
 
 
+
                         } else {
 
                             btnSignIn.loadingFailed();
+                            btnSignIn.reset();
+                            btnSignIn.setEnabled(true);
+
+
 
                             // Sign in failed, display a message and update the UI
                             //Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -319,6 +371,9 @@ public class registerLogin extends AppCompatActivity {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
                                 Toast.makeText(registerLogin.this, "Invalid credential recorded", Toast.LENGTH_LONG).show();
+                                btnSignIn.reset();
+                                btnSignIn.setEnabled(true);
+
 
                             }
                         }
@@ -371,6 +426,44 @@ public class registerLogin extends AppCompatActivity {
 
                 });
 
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void toNextPage(){
+
+        int cx = (btnSignIn.getLeft() + btnSignIn.getRight()) / 2;
+        int cy = (btnSignIn.getTop() + btnSignIn.getBottom()) / 2;
+
+        Animator animator = ViewAnimationUtils.createCircularReveal(animateView,cx,cy,0,getResources().getDisplayMetrics().heightPixels * 1.2f);
+        animator.setDuration(500);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animateView.setVisibility(View.VISIBLE);
+        animator.start();
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                startActivity(new Intent(registerLogin.this,Leap.class));
+                btnSignIn.reset();
+                animateView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
 
     }
 

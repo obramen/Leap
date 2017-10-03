@@ -149,12 +149,12 @@
 
 
                     <RelativeLayout
-                        android:id="@+id/layout2"
+                        android:id="@+id/leapLayout"
                         android:layout_below="@+id/layout1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
-                            android:id="@+id/textView1"
+                            android:id="@+id/leapText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Leaps"
@@ -186,8 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp">
+                    android:paddingEnd="10dp">
 
 
                     <TextView
@@ -249,103 +248,95 @@
                             android:layout_marginTop="3dp">
 
 
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:paddingStart="10dp"
-                                android:paddingEnd="10dp"
+                                android:orientation="vertical"
                                 android:paddingBottom="10dp"
-                                android:orientation="vertical">
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
                                     android:text="BIO"
-                                    android:textStyle="bold"
                                     android:textColor="@color/colorPrimary"
-                                    android:layout_marginStart="10dp"
-                                    android:layout_marginTop="10dp"/>
+                                    android:textStyle="bold" />
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingBottom="10dp">
+                                    android:layout_height="wrap_content">
 
 
                                     <TextView
                                         android:id="@+id/nameHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Name"
                                         android:layout_marginStart="10dp"
-                                        android:layout_marginTop="10dp"/>
+                                        android:text="Name" />
 
                                     <EditText
                                         android:id="@+id/nameEditText"
-                                        android:visibility="gone"
-                                        android:layout_below="@+id/nameHeader"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_below="@+id/nameHeader"
                                         android:layout_margin="5dp"
-                                        android:textSize="16sp"
-                                        android:text=""
+                                        android:layout_marginEnd="10dp"
                                         android:hint="Name"
-                                        />
+                                        android:text=""
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+
                                     <TextView
                                         android:id="@+id/nameTextView"
-                                        android:layout_toRightOf="@+id/nameHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:layout_margin="10dp"/>
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/nameHeader"
+                                        android:text="" />
 
 
                                 </RelativeLayout>
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingBottom="10dp">
+                                    android:layout_height="wrap_content">
 
 
                                     <TextView
                                         android:id="@+id/genderHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Gender"
                                         android:layout_marginStart="10dp"
-                                        android:layout_marginTop="10dp"/>
+                                        android:layout_marginTop="10dp"
+                                        android:text="Gender" />
+
                                     <EditText
                                         android:id="@+id/genderEditText"
-                                        android:layout_below="@+id/genderHeader"
-                                        android:visibility="gone"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_below="@+id/genderHeader"
                                         android:layout_margin="5dp"
-                                        android:textSize="16sp"
-                                        android:text=""
+                                        android:layout_marginEnd="10dp"
                                         android:hint="Gender"
-                                        />
+                                        android:text=""
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+
                                     <TextView
                                         android:id="@+id/genderTextView"
-                                        android:layout_toRightOf="@+id/genderHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:layout_margin="10dp"/>
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/genderHeader"
+                                        android:text="" />
 
 
                                 </RelativeLayout>
 
 
-
-
                             </LinearLayout>
-
-
 
 
                         </android.support.v7.widget.CardView>
@@ -353,7 +344,7 @@
 
                         <android.support.v7.widget.CardView
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="3dp">
 
 
@@ -371,14 +362,13 @@
                                     android:text="PROFILES (Unconfirmed)"
                                     android:textStyle="bold"
                                     android:textColor="@color/colorPrimary"
-                                    android:layout_marginStart="10dp"
-                                    android:layout_marginTop="10dp"/>
+                                    android:layout_margin="10dp"
+                                    />
 
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingBottom="10dp">
+                                    android:layout_height="wrap_content">
 
 
                                     <TextView
@@ -412,8 +402,7 @@
                                 </RelativeLayout>
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingBottom="10dp">
+                                    android:layout_height="wrap_content">
 
 
                                     <TextView
@@ -449,8 +438,7 @@
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingBottom="10dp">
+                                    android:layout_height="wrap_content">
 
 
                                     <TextView
@@ -485,8 +473,7 @@
                                 <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:paddingBottom="10dp"
-                                    android:layout_marginBottom="10dp">
+                                    >
 
 
                                     <TextView
@@ -495,9 +482,11 @@
                                         android:layout_height="wrap_content"
                                         android:text="Origin:"
                                         android:layout_marginStart="10dp"
-                                        android:layout_marginTop="10dp"/>
+                                        android:layout_marginTop="10dp"
+                                        />
                                     <EditText
                                         android:id="@+id/originEditText"
+                                        android:layout_below="@+id/originHeader"
                                         android:visibility="gone"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -516,7 +505,45 @@
                                         android:layout_margin="10dp"/>
 
 
+
+
                                 </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+
+                                    <Button
+                                        android:id="@+id/saveProfileButton"
+                                        android:visibility="visible"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        style="@style/redButtonDark"
+                                        android:textColor="@color/white"
+                                        android:text="save"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_marginRight="20dp"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_marginEnd="19dp" />
+
+                                    <Button
+                                        android:id="@+id/cancelProfileButton"
+                                        android:visibility="visible"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        style="@style/redButtonDark"
+                                        android:layout_gravity="end"
+                                        android:textColor="@color/white"
+                                        android:text="@string/cancel"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_toStartOf="@+id/saveProfileButton" />
+
+
+                                </RelativeLayout>
+
+
 
 
                             </LinearLayout>
@@ -532,28 +559,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <Button
-                                android:id="@+id/saveProfileButton"
-                                android:visibility="visible"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/redButtonDark"
-                                android:layout_margin="20dp"
-                                android:layout_alignParentEnd="true"
-                                android:textColor="@color/white"
-                                android:text="save"/>
 
-                            <Button
-                                android:id="@+id/cancelProfileButton"
-                                android:visibility="visible"
-                                android:layout_toLeftOf="@id/saveProfileButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/redButtonDark"
-                                android:layout_marginTop="20dp"
-                                android:layout_gravity="end"
-                                android:textColor="@color/white"
-                                android:text="@string/cancel"/>
 
                         </RelativeLayout>
 

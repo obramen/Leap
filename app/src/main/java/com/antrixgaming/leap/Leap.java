@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.joanzapata.iconify.widget.IconButton;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 
@@ -62,6 +64,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Leap extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
+
+
+
+    // NOTIFICATIONS
+    MenuItem itemMessages;
+    long count;
+
+    RelativeLayout badgeLayout;
+    TextView itemMessagesBadgeTextView;
+    IconButton iconButtonMessages;
+
 
 
     //TODO CHANGE ALL FIREBASE INSTANCES TO dbRef
@@ -553,6 +566,45 @@ public class Leap extends BaseActivity
         });
 
 
+
+
+
+
+
+
+
+        dbRef.child("notifications").child(myPhoneNumber).child("notificationStatus").orderByValue().equalTo("0")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                        count = dataSnapshot.getChildrenCount();
+
+                        itemMessagesBadgeTextView.setText("" + count);
+                        itemMessagesBadgeTextView.setVisibility(View.VISIBLE);
+                        iconButtonMessages.setTextColor(getResources().getColor(R.color.white));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -632,7 +684,26 @@ public class Leap extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.leap, menu);
+        getMenuInflater().inflate(R.menu.leap, menu);
+
+
+
+        itemMessages = menu.findItem(R.id.nav_leap_notifications);
+
+        badgeLayout = (RelativeLayout) itemMessages.getActionView();
+        itemMessagesBadgeTextView = (TextView) badgeLayout.findViewById(R.id.badge_textView);
+        itemMessagesBadgeTextView.setVisibility(View.GONE); // initially hidden
+
+        iconButtonMessages = (IconButton) badgeLayout.findViewById(R.id.badge_icon_button);
+        iconButtonMessages.setText("{fa-envelope}");
+        iconButtonMessages.setTextColor(getResources().getColor(R.color.selectorcolor));
+
+        iconButtonMessages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         return true;
     }
@@ -646,17 +717,12 @@ public class Leap extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.nav_notifications) {
+        if (id == R.id.nav_leap_notifications) {
 
             Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
             startActivity(openNotificationsIntent);
 
             return true;
-        } else if (id == R.id.action_new_circle) {
-
-
-            return true;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -673,19 +739,11 @@ public class Leap extends BaseActivity
             Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
             startActivity(openNotificationsIntent);
 
-        } else if (id == R.id.nav_cancelled_leaps) {
-
-        } else if (id == R.id.nav_pending_leaps) {
-
-        } else if (id == R.id.nav_declined_leaps) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-
-
     }
 
 

@@ -3,24 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_leap_search"
-        android:icon="@drawable/ic_action_search"
-        android:title="Search"
-        app:showAsAction="ifRoom"
-        app:actionProviderClass="android.support.v7.widget.SearchActionProvider"
-        android:actionViewClass="android.widget.SearchView"/>
+        android:id="@+id/nav_leap_notifications"
+        android:icon="@drawable/ic_bell"
+        android:title="Notifications"
+        app:showAsAction="always"
+        android:actionLayout="@layout/notification_layout"
 
-    <item
-        android:id="@+id/action_new_circle"
-        android:orderInCategory="100"
-        android:title="@string/new_circle"
-        app:showAsAction="never" />
+        />
 
-    <item
-        android:id="@+id/action_leap_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
+
+
 
 
 

@@ -522,8 +522,8 @@
                                         style="@style/redButtonDark"
                                         android:textColor="@color/white"
                                         android:text="save"
-                                        android:layout_marginLeft="20dp"
-                                        android:layout_marginRight="20dp"
+
+                                        android:layout_margin="20dp"
                                         android:layout_alignParentTop="true"
                                         android:layout_alignParentEnd="true"
                                         android:layout_marginEnd="19dp" />
@@ -537,8 +537,8 @@
                                         android:layout_gravity="end"
                                         android:textColor="@color/white"
                                         android:text="@string/cancel"
-                                        android:layout_alignParentBottom="true"
-                                        android:layout_toStartOf="@+id/saveProfileButton" />
+                                        android:layout_toStartOf="@+id/saveProfileButton"
+                                        android:layout_alignBaseline="@id/saveProfileButton"/>
 
 
                                 </RelativeLayout>

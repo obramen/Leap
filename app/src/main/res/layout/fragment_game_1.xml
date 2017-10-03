@@ -51,7 +51,7 @@ android:background="@color/grey">
                     android:text="LEAPER ONE"
                     android:textStyle="bold"
                     android:layout_alignParentStart="true"
-                    android:layout_alignBaseline="@+id/leaperOneScoreBox"
+                    android:layout_alignBaseline="@+id/g1leaperOneScoreBox"
                     android:layout_marginTop="13dp" />
 
                 <TextView
@@ -62,18 +62,18 @@ android:background="@color/grey">
                     android:textStyle="bold"
                     android:layout_marginBottom="15dp"
                     android:layout_alignParentStart="true"
-                    android:layout_alignBaseline="@+id/leaperTwoScoreBox"/>
+                    android:layout_alignBaseline="@+id/g1leaperTwoScoreBox"/>
 
                 <EditText
-                    android:layout_toRightOf="@id/leaperOneText"
-                    android:id="@+id/leaperOneScoreBox"
+                    android:id="@+id/g1leaperOneScoreBox"
                     android:layout_width="60dp"
-                    android:layout_marginStart="20dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/g1leaperTwoScoreBox"
+
                     android:enabled="false"/>
                 <EditText
-                    android:layout_below="@+id/leaperOneScoreBox"
-                    android:id="@+id/leaperTwoScoreBox"
+                    android:layout_below="@+id/g1leaperOneScoreBox"
+                    android:id="@+id/g1leaperTwoScoreBox"
                     android:layout_toRightOf="@+id/leapertwoText"
                     android:layout_marginStart="20dp"
                     android:enabled="false"

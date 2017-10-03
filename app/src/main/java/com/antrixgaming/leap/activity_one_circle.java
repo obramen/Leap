@@ -481,7 +481,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up button, so
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -501,6 +501,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
             groupInfoIntent.putExtra("circleID", groupID);
             startActivity(groupInfoIntent);
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);

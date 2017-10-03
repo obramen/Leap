@@ -185,6 +185,8 @@ public class LeapUtilities {
         this.childTwo = childTwo;
 
 
+
+
         databaseReference.addValueEventListener(new ValueEventListener() {
 
 
@@ -201,8 +203,33 @@ public class LeapUtilities {
 
             }
         });
+
+
     }
 
+    public String getReturnedChildValue() {
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                returnedChildValue = dataSnapshot.child(childOne).child(childTwo).getValue().toString();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        return returnedChildValue;
+    }
 
     public void ReturnFirebaseChildValue(String childOne, String childTwo, String childThree) {
 
@@ -298,7 +325,6 @@ public class LeapUtilities {
 
     public void setReturnedChildValue(String returnedChildValue){this.returnedChildValue = returnedChildValue;}
 
-    public String getReturnedChildValue(){return returnedChildValue;}
 
 
 

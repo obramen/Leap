@@ -6,11 +6,10 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="8dp"
-        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        android:divider="@color/colorPrimaryDark"
         android:id="@+id/list_of_circle_live_leaps"
         android:scrollbarSize="5dp"
-        android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
         />
 

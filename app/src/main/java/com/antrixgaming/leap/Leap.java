@@ -1,9 +1,15 @@
 package com.antrixgaming.leap;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -22,9 +28,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,16 +40,15 @@ import com.antrixgaming.leap.Fragments.LeapFragments.leapsFragment;
 
 import com.antrixgaming.leap.Fragments.LeapFragments.userProfileFragment;
 import com.antrixgaming.leap.LeapClasses.ContactPermissionStartService;
-import com.antrixgaming.leap.LeapClasses.ImageUtils;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
+import com.antrixgaming.leap.LeapClasses.PermissionRequest;
 import com.antrixgaming.leap.LeapServices.ContactService;
 import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.Models.circleMessage;
 import com.antrixgaming.leap.Models.createGroupCircle;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.StringSignature;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.antrixgaming.leap.Models.getPhoneContacts;
+import com.antrixgaming.leap.Models.savePhoneContacts;
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,11 +58,14 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.joanzapata.iconify.widget.IconButton;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 
+import java.lang.ref.ReferenceQueue;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,13 +75,16 @@ public class Leap extends BaseActivity
 
 
 
-    // NOTIFICATIONS
-    MenuItem itemMessages;
-    long count;
+    String countryCode;
 
-    RelativeLayout badgeLayout;
-    TextView itemMessagesBadgeTextView;
-    IconButton iconButtonMessages;
+
+
+
+
+    // NOTIFICATIONS
+    long count = 0;
+    MenuItem menuItem;
+
 
 
 
@@ -108,14 +119,25 @@ public class Leap extends BaseActivity
 
     LeapUtilities leapUtilities;
 
-    ContactPermissionStartService contactPermissionStartService;
+    SharedPreferences sharedPreferences;
 
+    ContactPermissionStartService contactPermissionStartService;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leap);
+
+        contactPermissionStartService = new ContactPermissionStartService();
+        contactPermissionStartService.ContactPermissionStartService(Leap.this);
+
+
+
+
+
+
+
 
         leapUtilities = new LeapUtilities();
 
@@ -124,12 +146,14 @@ public class Leap extends BaseActivity
         UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        contactPermissionStartService = new ContactPermissionStartService();
+        //contactPermissionStartService = new ContactPermissionStartService();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
             //getContactRetrievalPermission();
             //contactPermissionStartService.ContactPermissionStartService(this);
         } else {
+            //contactPermissionStartService.ContactPermissionStartService(this);
+
             //Intent startContactService = new Intent(this, ContactService.class);
             //startService(startContactService);
         }
@@ -163,9 +187,21 @@ public class Leap extends BaseActivity
 
             dbRef.child("uid").child(UID).child("countrycode").setValue("+" + countryCode);
 
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("countryCode", "+" + countryCode);
+            editor.apply();
+
+
         } else {
 
         }
+
+
+
+
+
+
         /////////////// ADDING ENDS HERE /////////////////
 
 
@@ -359,7 +395,8 @@ public class Leap extends BaseActivity
 
                     case 2:
                         //Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
-                        Intent openOneChat = new Intent(Leap.this, selectLeaperContact.class);
+                        //Intent openOneChat = new Intent(Leap.this, selectLeaperContact.class);
+                        Intent openOneChat = new Intent(Leap.this, SortedContacts.class);
                         openOneChat.putExtra("SourceActivity", "1");
                         startActivity(openOneChat);
                         break;
@@ -573,25 +610,32 @@ public class Leap extends BaseActivity
 
 
 
-        dbRef.child("notifications").child(myPhoneNumber).child("notificationStatus").orderByValue().equalTo("0")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                        count = dataSnapshot.getChildrenCount();
+        FirebaseDatabase.getInstance().getReference().child("notifications").child(myPhoneNumber).orderByChild("notificationStatus")
+                .equalTo("0").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                count = dataSnapshot.getChildrenCount();
 
-                        itemMessagesBadgeTextView.setText("" + count);
-                        itemMessagesBadgeTextView.setVisibility(View.VISIBLE);
-                        iconButtonMessages.setTextColor(getResources().getColor(R.color.white));
 
-                    }
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+            }
+        });
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -681,32 +725,34 @@ public class Leap extends BaseActivity
         }
     }
 
+
+
+
+
+
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.leap, menu);
 
 
+        MenuItem menuItem = menu.findItem(R.id.nav_leap_notifications);
+        menuItem.setIcon(leapUtilities.buildCounterDrawable(count, R.drawable.ic_bell));
 
-        itemMessages = menu.findItem(R.id.nav_leap_notifications);
-
-        badgeLayout = (RelativeLayout) itemMessages.getActionView();
-        itemMessagesBadgeTextView = (TextView) badgeLayout.findViewById(R.id.badge_textView);
-        itemMessagesBadgeTextView.setVisibility(View.GONE); // initially hidden
-
-        iconButtonMessages = (IconButton) badgeLayout.findViewById(R.id.badge_icon_button);
-        iconButtonMessages.setText("{fa-envelope}");
-        iconButtonMessages.setTextColor(getResources().getColor(R.color.selectorcolor));
-
-        iconButtonMessages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         return true;
     }
+
+
+
+
+
+
+
 
 
     @Override
@@ -776,87 +822,12 @@ public class Leap extends BaseActivity
 
 
 
-    private void getContactRetrievalPermission(){
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_CONTACTS);
-
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            Toast.makeText(this, "permission not available, request", Toast.LENGTH_SHORT).show();
 
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.READ_CONTACTS)) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                Toast.makeText(this, "permission request starting", Toast.LENGTH_SHORT).show();
 
 
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-        else {
-
-            Toast.makeText(this, "contactt permission already available", Toast.LENGTH_SHORT).show();
-            Intent startContactService = new Intent(this, ContactService.class);
-            startService(startContactService);
-
-        }
-    }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                    Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
-
-                    Intent startContactService = new Intent(this, ContactService.class);
-                    startService(startContactService);
-
-                } else {
-
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show();
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
 
 
 

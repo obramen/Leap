@@ -39,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -55,6 +56,10 @@ public class leapDetailsActivity extends BaseActivity {
 
     public String mGameFormat = null;
 
+    DatabaseReference scoreDbRef;
+    DatabaseReference dbRef;
+
+
 
     private MaterialSheetFab materialSheetFab;
     private int statusBarColor;
@@ -68,6 +73,8 @@ public class leapDetailsActivity extends BaseActivity {
     View overlay;
     int sheetColor;
     int fabColor;
+
+    public int leapStatus;
 
 
 
@@ -83,6 +90,17 @@ public class leapDetailsActivity extends BaseActivity {
     String mLeaperOneUID;
     String mLeaperTwoUID;
 
+    public String leapID;
+    public String sourceActivity;
+    public String mLeaperOne;
+    public String mLeaperTwo;
+
+
+    Long mleaperOneScore;
+    Long mleaperTwoScore;
+
+    Query leapDbRef;
+    String circleID;
 
 
     @Override
@@ -97,7 +115,7 @@ public class leapDetailsActivity extends BaseActivity {
 
         final String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        dbRef = FirebaseDatabase.getInstance().getReference();
 
         mStorage = FirebaseStorage.getInstance().getReference();
 
@@ -106,9 +124,50 @@ public class leapDetailsActivity extends BaseActivity {
 
         // Create the adapter that will return a fragment for each of the
         // primary sections of the activity.
+        // source activities:
+        // 1 - FragmentLeaps from main screen
+        // 2 - Open Fragment from circle
+        // 3 - Live fragment from circle
 
         Bundle bundle = getIntent().getExtras();
-        final String leapID = bundle.getString("leapID");
+        leapID = bundle.getString("leapID");
+        sourceActivity = bundle.getString("sourceActivity");
+
+        if (Objects.equals(sourceActivity, "1")){
+
+            leapDbRef = dbRef.child("leaps").child(myUID).orderByKey().equalTo(leapID);
+
+
+        } else if (Objects.equals(sourceActivity, "2")){
+
+            circleID = bundle.getString("circleID");
+
+            leapDbRef = dbRef.child("leapsforcircles").child("openleaps").child(circleID).orderByKey().equalTo(leapID);
+
+
+
+        } else if (Objects.equals(sourceActivity, "3")) {
+            circleID = bundle.getString("circleID");
+
+            leapDbRef = dbRef.child("leapsforcircles").child("liveleaps").child(circleID).orderByKey().equalTo(leapID);
+
+        }
+
+
+
+
+        scoreDbRef = dbRef.child("leapscore").child(leapID);
+
+        fab = (MenuFAB) findViewById(R.id.leapDetailsMenuFAB);
+        sheetView = findViewById(R.id.leapDetailsFab_sheet);
+        overlay = findViewById(R.id.leapDetailsDimOverlay);
+        sheetColor = getResources().getColor(R.color.white);
+        fabColor = getResources().getColor(R.color.colorPrimary);
+
+        setupFab();
+
+
+
 
 
 
@@ -120,7 +179,7 @@ public class leapDetailsActivity extends BaseActivity {
         FirebaseListAdapter<UserLeap> adapter;
         adapter = new FirebaseListAdapter<UserLeap>(this, UserLeap.class,
                 R.layout.activity_leap_details_listview,
-                dbRef.child("leaps").child(myUID).orderByKey().equalTo(leapID)) {
+                leapDbRef) {
 
             @Override
             protected void populateView(final View v, final UserLeap model, int position) {
@@ -132,8 +191,18 @@ public class leapDetailsActivity extends BaseActivity {
                 final TextView countdownTimer = (TextView)v.findViewById(R.id.detailsCountdownTimer);
                 final TextView leaperOne = (TextView)v.findViewById(R.id.detailsLeaperOne);
                 final TextView leaperTwo = (TextView)v.findViewById(R.id.detailsLeaperTwo);
+                final TextView leaperOneScore = (TextView)v.findViewById(R.id.detailsLeaperOneScore);
+                final TextView leaperTwoScore = (TextView)v.findViewById(R.id.detailsLeaperTwoScore);
                 TextView gameTime = (TextView)v.findViewById(R.id.detailsLeapTime);
                 final CardView circleDetailsLayout = (CardView) v.findViewById(R.id.circleDetailsLayout);
+
+
+
+
+
+
+
+
 
 
 
@@ -148,13 +217,8 @@ public class leapDetailsActivity extends BaseActivity {
                 //final TextView leapOutText = (TextView)v.findViewById(R.id.leapOutText);
                 final TextView mcircleID = (TextView)v.findViewById(R.id.circleID);
 
-                fab = (MenuFAB) findViewById(R.id.leapDetailsMenuFAB);
-                sheetView = findViewById(R.id.leapDetailsFab_sheet);
-                overlay = findViewById(R.id.leapDetailsDimOverlay);
-                sheetColor = getResources().getColor(R.color.white);
-                fabColor = getResources().getColor(R.color.colorPrimary);
 
-                setupFab();
+
 
                 // FAB MENU ITEMS
                 LinearLayout leapDetailsLeapInLayout = (LinearLayout)findViewById(R.id.leapDetailsLeapInLayout); // enclosing layout
@@ -171,8 +235,8 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                final String mLeaperOne = model.getleaperOne();
-                final String mLeaperTwo = model.getleaperTwo();
+                mLeaperOne = model.getleaperOne();
+                mLeaperTwo = model.getleaperTwo();
                 final String mLeapID = model.getleapID();
                 final String mCircleID = model.getCircleID();
                 final String mPhoneNumber = myPhoneNumber;
@@ -255,7 +319,7 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                    //final TextView leapsLeaperTwoUID = (TextView) v.findViewById(R.id.leapsLeaperTwoUID);
+                //final TextView leapsLeaperTwoUID = (TextView) v.findViewById(R.id.leapsLeaperTwoUID);
 
 
 
@@ -291,7 +355,6 @@ public class leapDetailsActivity extends BaseActivity {
 
                                 }
                             });
-                    mcircleID.setText(leapUtilities.getReturnedChildValue());
 
 
                 }
@@ -309,9 +372,15 @@ public class leapDetailsActivity extends BaseActivity {
                 gameTime.setText(lDay + ", " +lTime);
                 leaperOne.setText(model.getleaperOne());
                 leaperTwo.setText(model.getleaperTwo());
+                //leaperOneScore.setText(model.leaperOneScore);
+                //leaperTwoScore.setText(model.leaperTwoScore);
 
 
-                int leapStatus = Integer.parseInt(model.getleapStatus());
+
+
+
+
+                leapStatus = Integer.parseInt(model.getleapStatus());
 
 
                 // set conditions
@@ -394,80 +463,190 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                    //// IF THE SENDER IS THE ONE OPENING THE LEAP
-                    if (Objects.equals(model.getleaperOne(), myPhoneNumber)){
-
-                        leapDetailsLeapIn.setVisibility(v.GONE);
-                        leapDetailsLeapOut.setVisibility(v.VISIBLE);
 
 
+                scoreDbRef.orderByChild("winner").equalTo(model.leaperOne).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        mleaperOneScore = dataSnapshot.getChildrenCount();
+                        leaperOneScore.setText(String.valueOf(mleaperOneScore));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                scoreDbRef.orderByChild("winner").equalTo(model.leaperTwo).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        mleaperTwoScore = dataSnapshot.getChildrenCount();
+                        leaperTwoScore.setText(String.valueOf(mleaperTwoScore));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
 
 
-                        //// CHECK IF IT'S AN OPEN LEAP. IF YES THERE'S NO LEAPER TWO UID
-                        if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
 
-                            leaperOneUID = myUID;
+/*
+                scoreDbRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.child("Game1").child("winner").getValue() == null){
+
+
+
+                        }else {
+
+
+
+
+                            if(mleaperOneScore < mleaperTwoScore){
+                                leaperOneScore.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                leaperTwoScore.setTextColor(getResources().getColor(R.color.md_green_900));
+                                leaperOne.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                leaperTwo.setTextColor(getResources().getColor(R.color.md_green_900));
+
+
+
+                            }
+                            else if(Objects.equals(mleaperOneScore, mleaperTwoScore)){
+
+                                leaperOneScore.setTextColor(getResources().getColor(R.color.grey));
+                                leaperTwoScore.setTextColor(getResources().getColor(R.color.grey));
+                                leaperOne.setTextColor(getResources().getColor(R.color.grey));
+                                leaperTwo.setTextColor(getResources().getColor(R.color.grey));
+
+
+                            }
+
+                            else if(mleaperOneScore > mleaperTwoScore){
+
+                                leaperOneScore.setTextColor(getResources().getColor(R.color.md_green_900));
+                                leaperTwoScore.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                leaperOne.setTextColor(getResources().getColor(R.color.md_green_900));
+                                leaperTwo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+                            }
+
+
+
 
                         }
 
-
-                        //// IF IT'S NOT AN OPEN LEAP, THAT MEANS LEAPER TWO PRESEND. SO USING
-                        //// HIS PHONE NUMBER (MODEL.GETLEAPERTWO) FIND HIS UID
-                        else{
-                            DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
-                                    .child("phonenumbers").child(model.getleaperTwo()).child("uid");
-
-                            leaperTwoDbRef.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    leaperOneUID = myUID;
-                                    leaperTwoUID = dataSnapshot.getValue().toString();
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
                     }
 
 
 
-                    /// IF THE PERSON TO ACCEPT IS THE ONE OPENING THE LEAP
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //// IF THE SENDER IS THE ONE OPENING THE LEAP
+                if (Objects.equals(model.getleaperOne(), myPhoneNumber)){
+
+                    leapDetailsLeapIn.setVisibility(v.GONE);
+                    leapDetailsLeapOut.setVisibility(v.VISIBLE);
+
+
+
+
+
+                    //// CHECK IF IT'S AN OPEN LEAP. IF YES THERE'S NO LEAPER TWO UID
+                    if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
+
+                        leaperOneUID = myUID;
+
+                    }
+
+
+                    //// IF IT'S NOT AN OPEN LEAP, THAT MEANS LEAPER TWO PRESEND. SO USING
+                    //// HIS PHONE NUMBER (MODEL.GETLEAPERTWO) FIND HIS UID
                     else{
-
-                        leapDetailsLeapIn.setVisibility(v.VISIBLE);
-                        leapDetailsLeapOut.setVisibility(v.VISIBLE);
-
-                        //// WHETHER IT'S AN OPEN LEAP OR NOT, THE ONE OPENING IT IS A THE SECOND LEAPER / ACCEPTOR
-
-                        ///// FIND THE UID FOR THE SENDER (MODEL.GETLEAPERONE)
                         DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
-                                .child("phonenumbers").child(model.getleaperOne()).child("uid");
+                                .child("phonenumbers").child(model.getleaperTwo()).child("uid");
 
                         leaperTwoDbRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                leaperOneUID = dataSnapshot.getValue().toString();
-                                leaperTwoUID = myUID;
+                                leaperOneUID = myUID;
+                                leaperTwoUID = dataSnapshot.getValue().toString();
                             }
-
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
                         });
-
-
-
-
-
                     }
+                }
+
+
+
+                /// IF THE PERSON TO ACCEPT IS THE ONE OPENING THE LEAP
+                else{
+
+                    leapDetailsLeapIn.setVisibility(v.VISIBLE);
+                    leapDetailsLeapOut.setVisibility(v.VISIBLE);
+
+                    //// WHETHER IT'S AN OPEN LEAP OR NOT, THE ONE OPENING IT IS A THE SECOND LEAPER / ACCEPTOR
+
+                    ///// FIND THE UID FOR THE SENDER (MODEL.GETLEAPERONE)
+                    DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
+                            .child("phonenumbers").child(model.getleaperOne()).child("uid");
+
+                    leaperTwoDbRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            leaperOneUID = dataSnapshot.getValue().toString();
+                            leaperTwoUID = myUID;
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+
+
+                }
 
 
 
@@ -547,13 +726,17 @@ public class leapDetailsActivity extends BaseActivity {
                                 // update for sender to show accepted // LEAPER ONE
                                 // leaper two in this case is the other leaper in context
                                 dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leapStatus").setValue("1");
+                                dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leaperTwo").setValue(myPhoneNumber);
 
 
 
                                 // update/add leap to list for acceptor // LEAPER TWO
-                                dbRef.child("leaps").child(leaperTwoUID).child(model.getleapID()).setValue(new UserLeap(model.getleapID(), model.getgameType()
+                                dbRef.child("leaps").child(myUID).child(model.getleapID()).setValue(new UserLeap(model.getleapID(), model.getgameType()
                                         , model.getgameFormat(), model.getleaperOne(),
                                         myPhoneNumber, model.getleapDay(), model.getleapTime(), "1", circleID));
+
+
+                                finish();
 
 
 
@@ -585,7 +768,7 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                        }
+                            }
 
 
 

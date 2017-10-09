@@ -17,4 +17,25 @@ public class getPhoneContacts {
     }
 
 
+    public String getmContactName() {
+        return mContactName;
+    }
+
+    public String getmContactPhoneNumber() {
+        return mContactPhoneNumber;
+    }
+
+    public String getmPhoneContactType() {
+        return mPhoneContactType;
+    }
+
+    public void setmContactName(String mContactName) {
+        this.mContactName = mContactName;
+    }
+
+    public void setmContactPhoneNumber(String mContactPhoneNumber) {
+        this.mContactPhoneNumber = mContactPhoneNumber;
+    }
+
+
 }

@@ -6,8 +6,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="1dp"
-        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        android:divider="@color/transparent"
         android:id="@+id/list_of_circle_open_leaps"
         android:scrollbarSize="5dp"
         android:transcriptMode="alwaysScroll"

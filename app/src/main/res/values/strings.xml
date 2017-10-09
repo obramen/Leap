@@ -145,5 +145,10 @@
     <string name="cancel">CANCEL</string>
     <string name="leaper_two">Leaper Two</string>
     <string name="leaper_one">Leaper One</string>
+    <string name="account_exists">account exits</string>
+    <string name="Leap">Leap</string>
+    <string name="welcome">Welcome</string>
+    <string name="title_activity_authenticator">Activity Authenticator</string>
+    <string name="title_activity_viewing">Activity Viewing</string>
 
 </resources>

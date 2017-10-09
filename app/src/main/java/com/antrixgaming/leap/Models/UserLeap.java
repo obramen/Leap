@@ -12,7 +12,9 @@ public class UserLeap {
 
     private String gameType;
     public String gameFormat;
+    public String leaperOneScore;
     public String leaperOne;
+    public String leaperTwoScore;
     public String leaperTwo;
     private long leapSetupTime;
     private String leapDay;
@@ -24,12 +26,34 @@ public class UserLeap {
 
 
 
-    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, String leapDay, String leapTime, String leapStatus, @Nullable String circleID) {
+    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, String leapDay, String leapTime, String leapStatus,
+                    @Nullable String circleID) {
         this.leapID = leapID;
         this.gameType = gameType;
         this.gameFormat = gameFormat;
         this.leaperOne = leaperOne;
         this.leaperTwo = leaperTwo;
+        this.leapDay = leapDay;
+        this.leapTime = leapTime;
+        this.leapStatus = leapStatus;
+        this.circleID = circleID;
+
+        // Initialize to current time
+        leapSetupTime = new Date().getTime();
+
+        leapStatusChangeTime = new Date().getTime();
+
+    }
+
+    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, String leapDay, String leapTime, String leapStatus,
+                    @Nullable String circleID, @Nullable String leaperOneScore, @Nullable String leaperTwoScore) {
+        this.leapID = leapID;
+        this.gameType = gameType;
+        this.gameFormat = gameFormat;
+        this.leaperOne = leaperOne;
+        this.leaperOneScore = leaperOneScore;
+        this.leaperTwo = leaperTwo;
+        this.leaperTwoScore = leaperTwoScore;
         this.leapDay = leapDay;
         this.leapTime = leapTime;
         this.leapStatus = leapStatus;
@@ -99,5 +123,21 @@ public class UserLeap {
 
     public String getCircleID() {
         return circleID;
+    }
+
+    public String getLeaperTwoScore() {
+        return leaperTwoScore;
+    }
+
+    public String getLeaperOneScore() {
+        return leaperOneScore;
+    }
+
+    public void setLeaperOneScore(String leaperOneScore) {
+        this.leaperOneScore = leaperOneScore;
+    }
+
+    public void setLeaperTwoScore(String leaperTwoScore) {
+        this.leaperTwoScore = leaperTwoScore;
     }
 }

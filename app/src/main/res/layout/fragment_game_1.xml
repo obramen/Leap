@@ -1,170 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:background="@color/grey">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/grey">
 
-    <LinearLayout
-        android:id="@+id/scoreLayout"
-        android:orientation="horizontal"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:weightSum="3"
         android:layout_height="wrap_content">
 
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:background="@color/white"
-            android:layout_height="match_parent"
-            android:padding="20dp">
-
-            <RelativeLayout
-                android:id="@+id/nameBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/relativeLayout"
-                android:layout_alignParentStart="true">
-                
-
-
-
-
-
-
-
-
-            </RelativeLayout>
-            
-            <RelativeLayout
-                android:layout_toRightOf="@id/nameBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/relativeLayout">
-
-                <TextView
-                    android:id="@+id/leaperOneText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LEAPER ONE"
-                    android:textStyle="bold"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignBaseline="@+id/g1leaperOneScoreBox"
-                    android:layout_marginTop="13dp" />
-
-                <TextView
-                    android:id="@+id/leapertwoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LEAPER TWO"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="15dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignBaseline="@+id/g1leaperTwoScoreBox"/>
-
-                <EditText
-                    android:id="@+id/g1leaperOneScoreBox"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/g1leaperTwoScoreBox"
-
-                    android:enabled="false"/>
-                <EditText
-                    android:layout_below="@+id/g1leaperOneScoreBox"
-                    android:id="@+id/g1leaperTwoScoreBox"
-                    android:layout_toRightOf="@+id/leapertwoText"
-                    android:layout_marginStart="20dp"
-                    android:enabled="false"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content" />
-
-            </RelativeLayout>
-
-
-
-
-        </RelativeLayout>
-
-        b<RelativeLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="0dp"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:visibility="visible"
-            android:background="@color/white"
-            android:layout_height="match_parent"
-            android:padding="15dp">
-
-            <Button
-                android:id="@+id/recordScoreButton"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Record Score"
-                android:textSize="10dp"
-                android:layout_alignParentEnd="true"
-                style="@style/redButtonDark"
-                />
-
-            <Button
-                android:id="@+id/disputeScoreButton"
-                android:layout_width="130dp"
-                android:layout_below="@id/recordScoreButton"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                android:textSize="10dp"
-                android:text="Dispute Score"
-                style="@style/redButtonDark"
-                android:layout_alignParentEnd="true"
-                />
-
-
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-
-
-
-
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/vodsLayout"
-        android:layout_below="@id/scoreLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:padding="20dp">
-
-        <TextView
-            android:id="@+id/streamHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="STREAM / VODS"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_margin="20dp"/>
-
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="60dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="YouTube VOD goes here"
-            android:layout_gravity="center"
-            />
+            android:orientation="vertical"
+            android:layout_height="match_parent">
 
 
 
+            <LinearLayout
+                android:id="@+id/scoreLayout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:weightSum="3"
+                android:layout_height="wrap_content">
 
 
-    </android.support.v7.widget.CardView>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:background="@color/white"
+                    android:layout_height="match_parent"
+                    android:padding="20dp">
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/relativeLayout">
+
+                        <TextView
+                            android:id="@+id/leaperOneText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LEAPER ONE"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/g1leaperOneScoreBox"
+                            android:textStyle="bold"
+                            android:layout_alignBaseline="@+id/g1leaperOneScoreBox"
+                            android:layout_marginTop="13dp" />
+
+                        <TextView
+                            android:id="@+id/leaperTwoText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LEAPER TWO"
+                            android:layout_toEndOf="@+id/g1leaperTwoScoreBox"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_alignBaseline="@+id/g1leaperTwoScoreBox"/>
+
+                        <EditText
+                            android:id="@+id/g1leaperOneScoreBox"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:textAlignment="center"
+                            android:layout_alignRight="@+id/g1leaperTwoScoreBox"
+                            android:enabled="false"/>
+                        <EditText
+                            android:layout_below="@+id/g1leaperOneScoreBox"
+                            android:id="@+id/g1leaperTwoScoreBox"
+                            android:layout_centerHorizontal="true"
+                            android:textAlignment="center"
+                            android:inputType="number"
+                            android:enabled="false"
+                            android:layout_alignParentStart="true"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:id="@+id/g1SaveScoreButton"
+                            android:layout_marginStart="15dp"
+                            android:background="@drawable/green_button"
+                            android:src="@drawable/done_check_mark"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:padding="5dp"
+                            android:visibility="gone"
+                            android:layout_below="@id/g1leaperTwoScoreBox"
+                            android:tint="@color/white" />
+
+                        <ImageView
+                            android:id="@+id/g1CancelScoreButton"
+                            android:layout_marginStart="20dp"
+                            android:background="@drawable/redbutton"
+                            android:src="@drawable/ic_action_cancel"
+                            android:layout_alignTop="@+id/g1SaveScoreButton"
+                            android:layout_toEndOf="@+id/g1SaveScoreButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:padding="5dp"
+                            android:visibility="gone"
+                            android:tint="@color/white"
+                            />
+
+
+                        <TextView
+                            android:id="@+id/editScoreButton"
+                            android:layout_marginStart="15dp"
+                            android:textColor="@color/md_green_900"
+                            android:layout_alignBottom="@id/leaperOneText"
+                            android:layout_alignParentEnd="true"
+                            android:text="Edit score"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                        <TextView
+                            android:id="@+id/disputeScoreButton"
+                            android:layout_marginStart="15dp"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_below="@id/editScoreButton"
+                            android:layout_marginTop="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:text="Dispute score"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+
+                    </RelativeLayout>
+
+
+
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+            <RelativeLayout
+                android:background="@color/white"
+                android:id="@+id/vodsLayout"
+                android:layout_below="@+id/scoreLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/streamHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="STREAM / VODS"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="YouTube VOD goes here"
+                    android:layout_centerInParent="true"
+                    />
+
+
+
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
 
 
 </RelativeLayout>

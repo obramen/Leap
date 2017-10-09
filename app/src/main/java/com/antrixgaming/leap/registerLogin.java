@@ -154,7 +154,8 @@ public class registerLogin extends AppCompatActivity {
                 //Log.w(TAG, "onVerificationFailed", e);
 
                 btnSignIn.loadingFailed();
-                btnSignIn.setEnabled(true);
+                btnSignIn.reset();
+
 
 
 
@@ -167,7 +168,6 @@ public class registerLogin extends AppCompatActivity {
                     // ...
                     Toast.makeText(registerLogin.this, "Invalid phone number provided", Toast.LENGTH_LONG).show();
                     btnSignIn.reset();
-                    btnSignIn.setEnabled(true);
 
 
 
@@ -176,7 +176,6 @@ public class registerLogin extends AppCompatActivity {
                     // ...
                     Toast.makeText(registerLogin.this, "SMS quota for project has been exceeded", Toast.LENGTH_LONG).show();
                     btnSignIn.reset();
-                    btnSignIn.setEnabled(true);
 
 
                 }
@@ -283,7 +282,6 @@ public class registerLogin extends AppCompatActivity {
 
 
                 btnSignIn.startLoading(); //start loading
-                btnSignIn.setEnabled(false);
                 //spinner.setVisibility(View.VISIBLE);
 
                 //remove "0" from number if any
@@ -346,7 +344,6 @@ public class registerLogin extends AppCompatActivity {
 
 
                             //btnSignIn.reset();
-                            //btnSignIn.setEnabled(true);
 
 
                             registerLogin.this.startActivity(openLeapIntent);
@@ -360,7 +357,6 @@ public class registerLogin extends AppCompatActivity {
 
                             btnSignIn.loadingFailed();
                             btnSignIn.reset();
-                            btnSignIn.setEnabled(true);
 
 
 
@@ -372,7 +368,6 @@ public class registerLogin extends AppCompatActivity {
                                 // The verification code entered was invalid
                                 Toast.makeText(registerLogin.this, "Invalid credential recorded", Toast.LENGTH_LONG).show();
                                 btnSignIn.reset();
-                                btnSignIn.setEnabled(true);
 
 
                             }

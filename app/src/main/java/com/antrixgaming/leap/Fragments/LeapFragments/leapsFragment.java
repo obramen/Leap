@@ -50,10 +50,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class leapsFragment extends Fragment {
 
-    public DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+    public DatabaseReference dbRef;
     public String leaperTwoUID;
     public String myUID;
     public String myPhoneNumber;
+    DatabaseReference scoreDbRef;
+
 
 
     LeapUtilities leapUtilities;
@@ -67,6 +69,9 @@ public class leapsFragment extends Fragment {
     String mLeaperOneUID;
     String mLeaperTwoUID;
 
+    Long mleaperOneScore = null;
+    Long mleaperTwoScore = null;
+
 
 
 
@@ -78,12 +83,16 @@ public class leapsFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_leaps, container, false);
 
 
+        dbRef = FirebaseDatabase.getInstance().getReference();
+
+
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         leapUtilities = new LeapUtilities();
 
         mStorage = FirebaseStorage.getInstance().getReference();
+
 
 
 
@@ -120,7 +129,9 @@ public class leapsFragment extends Fragment {
                 TextView gameFormat = (TextView)v.findViewById(R.id.gameFormat);
                 final TextView countdownTimer = (TextView)v.findViewById(R.id.countdownTimer);
                 TextView leaperOne = (TextView)v.findViewById(R.id.leaperOne);
+                final TextView leaperOneScore = (TextView)v.findViewById(R.id.leaperOneScore);
                 final TextView leaperTwo = (TextView)v.findViewById(R.id.leaperTwo);
+                final TextView leaperTwoScore = (TextView)v.findViewById(R.id.leaperTwoScore);
                 TextView gameTime = (TextView)v.findViewById(R.id.gameTime);
                 final CardView leapCard = (CardView) v.findViewById(R.id.leapCard);
                 final TextView mcircleID = (TextView)v.findViewById(R.id.circleID);
@@ -173,6 +184,11 @@ public class leapsFragment extends Fragment {
                 leaperOne.setText(model.getleaperOne());
                 leaperTwo.setText(model.getleaperTwo());
                 final int leapStatus = Integer.parseInt(model.getleapStatus());
+                leaperOneScore.setText(model.leaperOneScore);
+                leaperTwoScore.setText(model.leaperTwoScore);
+
+                scoreDbRef = dbRef.child("leapscore").child(model.getleapID());
+
 
 
                 // set conditions
@@ -204,6 +220,47 @@ public class leapsFragment extends Fragment {
                 }
 
 
+
+
+                scoreDbRef.orderByChild("winner").equalTo(model.leaperOne).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        mleaperOneScore = dataSnapshot.getChildrenCount();
+                        leaperOneScore.setText(String.valueOf(mleaperOneScore));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                scoreDbRef.orderByChild("winner").equalTo(model.leaperTwo).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (Objects.equals(model.getleaperTwo(), "Open Leap")){
+
+                            leaperTwoScore.setText("0");
+
+
+                        } else {
+                            mleaperTwoScore = dataSnapshot.getChildrenCount();
+                            leaperTwoScore.setText(String.valueOf(mleaperTwoScore));
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
                 // Format the date before showing it
                 //messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()));
 
@@ -211,9 +268,20 @@ public class leapsFragment extends Fragment {
                 leapCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent openLeapDetails = new Intent(getActivity(), leapDetailsActivity.class);
-                        openLeapDetails.putExtra("leapID", model.getleapID());
-                        startActivity(openLeapDetails);
+
+                        if(leapStatus == 2){
+
+
+                            Toast.makeText(getActivity(), "Leap declined", Toast.LENGTH_SHORT).show();
+                        } else{
+
+                            Intent openLeapDetails = new Intent(getActivity(), leapDetailsActivity.class);
+                            openLeapDetails.putExtra("leapID", model.getleapID());
+                            openLeapDetails.putExtra("sourceActivity", "1");
+                            startActivity(openLeapDetails);
+                        }
+
+
 
                     }
                 });
@@ -231,6 +299,7 @@ public class leapsFragment extends Fragment {
                         countdownTimer.setTextColor(getResources().getColor(R.color.white));
                         //countdownTimer.setTextColor(getResources().getColor(R.color.colorPrimary));
                         countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
                     }
                 }.start();
 

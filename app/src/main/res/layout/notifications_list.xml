@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="Invite by"/>
 
+
             <TextView
                 android:id="@+id/notificationInviteMessage"
                 android:layout_width="wrap_content"

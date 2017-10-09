@@ -1,13 +1,13 @@
 package com.antrixgaming.leap.Models;
 
+import android.support.annotation.Nullable;
+
 import java.util.Date;
 
 
 public class LeapScore {
 
-    private String matchID;
-    private String leaperOne;
-    private String leaperTwo;
+    private String leapID;
     private String leaperOneScore;
     private String leaperTwoScore;
     private String scoreStatus;
@@ -15,24 +15,44 @@ public class LeapScore {
     private String modifiedBy;
     private long lastModifiedTime;
     private long firstEntryTime;
+    String winner;
+    String looser;
 
 
-
-    public LeapScore(String matchID, String leaperOne, String leaperTwo, String leaperOneScore, String leaperTwoScore,
-                     String scoreStatus, String entryBy, String modifiedBy, long lastModifiedTime) {
-        this.matchID = matchID;
-        this.leaperOne = leaperOne;
-        this.leaperTwo = leaperTwo;
+    public LeapScore(String leapID, String leaperOneScore, String leaperTwoScore,
+                     String scoreStatus, String entryBy, String winner, String looser) {
+        this.leapID = leapID;
         this.leaperOneScore = leaperOneScore;
         this.leaperTwoScore = leaperTwoScore;
         this.scoreStatus = scoreStatus;
         this.entryBy = entryBy;
+        this.winner = winner;
+        this.looser = looser;
         this.modifiedBy = modifiedBy;
         this.lastModifiedTime = lastModifiedTime;
 
         // Initialize to current time
         firstEntryTime = new Date().getTime();
     }
+
+
+    public LeapScore(String leapID, String leaperOneScore, String leaperTwoScore,
+                     String scoreStatus, String entryBy, String winner, String looser, @Nullable String modifiedBy, @Nullable long lastModifiedTime) {
+        this.leapID = leapID;
+        this.leaperOneScore = leaperOneScore;
+        this.leaperTwoScore = leaperTwoScore;
+        this.scoreStatus = scoreStatus;
+        this.entryBy = entryBy;
+        this.modifiedBy = modifiedBy;
+        this.lastModifiedTime = lastModifiedTime;
+        this.winner = winner;
+        this.looser = looser;
+
+        // Initialize to current time
+        firstEntryTime = new Date().getTime();
+    }
+
+
 
     public LeapScore(){
 
@@ -50,24 +70,16 @@ public class LeapScore {
         this.lastModifiedTime = lastModifiedTime;
     }
 
-    public void setLeaperOne(String leaperOne) {
-        this.leaperOne = leaperOne;
-    }
-
     public void setLeaperOneScore(String leaperOneScore) {
         this.leaperOneScore = leaperOneScore;
-    }
-
-    public void setLeaperTwo(String leaperTwo) {
-        this.leaperTwo = leaperTwo;
     }
 
     public void setLeaperTwoScore(String leaperTwoScore) {
         this.leaperTwoScore = leaperTwoScore;
     }
 
-    public void setMatchID(String matchID) {
-        this.matchID = matchID;
+    public void setleapID(String leapID) {
+        this.leapID = leapID;
     }
 
     public void setModifiedBy(String modifiedBy) {
@@ -90,24 +102,16 @@ public class LeapScore {
         return entryBy;
     }
 
-    public String getLeaperOne() {
-        return leaperOne;
-    }
-
     public String getLeaperOneScore() {
         return leaperOneScore;
-    }
-
-    public String getLeaperTwo() {
-        return leaperTwo;
     }
 
     public String getLeaperTwoScore() {
         return leaperTwoScore;
     }
 
-    public String getMatchID() {
-        return matchID;
+    public String getleapID() {
+        return leapID;
     }
 
     public String getModifiedBy() {
@@ -116,6 +120,22 @@ public class LeapScore {
 
     public String getScoreStatus() {
         return scoreStatus;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public String getLooser() {
+        return looser;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public void setLooser(String looser) {
+        this.looser = looser;
     }
 }
 

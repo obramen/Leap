@@ -243,6 +243,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
 
 
+
         circleLeapListNewLeapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -655,6 +656,8 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         }
 
     }
+
+
 
 
 

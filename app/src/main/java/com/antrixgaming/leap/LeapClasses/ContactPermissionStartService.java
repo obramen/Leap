@@ -24,7 +24,6 @@ public class ContactPermissionStartService extends BaseActivity{
 
         this.context = context;
 
-
     int permissionCheck = ContextCompat.checkSelfPermission(context,
         android.Manifest.permission.READ_CONTACTS);
 

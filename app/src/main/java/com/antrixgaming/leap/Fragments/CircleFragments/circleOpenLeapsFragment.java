@@ -1,26 +1,47 @@
 package com.antrixgaming.leap.Fragments.CircleFragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.antrixgaming.leap.Leap;
+import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.Models.ChatMessage;
+import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.Models.UserLeap;
+import com.antrixgaming.leap.Models.circleMessage;
+import com.antrixgaming.leap.Models.createGroupCircle;
 import com.antrixgaming.leap.R;
+import com.antrixgaming.leap.leapDetailsActivity;
 import com.antrixgaming.leap.leaperProfileActivity;
 import com.firebase.ui.auth.ui.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.Objects;
 
@@ -29,39 +50,62 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class circleOpenLeapsFragment extends Fragment {
 
-    DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference dbRefOpenLeap = dbRef.child("leapsforcircles").child("openleaps");
+    DatabaseReference dbRef;
+    DatabaseReference dbRefOpenLeap;
     String circleID = null;
-    String myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+    String myPhoneNumber;
     String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    String leapID;
+
+
+    StorageReference mStorage;
+    StorageReference mLeaperOneStorageRef;
+
+
+    LeapUtilities leapUtilities;
+
+    String mleaperOne;
+    String leaperOneUID;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_circle_open_leaps, container, false);
+        final View view = inflater.inflate(R.layout.fragment_circle_open_leaps, container, false);
+
+        dbRef = FirebaseDatabase.getInstance().getReference();
+        myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        dbRefOpenLeap = dbRef.child("leapsforcircles").child("openleaps");
+
+        leapUtilities=new LeapUtilities();
 
 
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         circleID = sharedPreferences.getString("currentCircleID", null);
 
+        mStorage = FirebaseStorage.getInstance().getReference();
 
-        ListView listView = (ListView) view.findViewById(R.id.list_of_circle_open_leaps);
+
+
+
+
+
+        final ListView listView = (ListView) view.findViewById(R.id.list_of_circle_open_leaps);
         FirebaseListAdapter<UserLeap> adapter;
         adapter = new FirebaseListAdapter<UserLeap>(getActivity(), UserLeap.class,
-                R.layout.circle_open_leap_list, dbRefOpenLeap.child(circleID).orderByChild("leapSetupTime")) {
+                R.layout.circle_open_leap_list, dbRefOpenLeap.child(circleID)) {
             @Override
-            protected void populateView(View v, UserLeap model, int position) {
+            protected void populateView(View v, final UserLeap model, int position) {
 
                 TextView circleOpenListLeaperName = (TextView) v.findViewById(R.id.circleOpenListLeaperName);
                 TextView gameType = (TextView) v.findViewById(R.id.gameType);
                 TextView gameFormat = (TextView) v.findViewById(R.id.gameFormat);
                 TextView gameTime = (TextView) v.findViewById(R.id.gameTime);
-                TextView circleOpenListStatus = (TextView) v.findViewById(R.id.circleOpenListStatus);
+                TextView mleapID = (TextView) v.findViewById(R.id.leapID);
                 CircleImageView circleOpenListImage = (CircleImageView) v.findViewById(R.id.circleOpenListImage);
-                Button circleOpenListLeapInButton = (Button) v.findViewById(R.id.circleOpenListLeapInButton);
-                Button circleOpenListCancelButton = (Button) v.findViewById(R.id.circleOpenListCancelButton);
 
                 circleOpenListLeaperName.setText(model.getleaperOne());
                 gameType.setText(model.getgameType());
@@ -71,6 +115,9 @@ public class circleOpenLeapsFragment extends Fragment {
                 String leapStatus = model.getleapStatus();
 
 
+                mleapID.setText(model.getleapID());
+                mleaperOne = model.getleaperOne();
+
 
                 // leap button status
                 // 0 - new leap
@@ -78,37 +125,31 @@ public class circleOpenLeapsFragment extends Fragment {
                 // 2 - declined leap
                 // 3 - cancelled leap
 
-                if (Objects.equals(model.getleaperOne(), myPhoneNumber)){
+                mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
+                leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperOneStorageRef, circleOpenListImage);
 
-                    switch (leapStatus){
-                        case "0":
-                            circleOpenListLeapInButton.setVisibility(v.VISIBLE);
-                            circleOpenListCancelButton.setVisibility(v.VISIBLE);
-                        case"1":
-                            circleOpenListLeapInButton.setVisibility(v.GONE);
-                            circleOpenListCancelButton.setVisibility(v.VISIBLE);
+                FirebaseDatabase.getInstance().getReference().child("phonenumbers").child(model.getleaperOne())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                leaperOneUID = dataSnapshot.child("uid").getValue().toString();
 
-                    }
-                }
+                            }
 
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-
-                circleOpenListLeapInButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-
-                    }
-                });
-
-                circleOpenListCancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                            }
+                        });
 
 
 
-                    }
-                });
+
+
+
+
+
+
 
 
 
@@ -122,9 +163,31 @@ public class circleOpenLeapsFragment extends Fragment {
 
 
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                TextView mLeapID = (TextView) view.findViewById(R.id.leapID);
+
+                Intent openLeapDetails = new Intent(getActivity(), leapDetailsActivity.class);
+                openLeapDetails.putExtra("leapID", mLeapID.getText().toString());
+                openLeapDetails.putExtra("circleID", circleID);
+                openLeapDetails.putExtra("sourceActivity", "2");
+                startActivity(openLeapDetails);
+
+
+            }
+        });
+
+
+
+
+
         return view;
     }
 
 }
+
+
 
 

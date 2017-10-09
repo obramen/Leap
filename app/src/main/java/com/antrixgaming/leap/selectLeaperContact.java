@@ -1,6 +1,7 @@
 package com.antrixgaming.leap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,9 +22,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.LeapClasses.ContactPermissionStartService;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.LeapServices.ContactService;
 import com.antrixgaming.leap.LeapServices.LeapService;
+import com.antrixgaming.leap.Models.getPhoneContacts;
 import com.antrixgaming.leap.Models.savePhoneContacts;
 import com.antrixgaming.leap.Models.sendNotification;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -53,12 +56,21 @@ public class selectLeaperContact extends BaseActivity {
     StorageReference mLeaperStorageRef;
     List<String> selectedNumbers;
 
+    ContactPermissionStartService contactPermissionStartService;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_leaper_contact);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+
 
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
@@ -69,12 +81,13 @@ public class selectLeaperContact extends BaseActivity {
 
         selectedNumbers = new ArrayList<>();
 
+        //contactPermissionStartService = new ContactPermissionStartService();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
-            getContactRetrievalPermission();
+           //contactPermissionStartService.ContactPermissionStartService(this);
+
         } else {
-            Intent startContactService = new Intent(this, ContactService.class);
-            //startService(startContactService);
+            //contactPermissionStartService.ContactPermissionStartService(this);
         }
 
 
@@ -86,8 +99,9 @@ public class selectLeaperContact extends BaseActivity {
         ListView listOfContacts = (ListView) findViewById(R.id.leaperContactList);
 
         FirebaseListAdapter<savePhoneContacts> adapter;
+
         adapter = new FirebaseListAdapter<savePhoneContacts>(this, savePhoneContacts.class,
-                R.layout.phone_contact_list, dbRef.orderByChild("name")) {
+                R.layout.phone_contact_list, dbRef.orderByChild("name")) {  //dbRef.orderByChild("name")
             @Override
             protected void populateView(View v, savePhoneContacts model, int position) {
 
@@ -129,6 +143,8 @@ public class selectLeaperContact extends BaseActivity {
                 } else {
                     mPhoneContactType.setText("");
                 }
+
+
 
             }
 
@@ -317,9 +333,9 @@ public class selectLeaperContact extends BaseActivity {
             //finish();
             //startActivity(intent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
-                getContactRetrievalPermission();
+                //getContactRetrievalPermission();
             } else {
-                Intent startContactService = new Intent(this, ContactService.class);
+                //Intent startContactService = new Intent(this, ContactService.class);
                 //startService(startContactService);
             }
             return true;
@@ -331,103 +347,6 @@ public class selectLeaperContact extends BaseActivity {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-    private void getContactRetrievalPermission(){
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_CONTACTS);
-
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            Toast.makeText(this, "permission not available, request", Toast.LENGTH_SHORT).show();
-
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.READ_CONTACTS)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                Toast.makeText(this, "permission request starting", Toast.LENGTH_SHORT).show();
-
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-        else {
-
-            Toast.makeText(this, "contactt permission already available", Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                    Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show();
-
-                    Intent startContactService = new Intent(this, ContactService.class);
-                    //startService(startContactService);
-
-                } else {
-
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show();
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
-
-
-
-
-
-
-
 
 
 

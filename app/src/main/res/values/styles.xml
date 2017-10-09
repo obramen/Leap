@@ -114,4 +114,8 @@
         <item name="android:windowBackground">@drawable/background_dialogue</item>
     </style>
 
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

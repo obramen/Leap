@@ -8,15 +8,14 @@
     android:orientation="vertical">
 
 
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:paddingBottom="50dp">
 
 
@@ -25,10 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:background="@color/white">
-
-
-
-
 
 
                 <ImageView
@@ -40,39 +35,38 @@
                     android:id="@+id/changeBackgroundImage"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:visibility="visible"
-                    android:src="@drawable/ic_add_attachment"
-                    app:civ_border_color="@color/white"
-                    app:civ_fill_color="@color/white"
-                    app:civ_border_width="1dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true" />
-
+                    android:src="@drawable/ic_add_attachment"
+                    android:visibility="visible"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="1dp"
+                    app:civ_fill_color="@color/white" />
 
 
                 <RelativeLayout
                     android:id="@+id/card2"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/colorPrimary"
                     android:layout_width="match_parent"
+                    android:layout_height="150dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_height="150dp">
+                    android:layout_marginTop="1dp"
+                    android:background="@color/colorPrimary">
 
                     <TextView
                         android:id="@+id/profileLeaperName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:text="Profile Name"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="90dp"
-                        android:textSize="20sp"
-                        android:maxLines="1"
                         android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Profile Name"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
 
-                        android:layout_centerHorizontal="true" />
+                        android:textStyle="bold" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -84,53 +78,50 @@
                             android:id="@+id/leaperProfileNewMessage"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/ic_chat"
+                            android:layout_alignParentStart="true"
                             android:padding="5dp"
-                            android:layout_alignParentStart="true" />
+                            android:src="@drawable/ic_chat" />
 
                         <ImageView
                             android:id="@+id/leaperProfileNewLeap"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/ic_add_attachment"
-                            android:padding="5dp"
                             android:layout_marginStart="10dp"
-                            android:tint="@color/white"
-                            android:layout_toEndOf="@+id/leaperProfileNewMessage" />
+                            android:layout_toEndOf="@+id/leaperProfileNewMessage"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_add_attachment"
+                            android:tint="@color/white" />
 
 
                     </RelativeLayout>
 
 
-
                 </RelativeLayout>
-
 
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profileImage"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="78dp"
                     android:src="@drawable/games_fifa_17"
                     app:civ_border_color="#EEE"
-                    app:civ_border_width="2dp"
-                    android:layout_marginBottom="78dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true" />
+                    app:civ_border_width="2dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/changeProfileImage"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:visibility="visible"
-                    android:src="@drawable/ic_add_attachment"
-                    app:civ_border_color="@color/colorPrimary"
-                    app:civ_fill_color="@color/white"
-                    app:civ_border_width="2dp"
-                    android:layout_margin="5dp"
                     android:layout_alignBottom="@+id/profileImage"
-                    android:layout_alignEnd="@+id/profileImage" />
-
+                    android:layout_alignEnd="@+id/profileImage"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_add_attachment"
+                    android:visibility="visible"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="2dp"
+                    app:civ_fill_color="@color/white" />
 
 
             </RelativeLayout>
@@ -141,8 +132,6 @@
                 android:orientation="vertical">
 
 
-
-
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -150,84 +139,98 @@
 
                     <RelativeLayout
                         android:id="@+id/leapLayout"
-                        android:layout_below="@+id/layout1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout1">
+
                         <TextView
                             android:id="@+id/leapText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Leaps"
+                            android:layout_margin="10dp"
                             android:layout_toStartOf="@+id/leapStatusSwitch"
-                            android:layout_margin="10dp"/>
+                            android:text="Leaps" />
 
                         <Switch
                             android:id="@+id/leapStatusSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="10dp"
                             android:layout_centerVertical="true"
+                            android:layout_marginEnd="10dp"
                             android:checked="true" />
 
+                        <Switch
+                            android:id="@+id/statusPermissionSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:checked="true" />
+
+                        <TextView
+                            android:id="@+id/statusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_toEndOf="@+id/statusPermissionSwitch"
+                            android:text="Privacy" />
 
 
                     </RelativeLayout>
 
 
-
                 </android.support.v7.widget.CardView>
-
-
-
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                    android:paddingEnd="10dp"
+                    android:paddingStart="10dp">
 
 
                     <TextView
                         android:id="@+id/tauntHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Taunt:"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginTop="10dp"
+                        android:text="Taunt:" />
 
                     <EditText
                         android:id="@+id/tauntEditText"
-                        android:layout_below="@+id/tauntHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:hint="Taunt"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_below="@+id/tauntHeader"
                         android:layout_margin="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
+                        android:hint="Taunt"
+                        android:text=""
                         android:textSize="16sp"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
+
                     <TextView
                         android:id="@+id/tauntTexView"
-                        android:layout_toRightOf="@+id/tauntHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp"
+                        android:layout_toRightOf="@+id/tauntHeader"
+                        android:text="" />
 
                     <TextView
                         android:id="@+id/editProfle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
-                        android:textSize="12sp"
-                        android:text="Edit profile"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginEnd="10dp"
-                        android:textColor="@color/colorPrimary" />
+                        android:text="Edit profile"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12sp" />
 
 
                 </RelativeLayout>
@@ -237,9 +240,9 @@
                     android:layout_height="wrap_content">
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
                         <android.support.v7.widget.CardView
                             android:layout_width="match_parent"
@@ -273,8 +276,9 @@
                                         android:id="@+id/nameHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
                                         android:layout_marginStart="10dp"
-                                        android:text="Name" />
+                                        android:text="Name:" />
 
                                     <EditText
                                         android:id="@+id/nameEditText"
@@ -310,7 +314,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="10dp"
                                         android:layout_marginTop="10dp"
-                                        android:text="Gender" />
+                                        android:text="Gender:" />
 
                                     <EditText
                                         android:id="@+id/genderEditText"
@@ -351,19 +355,18 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:paddingStart="10dp"
-                                android:paddingEnd="10dp"
+                                android:orientation="vertical"
                                 android:paddingBottom="10dp"
-                                android:orientation="vertical">
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="PROFILES (Unconfirmed)"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/colorPrimary"
                                     android:layout_margin="10dp"
-                                    />
+                                    android:text="PROFILES (Unconfirmed)"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textStyle="bold" />
 
 
                                 <RelativeLayout
@@ -375,31 +378,33 @@
                                         android:id="@+id/psnHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="PSN:"
                                         android:layout_marginStart="10dp"
-                                        android:layout_marginTop="10dp"/>
+                                        android:layout_marginTop="10dp"
+                                        android:text="PSN:" />
+
                                     <EditText
                                         android:id="@+id/psnEditText"
-                                        android:layout_below="@id/psnHeader"
-                                        android:visibility="gone"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_below="@id/psnHeader"
                                         android:layout_margin="5dp"
-                                        android:textSize="16sp"
-                                        android:text=""
+                                        android:layout_marginEnd="10dp"
                                         android:hint="PSN"
-                                        />
+                                        android:text=""
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+
                                     <TextView
                                         android:id="@+id/psnTextView"
-                                        android:layout_toRightOf="@+id/psnHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:layout_margin="10dp"/>
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/psnHeader"
+                                        android:text="" />
 
 
                                 </RelativeLayout>
+
                                 <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
@@ -409,29 +414,29 @@
                                         android:id="@+id/xboxliveHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Xbox Live:"
                                         android:layout_marginStart="10dp"
                                         android:layout_marginTop="10dp"
-                                        />
+                                        android:text="Xbox Live:" />
+
                                     <EditText
                                         android:id="@+id/xboxliveEditText"
-                                        android:visibility="gone"
-                                        android:layout_below="@+id/xboxliveHeader"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_below="@+id/xboxliveHeader"
                                         android:layout_margin="5dp"
-                                        android:textSize="16sp"
-                                        android:text=""
+                                        android:layout_marginEnd="10dp"
                                         android:hint="Xbox Live"
-                                        />
+                                        android:text=""
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+
                                     <TextView
                                         android:id="@+id/xboxliveTextView"
-                                        android:layout_toRightOf="@+id/xboxliveHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:layout_margin="10dp"/>
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/xboxliveHeader"
+                                        android:text="" />
 
 
                                 </RelativeLayout>
@@ -445,66 +450,65 @@
                                         android:id="@+id/steamHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Steam:"
                                         android:layout_marginStart="10dp"
-                                        android:layout_marginTop="10dp"/>
+                                        android:layout_marginTop="10dp"
+                                        android:text="Steam:" />
+
                                     <EditText
                                         android:id="@+id/steamEditText"
-                                        android:visibility="gone"
-                                        android:layout_below="@+id/steamHeader"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_below="@+id/steamHeader"
                                         android:layout_margin="5dp"
-                                        android:textSize="16sp"
-                                        android:text=""
+                                        android:layout_marginEnd="10dp"
                                         android:hint="Steam"
-                                        />
+                                        android:text=""
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+
                                     <TextView
                                         android:id="@+id/steamTextView"
-                                        android:layout_toRightOf="@+id/steamHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:layout_margin="10dp"/>
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/steamHeader"
+                                        android:text="" />
 
 
                                 </RelativeLayout>
+
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    >
+                                    android:layout_height="wrap_content">
 
 
                                     <TextView
                                         android:id="@+id/originHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Origin:"
                                         android:layout_marginStart="10dp"
                                         android:layout_marginTop="10dp"
-                                        />
+                                        android:text="Origin:" />
+
                                     <EditText
                                         android:id="@+id/originEditText"
-                                        android:layout_below="@+id/originHeader"
-                                        android:visibility="gone"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="10dp"
+                                        android:layout_below="@+id/originHeader"
                                         android:layout_margin="5dp"
-                                        android:textSize="16sp"
-                                        android:text=""
+                                        android:layout_marginEnd="10dp"
                                         android:hint="Origin"
-                                        />
+                                        android:text=""
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+
                                     <TextView
                                         android:id="@+id/originTextView"
-                                        android:layout_toRightOf="@+id/originHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:layout_margin="10dp"/>
-
-
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/originHeader"
+                                        android:text="" />
 
 
                                 </RelativeLayout>
@@ -516,41 +520,35 @@
 
                                     <Button
                                         android:id="@+id/saveProfileButton"
-                                        android:visibility="visible"
+                                        style="@style/redButtonDark"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        style="@style/redButtonDark"
-                                        android:textColor="@color/white"
-                                        android:text="save"
-
-                                        android:layout_margin="20dp"
-                                        android:layout_alignParentTop="true"
                                         android:layout_alignParentEnd="true"
-                                        android:layout_marginEnd="19dp" />
+                                        android:layout_alignParentTop="true"
+                                        android:layout_margin="20dp"
+
+                                        android:layout_marginEnd="19dp"
+                                        android:text="save"
+                                        android:textColor="@color/white"
+                                        android:visibility="visible" />
 
                                     <Button
                                         android:id="@+id/cancelProfileButton"
-                                        android:visibility="visible"
+                                        style="@style/redButtonDark"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        style="@style/redButtonDark"
+                                        android:layout_alignBaseline="@id/saveProfileButton"
                                         android:layout_gravity="end"
-                                        android:textColor="@color/white"
-                                        android:text="@string/cancel"
                                         android:layout_toStartOf="@+id/saveProfileButton"
-                                        android:layout_alignBaseline="@id/saveProfileButton"/>
+                                        android:text="@string/cancel"
+                                        android:textColor="@color/white"
+                                        android:visibility="visible" />
 
 
                                 </RelativeLayout>
 
 
-
-
                             </LinearLayout>
-
-
-
-
 
 
                         </android.support.v7.widget.CardView>
@@ -560,20 +558,13 @@
                             android:layout_height="wrap_content">
 
 
-
                         </RelativeLayout>
-
 
 
                     </LinearLayout>
 
 
                 </android.support.v4.widget.NestedScrollView>
-
-
-
-
-
 
 
             </LinearLayout>
@@ -583,11 +574,6 @@
 
 
     </android.support.v4.widget.NestedScrollView>
-
-
-
-
-
 
 
 </LinearLayout>

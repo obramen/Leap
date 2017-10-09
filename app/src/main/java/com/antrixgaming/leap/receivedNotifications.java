@@ -44,12 +44,12 @@ public class receivedNotifications extends BaseActivity {
 
 
             @Override
-            protected void populateView(View v, final sendNotification model, int position) {
+            protected void populateView(final View v, final sendNotification model, int position) {
                 // Get references to the views of message.xml
                 TextView notificationsInviteType = (TextView)v.findViewById(R.id.notificationInviteType);
                 TextView notificationsInviteTime = (TextView)v.findViewById(R.id.notificationInviteTime);
                 final TextView notificationsInviteBy = (TextView)v.findViewById(R.id.notificationInviteBy);
-                TextView notificationsInviteMessage = (TextView)v.findViewById(R.id.notificationInviteMessage);
+                final TextView notificationsInviteMessage = (TextView)v.findViewById(R.id.notificationInviteMessage);
                 TextView notificationConfirmText = (TextView)v.findViewById(R.id.notificationConfirmText);
                 Button notificationLeapInButton = (Button) v.findViewById(R.id.notificationLeapInButton);
                 Button notificationLeapOutButton = (Button) v.findViewById(R.id.notificationLeapOutButton);
@@ -88,25 +88,27 @@ public class receivedNotifications extends BaseActivity {
                 // Case for invite type and invite group
                 // 1 - Circle invite // Invite to join + Circle name (Load using circle ID)
                 String messageFormat = model.getinviteMessage();
-                switch(messageFormat){
-                    case "1":
-                        notificationsInviteBy.setText("Invitation from " + model.getinviteBy());
-                        DatabaseReference query = dbRef.child("groupcircles").child(circleID);
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String mGroupName = dataSnapshot.child("groupName").getValue().toString();
-                                groupName = mGroupName;
-                            }
+                if (messageFormat == "1") {
+                    notificationsInviteBy.setText("Invitation from " + model.getinviteBy());
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(circleID)
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                                    String circleName = dataSnapshot.child("circleName").getValue().toString();
 
-                            }
-                        });
 
-                        notificationsInviteMessage.setText("You have been invited to join " + groupName);
-                        break;
+                                    notificationsInviteMessage.setText("You have been invited to join " + circleName);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
 
                 }
 
@@ -116,6 +118,7 @@ public class receivedNotifications extends BaseActivity {
                 // Format the date before showing it
                 notificationsInviteTime.setText(DateFormat.format("dd-MMM-yyyy, HH:mm",
                         model.getinviteTime()));
+                notificationsInviteBy.setText(model.getinviteBy());
 
 
                 notificationLeapInButton.setOnClickListener(new View.OnClickListener() {

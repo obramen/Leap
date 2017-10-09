@@ -96,6 +96,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
     TextView editProfile;
     Switch leapStatusSwitch;
+    Switch statusPermissionSwitch;
     ImageView leaperProfileNewLeap;
     ImageView leaperProfileNewMessage;
 
@@ -165,6 +166,8 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+
+
         profileImage = (CircleImageView) findViewById(R.id.profileImage);
         changeBackgroundImage = (CircleImageView) findViewById(R.id.changeBackgroundImage);
         profileImageBackground = (ImageView) findViewById(R.id.profileImageBackground);
@@ -173,6 +176,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         profileLeaperName = (TextView) findViewById(R.id.profileLeaperName);
         profileLeaperName.setText(leaperPhoneNumber);
         leapStatusSwitch = (Switch) findViewById(R.id.leapStatusSwitch);
+        statusPermissionSwitch = (Switch) findViewById(R.id.statusPermissionSwitch);
         editProfile = (TextView) findViewById(R.id.editProfle);
         changeProfileImage = (CircleImageView) findViewById(R.id.changeProfileImage);
         leaperProfileNewLeap = (ImageView) findViewById(R.id.leaperProfileNewLeap);
@@ -290,6 +294,33 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+        FirebaseDatabase.getInstance().getReference().child("connections").child(myUID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        String permissionStatus = dataSnapshot.child("statusPermission").getValue().toString();
+
+                        int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+                        if (mleapStatusSwitch == 1)
+                            leapStatusSwitch.setChecked(true);
+                        else
+                            leapStatusSwitch.setChecked(false);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
         userProfileDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -327,7 +358,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                 taunt = dataSnapshot.child("taunt").getValue().toString();
                 name = dataSnapshot.child("name").getValue().toString();
                 gender = dataSnapshot.child("gender").getValue().toString();
-                psn = dataSnapshot.child("taunt").getValue().toString();
+                psn = dataSnapshot.child("psn").getValue().toString();
                 xboxlive = dataSnapshot.child("xboxlive").getValue().toString();
                 origin = dataSnapshot.child("origin").getValue().toString();
                 steam = dataSnapshot.child("steam").getValue().toString();
@@ -553,12 +584,12 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+                int mPermissiontatusSwitch = Integer.parseInt(dataSnapshot.child("statusPermission").getValue().toString());
 
-                if (mleapStatusSwitch == 1)
-                    leapStatusSwitch.setChecked(true);
+                if (mPermissiontatusSwitch == 1)
+                    statusPermissionSwitch.setChecked(true);
                 else
-                    leapStatusSwitch.setChecked(false);
+                    statusPermissionSwitch.setChecked(false);
 
 
             }

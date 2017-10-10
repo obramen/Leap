@@ -294,27 +294,6 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
-        FirebaseDatabase.getInstance().getReference().child("connections").child(myUID)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        String permissionStatus = dataSnapshot.child("statusPermission").getValue().toString();
-
-                        int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
-
-                        if (mleapStatusSwitch == 1)
-                            leapStatusSwitch.setChecked(true);
-                        else
-                            leapStatusSwitch.setChecked(false);
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
 
 
@@ -592,6 +571,17 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                     statusPermissionSwitch.setChecked(false);
 
 
+
+
+
+                int mleapStatusSwitch = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+
+                if (mleapStatusSwitch == 1)
+                    leapStatusSwitch.setChecked(true);
+                else
+                    leapStatusSwitch.setChecked(false);
+
+
             }
 
             @Override
@@ -599,6 +589,24 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
             }
         });
+
+
+        statusPermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                            .child("statusPermission").setValue("1");
+                    Toast.makeText(leaperProfileActivity.this, "Privacy changed", Toast.LENGTH_SHORT).show();
+                }else{
+                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                            .child("statusPermission").setValue("0");
+                    Toast.makeText(leaperProfileActivity.this, "Privacy changed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
 
 
 

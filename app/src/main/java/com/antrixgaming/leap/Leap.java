@@ -395,8 +395,8 @@ public class Leap extends BaseActivity
 
                     case 2:
                         //Intent openOneChat = new Intent(getActivity(), phoneContactList.class);
-                        //Intent openOneChat = new Intent(Leap.this, selectLeaperContact.class);
-                        Intent openOneChat = new Intent(Leap.this, SortedContacts.class);
+                        Intent openOneChat = new Intent(Leap.this, selectLeaperContact.class);
+                        //Intent openOneChat = new Intent(Leap.this, SortedContacts.class);
                         openOneChat.putExtra("SourceActivity", "1");
                         startActivity(openOneChat);
                         break;
@@ -535,6 +535,80 @@ public class Leap extends BaseActivity
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+        //////////////////////////// RESET ONLINE STATUS NODE
+        dbRef.child("connections").child(myPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String leapStatus = null;
+                String statusPermission = null;
+
+                /// BEFORE ANYTHING, CHECK AND REMOVE REDUNDANT ENTRIES BY RESETTING ENTIRE NODE. HOWEVER GET AVAILABLE VALUES FIRST
+                if(dataSnapshot.child("leapStatus").getValue() == null){
+                } else {
+                    leapStatus = dataSnapshot.child("leapStatus").getValue().toString();
+                }
+
+                if(dataSnapshot.child("statusPermission").getValue() == null) {
+
+                }else {
+
+                    statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
+                }
+
+
+
+                //// PROCEED TO DELETE THE NODE
+                dbRef.child("connections").child(myPhoneNumber).removeValue();
+
+                /// RESTORE THE VALUES IF THEY WEREN'T NULL AT THE POINT OF RETRIEVING
+                if (leapStatus == null){
+                } else{
+                    dbRef.child("connections").child(myPhoneNumber).child("leapStatus").setValue(leapStatus);
+                }
+
+                if (statusPermission == null){
+                    dbRef.child("connections").child(myPhoneNumber).child("lastOnline").setValue("true");
+                    dbRef.child("connections").child(myPhoneNumber).child("statusPermission").setValue("1"); // 1 - for allow last see // default value if nothing set in settings
+                    dbRef.child("connections").child(myPhoneNumber).child("leapStatus").setValue("1");
+                } else{
+                    dbRef.child("connections").child(myPhoneNumber).child("lastOnline").setValue("true");
+                    dbRef.child("connections").child(myPhoneNumber).child("statusPermission").setValue(statusPermission);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //////////////////////////// RESET ONLINE STATUS NODE END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // since I can connect from multiple devices, we store each connection instance separately
         // any time that connectionsRef's value is null (i.e. has no children) I am offline
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -549,6 +623,8 @@ public class Leap extends BaseActivity
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
+
+
                     DatabaseReference con = myConnectionsRef.push();
                     deviceOnlinekey = con.getKey().toString();
 
@@ -576,34 +652,6 @@ public class Leap extends BaseActivity
 
 
 
-        final DatabaseReference onlineStatus = dbRef.child("connections").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-
-        onlineStatus.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.child("statusPermission").getValue() == null) {
-                    onlineStatus.child("lastOnline").setValue("true");
-                    onlineStatus.child("statusPermission").setValue("1"); // 1 - for allow last see // default value if nothing set in settings
-                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
-                            .child("leapStatus").setValue("1");
-                } else {
-                    onlineStatus.child("lastOnline").setValue("true");
-                    //String currentStatus = dataSnapshot.child("lastOnline").getValue().toString();
-                    //String statusPermission = dataSnapshot.child("statusPermission").getValue().toString();
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
 
 
 
@@ -626,20 +674,6 @@ public class Leap extends BaseActivity
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

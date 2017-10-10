@@ -81,13 +81,13 @@ public class selectLeaperContact extends BaseActivity {
 
         selectedNumbers = new ArrayList<>();
 
-        //contactPermissionStartService = new ContactPermissionStartService();
+        contactPermissionStartService = new ContactPermissionStartService();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
-           //contactPermissionStartService.ContactPermissionStartService(this);
+           contactPermissionStartService.ContactPermissionStartService(this);
 
         } else {
-            //contactPermissionStartService.ContactPermissionStartService(this);
+            contactPermissionStartService.ContactPermissionStartService(this);
         }
 
 

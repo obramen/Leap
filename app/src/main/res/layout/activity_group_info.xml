@@ -34,8 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                android:subtitle="This Sub"/>
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -79,7 +78,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end|bottom"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
 
             <!-- Sheet that contains your items -->
 

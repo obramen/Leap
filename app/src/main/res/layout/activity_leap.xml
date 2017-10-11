@@ -38,6 +38,16 @@
                 android:padding="7dp"
                 android:background="@color/colorPrimary">
 
+                <TextView
+                    android:id="@+id/BugReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bug report"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/white"/>
+
                 <Button
                     android:id="@+id/leapOutButton"
                     android:layout_width="70dp"

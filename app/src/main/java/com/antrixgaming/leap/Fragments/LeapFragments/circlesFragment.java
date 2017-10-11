@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,12 +142,20 @@ public class circlesFragment extends Fragment {
                                     // Set their text
                                     lastCircleMessage.setText(mLastCircleMessageText);
                                     lastCircleMessageBy.setText(mLastCircleMessageUser + ": ");
-                                    lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
+                                    //lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
                                     //messageUser.setText(model.getMessageUser());
 
                                     // Format the date before showing it
                                     //lastCircleMessageTime.setText(DateFormat.format("HH:mm",model.getMessageTime()));
                                     // Format the date before showing it
+
+                                    if (DateUtils.isToday(mLastCircleMessageTime)){
+                                        lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
+
+                                    }
+                                    else{
+                                        lastCircleMessageTime.setText(DateFormat.format("dd-MM-yy HH:mm", mLastCircleMessageTime));
+                                    }
 
 
 

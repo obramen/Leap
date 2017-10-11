@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -197,8 +198,14 @@ public class chatsFragment extends Fragment {
                 // Set their text
                 messageText.setText(model.getMessageText()); // set last message as it is
                 // Format the date before showing it
-                messageTime.setText(DateFormat.format("HH:mm",
-                        model.getMessageTime()));
+                if (DateUtils.isToday(model.getMessageTime())){
+                    messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()));
+
+                }
+                else{
+                    messageTime.setText(DateFormat.format("dd-MM-yy HH:mm", model.getMessageTime()));
+                }
+
                 String loadName = model.getloadname();
 
 

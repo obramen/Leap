@@ -11,6 +11,8 @@ import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,9 +112,32 @@ public class circleOpenLeapsFragment extends Fragment {
                 circleOpenListLeaperName.setText(model.getleaperOne());
                 gameType.setText(model.getgameType());
                 gameFormat.setText(model.getgameFormat());
-                gameTime.setText(model.getleapTime());
 
                 String leapStatus = model.getleapStatus();
+
+
+                /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME
+                CharSequence mDay = DateFormat.format("dd-MMM-yy", model.getleapDay());
+                CharSequence mTime = DateFormat.format("HH:MM", model.getleapDay());
+
+
+                CharSequence lDay;
+
+
+                if (DateUtils.isToday(model.getleapDay())){
+                    lDay = "Today";
+
+                }
+                else{
+                    lDay = mDay;
+                }
+
+
+                final CharSequence lTime = mTime;
+
+                gameTime.setText(lDay + ", " +lTime);
+
+
 
 
                 mleapID.setText(model.getleapID());

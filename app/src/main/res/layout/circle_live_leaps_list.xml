@@ -9,187 +9,206 @@
     android:descendantFocusability="blocksDescendants">
 
 
-    <LinearLayout
-        android:id="@+id/detailsLayout"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="7dp">
 
-        <TextView
-            android:id="@+id/gameTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/time"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/gameType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/type"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/gameFormat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/format"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="12sp" />
-
-
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_below="@id/detailsLayout"
-        android:layout_width="match_parent"
-        android:background="@color/white"
-        android:padding="3dp"
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-
-
-
-    <LinearLayout
-        android:id="@+id/nameFormat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="10">
-
-
-
-        <RelativeLayout
-            android:id="@+id/nameLayout"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            android:padding="5dp"
-            android:layout_marginBottom="1dp"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/circleLiveListImage1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/profile_picture"
-                android:layout_centerVertical="true"
-                app:civ_border_color="@color/grey"
-                app:civ_border_width="2dp" />
 
-            <TextView
-                android:id="@+id/circleLiveListLeaperOneName"
-                android:layout_toEndOf="@id/circleLiveListImage1"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/detailsLayout"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="name"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/circleListLeaperOneScore"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="-"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:background="@color/white"
+                android:padding="7dp">
+
+                <TextView
+                    android:id="@+id/gameTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/time"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/gameType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/type"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/gameFormat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/format"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
 
 
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/nameLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            android:background="@color/colorPrimaryDark"
-            android:padding="5dp">
+            </LinearLayout>
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/circleLiveListImage2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/profile_picture"
-                app:civ_border_color="@color/grey"
-                app:civ_border_width="2dp" />
-
-            <TextView
-                android:id="@+id/circleLiveListLeaperTwoName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/circleLiveListImage2"
-                android:layout_centerVertical="true"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="name"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/circleListLeaperTwoScore"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="-"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_below="@id/detailsLayout"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_height="wrap_content">
 
 
 
 
-
-    </LinearLayout>
-
-        <TextView
-            android:id="@+id/leapID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="leapid"
-            android:textColor="@color/black"
-            android:visibility="gone"/>
+                <LinearLayout
+                    android:id="@+id/nameFormat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="10">
 
 
-    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/nameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5"
+                        android:padding="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:background="@color/colorPrimaryDark">
+
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/circleLiveListImage1"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/profile_picture"
+                            android:layout_centerVertical="true"
+                            app:civ_border_color="@color/grey"
+                            app:civ_border_width="2dp" />
+
+                        <TextView
+                            android:id="@+id/circleLiveListLeaperOneName"
+                            android:layout_toEndOf="@id/circleLiveListImage1"
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="name"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/circleListLeaperOneScore"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="-"
+                            android:layout_marginStart="5dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/nameLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5"
+                        android:background="@color/colorPrimaryDark"
+                        android:padding="5dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/circleLiveListImage2"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/profile_picture"
+                            app:civ_border_color="@color/grey"
+                            app:civ_border_width="2dp" />
+
+                        <TextView
+                            android:id="@+id/circleLiveListLeaperTwoName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/circleLiveListImage2"
+                            android:layout_centerVertical="true"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="name"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/circleListLeaperTwoScore"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="-"
+                            android:layout_marginStart="5dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+
+
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/leapID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="leapid"
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+
 
 
 

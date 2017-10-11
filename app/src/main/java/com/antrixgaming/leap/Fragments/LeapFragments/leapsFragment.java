@@ -13,6 +13,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
 import android.support.v7.widget.CardView;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -172,8 +174,25 @@ public class leapsFragment extends Fragment {
 
                 }
 
-                final String lDay = model.getleapDay();
-                final String lTime = model.getleapTime();
+
+                /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME
+                CharSequence mDay = DateFormat.format("dd-MMM-yy", model.getleapDay());
+                CharSequence mTime = DateFormat.format("HH:MM", model.getleapDay());
+
+
+                CharSequence lDay;
+
+
+                if (DateUtils.isToday(model.getleapDay())){
+                    lDay = "Today";
+
+                }
+                else{
+                    lDay = mDay;
+                }
+
+
+                final CharSequence lTime = mTime;
 
 
                 // Set their texts

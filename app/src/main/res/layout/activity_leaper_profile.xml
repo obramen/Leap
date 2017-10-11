@@ -314,19 +314,22 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="10dp"
                                         android:layout_marginTop="10dp"
-                                        android:text="Gender:" />
+                                        android:text="Gender:"
+                                        android:layout_alignBottom="@+id/genderTextView" />
 
-                                    <EditText
+                                    <Spinner
                                         android:id="@+id/genderEditText"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_below="@+id/genderHeader"
                                         android:layout_margin="5dp"
                                         android:layout_marginEnd="10dp"
+                                        android:entries="@array/gender"
                                         android:hint="Gender"
                                         android:text=""
                                         android:textSize="16sp"
-                                        android:visibility="gone" />
+                                        android:visibility="gone"
+                                        android:spinnerMode="dropdown"/>
 
                                     <TextView
                                         android:id="@+id/genderTextView"

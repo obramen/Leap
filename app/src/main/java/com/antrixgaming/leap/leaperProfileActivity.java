@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -103,7 +104,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
     EditText tauntEditText;
     EditText nameEditText;
-    EditText genderEditText;
+    Spinner genderEditText;
     EditText psnEditText;
     EditText xboxliveEditText;
     EditText originEditText;
@@ -187,7 +188,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         /// FOR EDITING INFORMATION
         tauntEditText = (EditText) findViewById(R.id.tauntEditText);
         nameEditText = (EditText) findViewById(R.id.nameEditText);
-        genderEditText = (EditText) findViewById(R.id.genderEditText);
+        genderEditText = (Spinner) findViewById(R.id.genderEditText);
         psnEditText = (EditText) findViewById(R.id.psnEditText);
         xboxliveEditText = (EditText) findViewById(R.id.xboxliveEditText);
         originEditText = (EditText) findViewById(R.id.originEditText);
@@ -355,7 +356,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
                 tauntEditText.setText(taunt);
                 nameEditText.setText(name);
-                genderEditText.setText(gender);
+                //genderEditText.(gender);
                 psnEditText.setText(psn);
                 xboxliveEditText.setText(xboxlive);
                 originEditText.setText(origin);
@@ -415,7 +416,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                 progressDialogSaveProfile.show();
 
                 dbRef.child("userprofiles").child(leaperPhoneNumber).setValue(new UserProfile(leaperPhoneNumber, nameEditText.getText().toString().trim(),
-                        tauntEditText.getText().toString().trim(), genderEditText.getText().toString().trim(),"" ,
+                        tauntEditText.getText().toString().trim(), genderEditText.getSelectedItem().toString(),"" ,
                         "" , "",
                         psnEditText.getText().toString().trim(), xboxliveEditText.getText().toString().trim(),
                         steamEditText.getText().toString().trim(), originEditText.getText().toString().trim()));

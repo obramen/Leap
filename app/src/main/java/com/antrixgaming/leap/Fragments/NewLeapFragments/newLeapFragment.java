@@ -16,6 +16,7 @@ import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.Models.GameList;
@@ -40,6 +42,8 @@ import com.antrixgaming.leap.leapDetailsActivity;
 import com.antrixgaming.leap.newLeap;
 import com.antrixgaming.leap.selectLeaperContact;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
+import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -91,6 +96,8 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
     StorageReference mLeaperTwoStorageRef;
     CircleImageView detailsLeaperOneImage;
     CircleImageView detailsLeaperTwoImage;
+
+    Long leapDay;
 
 
 
@@ -181,123 +188,52 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
         leaperOne.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
-        //final String mGameType = gameType.getText().toString();
-        //final String mGameFormat = gameFormat.getSelectedItem().toString();
-        //final String mLeaperOne = leaperOne.getText().toString();
-        //final String mLeaperTwo = leaperTwo.getText().toString();
-        //final String mLeapDate = dateTextView.getText().toString();
-        //final String mLeapTime = timeTextView.getText().toString();
-
-        timeTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-                //DialogFragment newFragment = new TimePickerFragment();
-                //newFragment.show(getFragmentManager(), "timePicker");
-
-                // Get Current Time
-                final Calendar c = Calendar.getInstance();
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMinute = c.get(Calendar.MINUTE);
-
-
-                // Launch Time Picker Dialog
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                        new TimePickerDialog.OnTimeSetListener() {
-
-
-
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay,
-                                                  int minute) {
-                                timeTextView.setText(hourOfDay + ":" + minute);
-                            }
-                }, mHour, mMinute, false);
-
-                timePickerDialog.show();
-
-
-
-
-
-
-            }
-
-
-
-
-        });
-
         dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
 
-                //DialogFragment newFragment = new DatePickerFragment();
-                //newFragment.show(getFragmentManager(), "datePicker");
+                new SingleDateAndTimePickerDialog.Builder(getContext())
+                        .bottomSheet()
+                        //.curved()
+                        //.minutesStep(15)
+                        //.defaultDate(new Date().getTime())
+                        .minDateRange(new Date())
 
+                        //.displayHours(false)
+                        //.displayMinutes(false)
+                        //.mustBeOnFuture()
+                        .backgroundColor(getResources().getColor(R.color.white))
+                        .mainColor(getResources().getColor(R.color.colorPrimary))
+                        .titleTextColor(getResources().getColor(R.color.colorPrimary))
 
-
-
-                // Get Current Date
-                final Calendar c = Calendar.getInstance();
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-
-
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-
-
-
+                        .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
                             @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                            public void onDisplayed(SingleDateAndTimePicker picker) {
+                                //retrieve the SingleDateAndTimePicker
+                            }
+                        })
 
-                                dateTextView.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        .title("Leap time")
+                        .listener(new SingleDateAndTimePickerDialog.Listener() {
+                            @Override
+                            public void onDateSelected(Date date) {
 
+                                CharSequence mDay = DateFormat.format("dd-MMM-yy", date.getTime());
 
-                                // Get Current Time
-                                final Calendar c = Calendar.getInstance();
-                                mHour = c.get(Calendar.HOUR_OF_DAY);
-                                mMinute = c.get(Calendar.MINUTE);
+                                CharSequence mTime = DateFormat.format("HH:MM", date.getTime());
 
+                                String leapDay = date.toString();
 
-                                // Launch Time Picker Dialog
-                                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                                        new TimePickerDialog.OnTimeSetListener() {
-
-
-
-                                            @Override
-                                            public void onTimeSet(TimePicker view, int hourOfDay,
-                                                                  int minute) {
-
-                                                timeTextView.setText(hourOfDay + ":" + minute);
-                                            }
-                                        }, mHour, mMinute, false);
-
-                                if (dayOfMonth == new Date().getTime()){
-
-
-                                }
-
-                                timePickerDialog.show();
-
-
-
+                                timeTextView.setText(mTime);
+                                dateTextView.setText(mDay);
 
 
                             }
-                        }, mYear, mMonth, mDay);
+                        }).display();
 
-                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
 
-                datePickerDialog.show();
+
 
             }
 
@@ -346,14 +282,14 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                     // status "0" show a new leap. "1" = accepted. "2" = declined. "3" = cancelled
                     String key = dbRef.child("leaps").child(myUID).push().getKey();
                     dbRef.child("leaps").child(myUID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                            mLeaperTwo, mLeapDate, mLeapTime, "0", circleID));
+                            mLeaperTwo, leapDay, "0", circleID));
 
 
                     /// mLeaperTwo is a bundled string from previous intent (
                     /// if it's same as leaper one then it's an open leap
 
                     dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                            mLeaperTwo, mLeapDate, mLeapTime, "0", circleID));
+                            mLeaperTwo, leapDay, "0", circleID));
 
 
 
@@ -389,7 +325,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                             // status "0" show a new leap. "1" = accepted. "2" = declined. "3" = cancelled
                             String key = dbRef.child("leaps").child(myUID).push().getKey();
                             dbRef.child("leaps").child(myUID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                                    mLeaperTwo, mLeapDate, mLeapTime, "0", circleID));
+                                    mLeaperTwo, leapDay, "0", circleID));
 
 
 
@@ -400,7 +336,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                             if (Objects.equals(circleID, "null")){
 
                                 dbRef.child("leaps").child(leaperTwoUID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                                        mLeaperTwo, mLeapDate, mLeapTime, "0", circleID));
+                                        mLeaperTwo, leapDay, "0", circleID));
 
 
 
@@ -420,11 +356,11 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
                                     // add to leapertoleaper list for the circle
                                     dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                                            mLeaperTwo, mLeapDate, mLeapTime, "0", circleID));
+                                            mLeaperTwo, leapDay, "0", circleID));
 
                                     // add to the leaped person's leap list
                                     dbRef.child("leaps").child(leaperTwoUID).child(key).setValue(new UserLeap(key, mGameType, mGameFormat, mLeaperOne,
-                                            mLeaperTwo, mLeapDate, mLeapTime, "0", circleID));
+                                            mLeaperTwo, leapDay, "0", circleID));
 
 
 

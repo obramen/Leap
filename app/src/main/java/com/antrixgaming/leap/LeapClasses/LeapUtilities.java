@@ -64,7 +64,7 @@ public class LeapUtilities {
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .error(R.drawable.profile_picture).centerCrop().into(circleImageView);
 
-    
+
 /*
         Picasso.with(context).load(storageReference.getDownloadUrl().toString()).networkPolicy(NetworkPolicy.OFFLINE)
                 .error(R.drawable.profile_picture)

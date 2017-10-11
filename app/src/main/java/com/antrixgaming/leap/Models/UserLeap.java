@@ -17,8 +17,7 @@ public class UserLeap {
     public String leaperTwoScore;
     public String leaperTwo;
     private long leapSetupTime;
-    private String leapDay;
-    private String leapTime;
+    private long leapDay;
     public String leapStatus;
     private String leapID;
     private long leapStatusChangeTime;
@@ -26,7 +25,7 @@ public class UserLeap {
 
 
 
-    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, String leapDay, String leapTime, String leapStatus,
+    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, long leapDay, String leapStatus,
                     @Nullable String circleID) {
         this.leapID = leapID;
         this.gameType = gameType;
@@ -34,7 +33,6 @@ public class UserLeap {
         this.leaperOne = leaperOne;
         this.leaperTwo = leaperTwo;
         this.leapDay = leapDay;
-        this.leapTime = leapTime;
         this.leapStatus = leapStatus;
         this.circleID = circleID;
 
@@ -45,7 +43,7 @@ public class UserLeap {
 
     }
 
-    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, String leapDay, String leapTime, String leapStatus,
+    public UserLeap(String leapID, String gameType, String gameFormat, String leaperOne, String leaperTwo, long leapDay, String leapStatus,
                     @Nullable String circleID, @Nullable String leaperOneScore, @Nullable String leaperTwoScore) {
         this.leapID = leapID;
         this.gameType = gameType;
@@ -55,7 +53,6 @@ public class UserLeap {
         this.leaperTwo = leaperTwo;
         this.leaperTwoScore = leaperTwoScore;
         this.leapDay = leapDay;
-        this.leapTime = leapTime;
         this.leapStatus = leapStatus;
         this.circleID = circleID;
 
@@ -104,12 +101,9 @@ public class UserLeap {
     public void setleapSetupTime(Long leapSetupTime){this.leapSetupTime = leapSetupTime;}
 
 
-    public String getleapDay(){return leapDay;}
-    public void setleapDay  (String leapDay) {this.leapDay = leapDay;}
+    public long getleapDay(){return leapDay;}
+    public void setleapDay  (long leapDay) {this.leapDay = leapDay;}
 
-
-    public String getleapTime(){return leapTime;}
-    public void setleapTime(String leapTime){this.leapTime = leapTime;}
 
     public String getleapStatus(){return leapStatus;}
     public void setleapStatus(String leapStatus){this.leapStatus = leapStatus;}

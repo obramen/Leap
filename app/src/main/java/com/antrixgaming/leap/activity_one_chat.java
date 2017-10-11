@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -299,17 +300,25 @@ public class activity_one_chat extends BaseActivity {
 
 
                     // Set their text
-                    messageText.setText(model.getMessageText());
-                    phoneNumber.setText(model.getSenderPhoneNumber());
-                    //messageUser.setText(model.getMessageUser());
+                messageText.setText(model.getMessageText());
+                phoneNumber.setText(model.getSenderPhoneNumber());
+                //messageUser.setText(model.getMessageUser());
 
-                    // Format the date before showing it
-                    messageTime.setText(DateFormat.format("HH:mm",
-                            model.getMessageTime()));
+                // Format the date before showing it
+                if (DateUtils.isToday(model.getMessageTime())){
+                    messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()));
+
+                }
+                else{
+                    messageTime.setText(DateFormat.format("dd-MM-yy HH:mm", model.getMessageTime()));
+                }
 
 
 
-                    FirebaseDatabase.getInstance().getReference().child("userchatpendingquantity").child(oneCircleFirstUserUid).
+
+
+
+                dbRef.child("userchatpendingquantity").child(oneCircleFirstUserUid).
                             child(oneCircleUid).child("unreadMessages").setValue("0");
 
 
@@ -347,12 +356,12 @@ public class activity_one_chat extends BaseActivity {
                             getSupportActionBar().setSubtitle("Online");
                         } else {
 
-                            if ((DateFormat.format("dd-MM-yyyy", Long.parseLong(currentStatus)) == (DateFormat.format("dd-MM-yyyy", new Date().getTime())))) {
+                            if (DateUtils.isToday(Long.parseLong(currentStatus))) {
                                 getSupportActionBar().setSubtitle("Today, " + DateFormat.format("HH:mm", Long.parseLong(currentStatus)));
 
                             } else {
 
-                                getSupportActionBar().setSubtitle(DateFormat.format("dd-MMM-yyyy, HH:mm", Long.parseLong(currentStatus)));
+                                getSupportActionBar().setSubtitle(DateFormat.format("dd-MMM-yy, HH:mm", Long.parseLong(currentStatus)));
 
                             }
 

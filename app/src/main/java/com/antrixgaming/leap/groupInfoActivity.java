@@ -50,6 +50,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -99,11 +100,15 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
     LeapUtilities leapUtilities;
     OnlinePressence onlinePressence;
 
+    String groupCreator;
+    DatabaseReference dbRef;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_info);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -112,6 +117,10 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         mStorage = FirebaseStorage.getInstance().getReference();
         TrueAdmin = "true";
         FalseAdmin = "false";
+
+        dbRef = FirebaseDatabase.getInstance().getReference();
+
+        groupCreator = "";
 
 
 
@@ -143,26 +152,126 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         Bundle bundle = getIntent().getExtras();
         final String groupName = bundle.getString("groupName");
         final String circleID = bundle.getString("circleID");
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID).child("members");
 
 
 
 
         // get the created date and user who created the group
-        ValueEventListener listener = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
+        dbRef.child("groupcircles").child(circleID)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String groupCreatedBy = dataSnapshot.child("createdBy").getValue().toString();
-                        Long groupCreatedOn = Long.parseLong(dataSnapshot.child("createdOn").getValue().toString());
-                        String groupName = dataSnapshot.child("groupName").getValue().toString();
+                        final String groupCreatedBy = dataSnapshot.child("createdBy").getValue().toString();
+                        final String groupCreatedOn = dataSnapshot.child("createdOn").getValue().toString();
+                        final String groupName = dataSnapshot.child("groupName").getValue().toString();
 
 
-                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                        getSupportActionBar().setTitle(groupName);
-                        getSupportActionBar().setSubtitle("Created by " + groupCreatedBy +", " + DateFormat.format("dd-MMM-yyyy", groupCreatedOn));
-                        //getSupportActionBar().show();
-                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                        //getting creator phone number
+                        dbRef.child("uid").child(groupCreatedBy).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                groupCreator = dataSnapshot.child("phoneNumber").getValue().toString();
+
+
+
+                                if (Objects.equals(groupCreator, myPhoneNumber)){
+
+                                    dbRef.child("userprofiles").child(myPhoneNumber).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name").getValue().toString(), "")){
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                toolbar.setTitle(groupName);
+                                                toolbar.setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+                                            } else {
+
+                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                toolbar.setTitle(groupName);
+                                                toolbar.setSubtitle("Created by " + myName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                            }
+
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+                                } else{
+
+
+                                    //getting creator name
+                                    dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(groupCreator).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            if(dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name").getValue() == ""){
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                toolbar.setTitle(groupName);
+                                                toolbar.setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+                                            } else {
+
+
+                                                String mName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                toolbar.setTitle(groupName);
+                                                toolbar.setSubtitle("Created by " + mName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                            }
+
+
+
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                }
+
+
+
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
 
                     }
 
@@ -236,28 +345,50 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
         groupInfoNewNotice.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
 
 
+                new LovelyTextInputDialog(groupInfoActivity.this, R.style.MyDialogTheme)
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setTitle("New Notice")
+                        .setMessage("Enter new message")
+                        .setIcon(R.drawable.ic_chat)
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                return;
+                            }
+                        })
+                        .setConfirmButton("Send", new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
 
-                String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                        .push().getKey();
-                FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                        .child(key).setValue(new circleMessage("Admin message", circleID,
-                        myPhoneNumber, myUID, "1", "false"));
-                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
-                        .child("lastgroupmessage").setValue(new circleMessage("Admin message", circleID,
-                        myPhoneNumber, myUID, "1", "true"));
-                FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                        .child(key).child("members").setValue("mmm");
-                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
-                        .setValue(new circleMessage("Admin message", circleID,
-                                myPhoneNumber, myUID, "1", "true"));
+
+                                String key = dbRef.child("groupcirclemessages").child(circleID)
+                                        .push().getKey();
+                                dbRef.child("groupcirclemessages").child(circleID)
+                                        .child(key).setValue(new circleMessage(text, circleID,
+                                        myPhoneNumber, myUID, "1", "false"));
+                                dbRef.child("groupcircles").child(circleID)
+                                        .child("lastgroupmessage").setValue(new circleMessage(text, circleID,
+                                        myPhoneNumber, myUID, "1", "true"));
+                                dbRef.child("groupcirclemessages").child(circleID)
+                                        .child(key).child("members").setValue("mmm");
+                                dbRef.child("groupcirclelastmessages").child(circleID)
+                                        .setValue(new circleMessage(text, circleID,
+                                                myPhoneNumber, myUID, "1", "true"));
 
 
-                Snackbar.make(v, "Notice Sent", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                                Toast.makeText(groupInfoActivity.this, "Notice sent", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        })
+                        .show();
+
+
             }
         });
 
@@ -329,7 +460,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
         ListView listOfContacts = (ListView) findViewById(R.id.list_of_groupInfoLeapers);
 
-        DatabaseReference dbRefLeaper = FirebaseDatabase.getInstance().getReference().child("groupcirclemembers")
+        DatabaseReference dbRefLeaper = dbRef.child("groupcirclemembers")
                 .child(circleID).child("currentmembers");
 
         FirebaseListAdapter<CircleMember> adapter;

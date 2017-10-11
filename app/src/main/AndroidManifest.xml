@@ -11,14 +11,11 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-
 
     <application
         android:allowBackup="true"
@@ -48,7 +45,7 @@
             android:name=".newLeap"
             android:label="@string/title_activity_new_leap"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity_one_chat" />
         <activity android:name=".phoneContactList" />
         <activity
@@ -62,45 +59,39 @@
         <activity
             android:name=".leapDetailsActivity"
             android:label="Leap details"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".selectLeaperContact"
-            android:label="Select leaper"></activity>
+            android:label="Select leaper" />
         <activity
             android:name=".SortedContacts"
-            android:label="Select leaper"></activity>
-
-
+            android:label="Select leaper" />
 
         <service
             android:name=".LeapServices.LeapService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".LeapServices.ContactService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".receivedNotifications"
-            android:label="Notifications"></activity>
-        <activity android:name=".BaseActivity"></activity>
-        <activity android:name=".leaperProfileActivity"></activity>
+            android:label="Notifications" />
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".leaperProfileActivity" />
 
         <service android:name=".LeapServices.LeapMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".LeapServices.FirebaseIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-
-
-
-
+        <activity android:name=".events"></activity>
     </application>
 
 </manifest>

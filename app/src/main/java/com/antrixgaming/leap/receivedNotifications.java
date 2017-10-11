@@ -151,7 +151,7 @@ public class receivedNotifications extends BaseActivity {
                         String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                                 .push().getKey();
                         FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                                .child(key).push().setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "- joined circle",
+                                .child(key).setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "- joined circle",
                                 circleID, "", "", "1", "false"));
                         FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
                                 .child("lastgroupmessage").setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",

@@ -12,7 +12,7 @@
             android:icon="@drawable/ic_notifications"
             android:title="Notifications" />
         <item
-            android:id="@+id/nav_events"
+            android:id="@+id/nav_leap_events"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Events" />
         <item

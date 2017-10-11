@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,8 +105,32 @@ public class circleLiveLeapsFragment extends Fragment {
                 circleLiveListLeaperTwoName.setText(model.getleaperTwo());
                 gameType.setText(model.getgameType());
                 gameFormat.setText(model.getgameFormat());
-                gameTime.setText(model.getleapTime());
                 mleapID.setText(model.getleapID());
+
+
+
+                /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME
+                CharSequence mDay = DateFormat.format("dd-MMM-yy", model.getleapDay());
+                CharSequence mTime = DateFormat.format("HH:MM", model.getleapDay());
+
+
+                CharSequence lDay;
+
+
+                if (DateUtils.isToday(model.getleapDay())){
+                    lDay = "Today";
+
+                }
+                else{
+                    lDay = mDay;
+                }
+
+
+                final CharSequence lTime = mTime;
+
+                gameTime.setText(lDay + ", " +lTime);
+
+
 
 
 

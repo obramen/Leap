@@ -14,10 +14,11 @@
         android:layout_centerHorizontal="true"
         android:text="NOTIFICATION"
         android:textSize="12sp"
-        android:visibility="gone"
-        android:maxWidth="230dp"
-        style="@style/redButtonDark"
-        android:padding="5dp"
+        android:visibility="visible"
+        android:padding="10dp"
+        android:background="@drawable/admin_message"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:textColor="@color/white"
         />
 

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -62,6 +64,9 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
             R.drawable.ic_action_live};
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    DatabaseReference dbRef;
+
+    String groupCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,10 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
+
+        dbRef = FirebaseDatabase.getInstance().getReference();
+
+        groupCreator = "";
 
 
 
@@ -95,19 +104,122 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
 
         // get the created date and user who created the group
-        ValueEventListener listener = FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
+        dbRef.child("groupcircles").child(circleID)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String groupCreatedBy = dataSnapshot.child("createdBy").getValue().toString();
-                String groupCreatedOn = dataSnapshot.child("createdOn").getValue().toString();
-                String groupName = dataSnapshot.child("groupName").getValue().toString();
+                final String groupCreatedBy = dataSnapshot.child("createdBy").getValue().toString();
+                final String groupCreatedOn = dataSnapshot.child("createdOn").getValue().toString();
+                final String groupName = dataSnapshot.child("groupName").getValue().toString();
 
-                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                getSupportActionBar().setTitle(groupName);
-                getSupportActionBar().setSubtitle("Created by " + groupCreatedBy +", " + groupCreatedOn);
 
-                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                //getting creator phone number
+                dbRef.child("uid").child(groupCreatedBy).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        groupCreator = dataSnapshot.child("phoneNumber").getValue().toString();
+
+
+
+                        if (Objects.equals(groupCreator, myPhoneNumber)){
+
+                            dbRef.child("userprofiles").child(myPhoneNumber).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name").getValue().toString(), "")){
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        getSupportActionBar().setTitle(groupName);
+                                        getSupportActionBar().setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+                                    } else {
+
+                                        String myName = dataSnapshot.child("name").getValue().toString();
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        getSupportActionBar().setTitle(groupName);
+                                        getSupportActionBar().setSubtitle("Created by " + myName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                    }
+
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+
+                        } else{
+
+
+                            //getting creator name
+                            dbRef.child("ContactList").child(myUid).child("leapSortedContacts").child(groupCreator).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if(dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name").getValue() == ""){
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        getSupportActionBar().setTitle(groupName);
+                                        getSupportActionBar().setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+                                    } else {
+
+
+                                        String mName = dataSnapshot.child("name").getValue().toString();
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        getSupportActionBar().setTitle(groupName);
+                                        getSupportActionBar().setSubtitle("Created by " + mName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                    }
+
+
+
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
             }
 
             @Override
@@ -441,8 +553,13 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                         //messageUser.setText(model.getMessageUser());
 
                         // Format the date before showing it
-                        messageTime.setText(DateFormat.format("HH:mm",
-                                model.getMessageTime()));
+                        if (DateUtils.isToday(model.getMessageTime())){
+                            messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()));
+
+                        }
+                        else{
+                            messageTime.setText(DateFormat.format("dd-MM-yy HH:mm", model.getMessageTime()));
+                        }
 
                     }
                 };

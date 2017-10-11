@@ -123,6 +123,8 @@ public class Leap extends BaseActivity
 
     ContactPermissionStartService contactPermissionStartService;
 
+    TextView BugReport;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +133,7 @@ public class Leap extends BaseActivity
 
         contactPermissionStartService = new ContactPermissionStartService();
         contactPermissionStartService.ContactPermissionStartService(Leap.this);
+
 
 
 
@@ -530,6 +533,55 @@ public class Leap extends BaseActivity
             }
         });
 
+        BugReport = (TextView)findViewById(R.id.BugReport);
+        BugReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LovelyTextInputDialog(Leap.this, R.style.MyDialogTheme)
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setTitle("Bug Report")
+                        .setMessage("Enter report")
+                        .setIcon(R.drawable.ic_chat)
+                        .setInputFilter("Enter message", new LovelyTextInputDialog.TextFilter() {
+                            @Override
+                            public boolean check(String text) {
+                                //return text.matches("\\w{3,23}\\b");     //("\\w+");
+                                return text.matches("^\\w+( +\\w+)*$");     //("\\w+");
+                                //return text.matches("\\w+");
+                            }
+
+                        })
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                return;
+                            }
+                        })
+                        .setConfirmButton("Send", new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
+
+
+                                String key = dbRef.child("bugreports").push().getKey();
+                                dbRef.child("bugreports").child(key)
+                                        .child("reportDate").setValue(new Date().getTime());
+                                dbRef.child("bugreports").child(key)
+                                        .child("reporter").setValue(myUID);
+                                dbRef.child("bugreports").child(key)
+                                        .child("message").setValue(text);
+
+
+                                Toast.makeText(Leap.this, "Bug report sent successfully", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        })
+                        .show();
+            }
+        });
+
+
 
 
 
@@ -817,6 +869,10 @@ public class Leap extends BaseActivity
         if (id == R.id.nav_notifications) {
 
             Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
+            startActivity(openNotificationsIntent);
+
+        }  else if (id == R.id.nav_leap_events){
+            Intent openNotificationsIntent = new Intent(this, events.class);
             startActivity(openNotificationsIntent);
 
         }

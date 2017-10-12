@@ -154,7 +154,7 @@ public class circlesFragment extends Fragment {
 
                                     }
                                     else{
-                                        lastCircleMessageTime.setText(DateFormat.format("dd-MM-yy HH:mm", mLastCircleMessageTime));
+                                        lastCircleMessageTime.setText(DateFormat.format("dd/MM/yyyy", mLastCircleMessageTime));
                                     }
 
 

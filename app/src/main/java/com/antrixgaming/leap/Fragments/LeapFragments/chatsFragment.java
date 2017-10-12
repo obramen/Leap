@@ -203,7 +203,7 @@ public class chatsFragment extends Fragment {
 
                 }
                 else{
-                    messageTime.setText(DateFormat.format("dd-MM-yy HH:mm", model.getMessageTime()));
+                    messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()));
                 }
 
                 String loadName = model.getloadname();
@@ -230,7 +230,7 @@ public class chatsFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.child("statusPermission").getValue() == null){
                                 //if unable to retrieve the value, do nothing
-                                leaperImage.setBorderColor(getResources().getColor(R.color.grey)); /// LEAPER IS ONLINE
+                                leaperImage.setBorderColor(getResources().getColor(R.color.grey));
                             }
                             else {
 

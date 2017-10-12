@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -132,10 +133,6 @@ public class Leap extends BaseActivity
         setContentView(R.layout.activity_leap);
 
         contactPermissionStartService = new ContactPermissionStartService();
-        contactPermissionStartService.ContactPermissionStartService(Leap.this);
-
-
-
 
 
 
@@ -716,8 +713,11 @@ public class Leap extends BaseActivity
                 .equalTo("0").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+
                 count = dataSnapshot.getChildrenCount();
 
+                menuItem.setIcon(leapUtilities.buildCounterDrawable(count, R.drawable.ic_bell));
 
             }
 
@@ -726,6 +726,13 @@ public class Leap extends BaseActivity
 
             }
         });
+
+
+
+
+
+        contactPermissionStartService.ContactPermissionStartService(Leap.this);
+
 
 
 

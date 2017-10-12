@@ -219,7 +219,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                             @Override
                             public void onDateSelected(Date date) {
 
-                                CharSequence mDay = DateFormat.format("dd-MMM-yy", date.getTime());
+                                CharSequence mDay = DateFormat.format("dd/MMM/yyyy", date.getTime());
 
                                 CharSequence mTime = DateFormat.format("HH:MM", date.getTime());
 

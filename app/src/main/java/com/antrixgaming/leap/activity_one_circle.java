@@ -558,7 +558,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
                         }
                         else{
-                            messageTime.setText(DateFormat.format("dd-MM-yy HH:mm", model.getMessageTime()));
+                            messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()));
                         }
 
                     }

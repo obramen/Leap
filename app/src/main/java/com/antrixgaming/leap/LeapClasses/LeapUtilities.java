@@ -62,7 +62,9 @@ public class LeapUtilities {
         Glide.with(context).using(new FirebaseImageLoader()).load(storageReference)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                .error(R.drawable.profile_picture).centerCrop().into(circleImageView);
+                .error(R.drawable.profile_picture)
+                .fitCenter()
+                .into(circleImageView);
 
 
 /*
@@ -89,7 +91,9 @@ public class LeapUtilities {
         Glide.with(context).using(new FirebaseImageLoader()).load(storageReference)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                .error(R.drawable.profile_picture).centerCrop().into(imageView);
+                .error(R.drawable.profile_picture)
+                .fitCenter()
+                .into(imageView);
 
     }
 

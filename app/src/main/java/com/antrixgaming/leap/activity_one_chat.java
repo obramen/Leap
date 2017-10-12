@@ -310,7 +310,7 @@ public class activity_one_chat extends BaseActivity {
 
                 }
                 else{
-                    messageTime.setText(DateFormat.format("dd-MM-yy HH:mm", model.getMessageTime()));
+                    messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()));
                 }
 
 

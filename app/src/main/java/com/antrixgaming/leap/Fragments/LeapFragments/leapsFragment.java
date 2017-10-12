@@ -46,6 +46,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -307,20 +308,55 @@ public class leapsFragment extends Fragment {
 
 
 
-                new CountDownTimer(300000, 1000) {
+                long NowTime = new Date().getTime();
 
-                    public void onTick(long millisUntilFinished) {
-                        countdownTimer.setText("" + millisUntilFinished / 1000);
-                    }
 
-                    public void onFinish() {
-                        countdownTimer.setText("LIVE!");
-                        countdownTimer.setTextColor(getResources().getColor(R.color.white));
-                        //countdownTimer.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                if (model.getleapDay() >=  NowTime){
 
-                    }
-                }.start();
+                    long countDown = model.getleapDay() - NowTime;
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(countDown);
+                    long days = TimeUnit.MILLISECONDS.toDays(countDown);
+
+
+
+
+                    new CountDownTimer(seconds, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            countdownTimer.setText("" + millisUntilFinished / 1000);
+                        }
+
+                        public void onFinish() {
+
+                            countdownTimer.setVisibility(View.VISIBLE);
+
+                            countdownTimer.setText("LIVE");
+                            countdownTimer.setTextColor(getResources().getColor(R.color.white));
+                            countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        }
+                    }.start();
+
+
+                }
+
+                if ((TimeUnit.MILLISECONDS.toSeconds(NowTime) > TimeUnit.MILLISECONDS.toSeconds(model.getleapDay())) &&
+                        (TimeUnit.MILLISECONDS.toSeconds(NowTime) < TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+
+                    countdownTimer.setText("LIVE");
+                    countdownTimer.setVisibility(View.VISIBLE);
+
+                }
+
+                if (TimeUnit.MILLISECONDS.toSeconds(NowTime) >= (TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+
+                    countdownTimer.setVisibility(View.GONE);
+
+                }
+
+
+
+
+
 
 
                 mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);

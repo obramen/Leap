@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.TimeUtils;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -52,6 +53,7 @@ import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -376,7 +378,7 @@ public class leapDetailsActivity extends BaseActivity {
 
 
                 /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME
-                CharSequence mDay = DateFormat.format("dd-MMM-yy", model.getleapDay());
+                CharSequence mDay = DateFormat.format("dd/MMM/yyyy", model.getleapDay());
                 CharSequence mTime = DateFormat.format("HH:MM", model.getleapDay());
 
 
@@ -868,19 +870,56 @@ public class leapDetailsActivity extends BaseActivity {
                         //Long acceptTime = model.getLeapStatusChangeTime();
                         //Long matchTime = Long.parseLong(lDay + " "  + lTime);
 
+                        long NowTime = new Date().getTime();
 
-                        new CountDownTimer(30000, 1000) {
 
-                            public void onTick(long millisUntilFinished) {
-                                countdownTimer.setText("" + millisUntilFinished / 1000);
-                            }
+                        if (model.getleapDay() >=  NowTime){
 
-                            public void onFinish() {
-                                countdownTimer.setText("LIVE");
-                                countdownTimer.setTextColor(getResources().getColor(R.color.white));
-                                countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            }
-                        }.start();
+                            long countDown = model.getleapDay() - NowTime;
+                            long seconds = TimeUnit.MILLISECONDS.toSeconds(countDown);
+                            long days = TimeUnit.MILLISECONDS.toDays(countDown);
+
+
+
+
+                            new CountDownTimer(seconds, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    countdownTimer.setText("" + millisUntilFinished / 1000);
+                                }
+
+                                public void onFinish() {
+
+                                    countdownTimer.setVisibility(View.VISIBLE);
+
+                                    countdownTimer.setText("LIVE");
+                                    countdownTimer.setTextColor(getResources().getColor(R.color.white));
+                                    countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                }
+                            }.start();
+
+
+                        }
+
+                        if ((TimeUnit.MILLISECONDS.toSeconds(NowTime) > TimeUnit.MILLISECONDS.toSeconds(model.getleapDay())) &&
+                                (TimeUnit.MILLISECONDS.toSeconds(NowTime) < TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+
+                            countdownTimer.setText("LIVE");
+                            countdownTimer.setVisibility(View.VISIBLE);
+
+                        }
+
+                        if (TimeUnit.MILLISECONDS.toSeconds(NowTime) >= (TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+
+                            countdownTimer.setVisibility(View.GONE);
+
+                        }
+
+
+
+
+
+
 
 
 
@@ -1092,7 +1131,7 @@ public class leapDetailsActivity extends BaseActivity {
                                     @Override
                                     public void onDateSelected(Date date) {
 
-                                        CharSequence mDay = DateFormat.format("dd-MMM-yy", date.getTime());
+                                        CharSequence mDay = DateFormat.format("dd/MMM/yyyy", date.getTime());
 
                                         CharSequence mTime = DateFormat.format("HH:MM", date.getTime());
 

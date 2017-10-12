@@ -550,11 +550,11 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                 if(isChecked){
                     FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
                             .child("leapStatus").setValue("1");
-                    Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
                 }else{
                     FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
                             .child("leapStatus").setValue("0");
-                    Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
 
                 }
             }

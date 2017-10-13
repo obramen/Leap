@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.Inflater;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -85,6 +86,8 @@ public class Leap extends BaseActivity
     // NOTIFICATIONS
     long count = 0;
     MenuItem menuItem;
+    int loadFlag = 0;
+
 
 
 
@@ -125,6 +128,7 @@ public class Leap extends BaseActivity
     ContactPermissionStartService contactPermissionStartService;
 
     TextView BugReport;
+    TextView AboutLeap;
 
 
     @Override
@@ -133,11 +137,7 @@ public class Leap extends BaseActivity
         setContentView(R.layout.activity_leap);
 
         contactPermissionStartService = new ContactPermissionStartService();
-
-
-
-
-
+        contactPermissionStartService.ContactPermissionStartService(Leap.this);
 
         leapUtilities = new LeapUtilities();
 
@@ -534,6 +534,7 @@ public class Leap extends BaseActivity
         BugReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 new LovelyTextInputDialog(Leap.this, R.style.MyDialogTheme)
                         .setTopColorRes(R.color.colorPrimary)
                         .setTitle("Bug Report")
@@ -579,6 +580,14 @@ public class Leap extends BaseActivity
         });
 
 
+        AboutLeap = (TextView)findViewById(R.id.aboutLeap);
+        AboutLeap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent aboutLeapIntent = new Intent(Leap.this, about_leap.class);
+                startActivity(aboutLeapIntent);
+            }
+        });
 
 
 
@@ -709,15 +718,23 @@ public class Leap extends BaseActivity
 
 
 
+
         FirebaseDatabase.getInstance().getReference().child("notifications").child(myPhoneNumber).orderByChild("notificationStatus")
                 .equalTo("0").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
+
                 count = dataSnapshot.getChildrenCount();
 
-                menuItem.setIcon(leapUtilities.buildCounterDrawable(count, R.drawable.ic_bell));
+                if (loadFlag == 0){
+                    loadFlag = 1;
+                } else if (loadFlag == 1){
+
+
+
+                }
 
             }
 
@@ -731,7 +748,7 @@ public class Leap extends BaseActivity
 
 
 
-        contactPermissionStartService.ContactPermissionStartService(Leap.this);
+
 
 
 
@@ -743,6 +760,8 @@ public class Leap extends BaseActivity
 
 
     }
+
+
 
 
 
@@ -832,13 +851,14 @@ public class Leap extends BaseActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.leap, menu);
 
-
         MenuItem menuItem = menu.findItem(R.id.nav_leap_notifications);
         menuItem.setIcon(leapUtilities.buildCounterDrawable(count, R.drawable.ic_bell));
 
 
         return true;
     }
+
+
 
 
 

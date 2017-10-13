@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:padding="7dp"
+    android:background="@color/white">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="5dp"
-        android:divider="@color/colorPrimaryDark"
+        android:divider="@color/transparent"
         android:id="@+id/list_of_circle_live_leaps"
         android:scrollbarSize="8dp"
         android:transcriptMode="alwaysScroll"

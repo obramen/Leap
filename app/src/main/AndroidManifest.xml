@@ -93,8 +93,14 @@
 
         <activity
             android:name=".events"
-            android:label="Events"></activity>
-        <activity android:name=".eventDetails"></activity>
+            android:label="Events" />
+        <activity
+            android:name=".eventDetails"
+            android:label="Event Details" />
+        <activity
+            android:name=".about_leap"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".new_event"></activity>
     </application>
 
 </manifest>

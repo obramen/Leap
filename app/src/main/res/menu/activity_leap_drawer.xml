@@ -16,13 +16,13 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Events" />
         <item
-            android:id="@+id/nav_finished_leaps"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Finished leaps" />
-        <item
             android:id="@+id/nav_pending_leaps"
             android:icon="@drawable/ic_menu_manage"
             android:title="Pending leaps" />
+        <item
+            android:id="@+id/nav_finished_leaps"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Finished leaps" />
         <item
             android:id="@+id/nav_declined_leaps"
             android:icon="@drawable/ic_menu_slideshow"

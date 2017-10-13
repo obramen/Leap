@@ -687,7 +687,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
                     Glide.with(leaperProfileActivity.this).using(new FirebaseImageLoader()).load(mLeaperProfileStorageRef)
                             .diskCacheStrategy(DiskCacheStrategy.RESULT)
                             .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                            .error(R.drawable.profile_picture).centerCrop().into(profileImageBackground);
+                            .error(R.drawable.profile_picture).fitCenter().into(profileImageBackground);
                     progressDialog.dismiss();
 
 

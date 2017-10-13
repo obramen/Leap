@@ -48,12 +48,13 @@
         <item name="android:background">@drawable/white_button</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
+
     <style name="greyButton">
-            <item name="android:layout_width">fill_parent</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:background">@drawable/grey_button</item>
-            <item name="android:textColor">@color/darkgrey</item>
-        </style>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/grey_button</item>
+        <item name="android:textColor">@color/darkgrey</item>
+    </style>
 
     <style name="darkButton">
         <item name="android:layout_width">fill_parent</item>
@@ -114,8 +115,8 @@
         <item name="android:windowBackground">@drawable/background_dialogue</item>
     </style>
 
-    <style name="SwitchCompatTheme" >
-        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+    <style name="SwitchCompatTheme">
+        <item name="colorControlActivated">@color/green</item>
     </style>
 
 </resources>

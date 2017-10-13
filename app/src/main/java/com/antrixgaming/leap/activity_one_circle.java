@@ -130,7 +130,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
                                         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
                                         getSupportActionBar().setTitle(groupName);
-                                        getSupportActionBar().setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                        getSupportActionBar().setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd/MMM/yy", Long.parseLong(groupCreatedOn)));
                                         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
 
                                     } else {
@@ -139,7 +139,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
                                         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
                                         getSupportActionBar().setTitle(groupName);
-                                        getSupportActionBar().setSubtitle("Created by " + myName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                        getSupportActionBar().setSubtitle("Created by " + myName +", " + DateFormat.format("dd/MMM/yy", Long.parseLong(groupCreatedOn)));
                                         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,14 +13,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_circle"
+        android:src="@android:drawable/ic_menu_today"
         android:tint="@color/white"
         android:background="@color/colorPrimary"
         app:rippleColor="@android:color/black"
         app:borderWidth="0dp"
         app:elevation="2dp"
         android:visibility="gone"
-        android:soundEffectsEnabled="false" />
+        android:soundEffectsEnabled="false"
+    />
 
     <ListView
         android:id="@+id/list_of_events"
@@ -29,7 +30,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
-        android:scrollbarSize="5dp" />
+        android:dividerHeight="8dp"
+        android:scrollbarSize="5dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp" />
 
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

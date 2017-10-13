@@ -614,7 +614,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                 Glide.with(groupInfoActivity.this).using(new FirebaseImageLoader()).load(mGroupStorageRef)
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                        .error(R.drawable.antrixlogo1).centerCrop().into(groupProfileImage);
+                        .error(R.drawable.antrixlogo1).fitCenter().into(groupProfileImage);
                 progressDialog.dismiss();
 
 

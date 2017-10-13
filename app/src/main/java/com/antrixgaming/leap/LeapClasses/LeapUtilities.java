@@ -1,10 +1,15 @@
 package com.antrixgaming.leap.LeapClasses;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +17,15 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.antrixgaming.leap.R;
+import com.antrixgaming.leap.events;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,25 +33,40 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class LeapUtilities {
+import static android.R.attr.data;
+
+public class LeapUtilities extends AppCompatActivity implements ImageUtils.ImageAttachmentListener {
 
     private Context context;
     private StorageReference storageReference;
     private CircleImageView circleImageView;
     private ImageView imageView;
-    private String returnedValue;
-    private String childOne;
-    private String childTwo;
-    private String childThree;
-    private String childFour;
-    private String childFive;
-    private String returnedChildValue;
     private DatabaseReference databaseReference;
+
+
+
+
+    private Bitmap bitmap;
+    private String file_name;
+
+    ProgressDialog progressDialog;
+
+
+
+    ImageUtils imageutils;
+
+
+
+
 
 
 
@@ -63,7 +86,7 @@ public class LeapUtilities {
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .error(R.drawable.profile_picture)
-                .fitCenter()
+                .centerCrop()
                 .into(circleImageView);
 
 
@@ -159,209 +182,100 @@ public class LeapUtilities {
 
 
 
-    public void ReturnFirebaseValue(DatabaseReference databaseReference){
 
-        this.databaseReference = databaseReference;
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
 
+
+    public void LeapImageUpload(final Context context, final ImageView imageView, final StorageReference storageReference){
+
+
+        progressDialog = new ProgressDialog(context);
+
+        this.imageView = imageView;
+        this.storageReference = storageReference;
+
+        imageutils = new ImageUtils((AppCompatActivity) context);
+
+
+        if (imageutils.isDeviceSupportCamera())
+            imageutils.imagepicker(1);
+        else imageutils.imagepicker(0);
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        super.onActivityResult(requestCode, resultCode, data);
+        imageutils.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        imageutils.request_permission_result(requestCode, permissions, grantResults);
+    }
+
+
+
+    @Override
+    public void image_attachment(final int from, String filename, Bitmap file, Uri uri) {
+
+
+        this.bitmap=file;
+        this.file_name=filename;
+        imageView.setImageBitmap(file);
+
+        String path =  Environment.getExternalStorageDirectory() + File.separator + "ImageAttach" + File.separator;
+        imageutils.createImage(file,filename,path,false);
+
+
+        // Get the data from an ImageView as bytes
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        progressDialog.setMessage("Image uploading...");
+        progressDialog.show();
+
+
+
+        UploadTask uploadTask = storageReference.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onFailure(@NonNull Exception exception) {
 
-                returnedValue = dataSnapshot.getValue().toString();
 
+                progressDialog.dismiss();
+                Toast.makeText(context, "error encountered, retry", Toast.LENGTH_SHORT).show();
+
+                // Handle unsuccessful uploads
             }
-
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                Toast.makeText(context, "Profile picture changed", Toast.LENGTH_SHORT).show();
+                Glide.with(context).using(new FirebaseImageLoader()).load(storageReference)
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                        .error(R.drawable.antrixlogo1).fitCenter().into(imageView);
+                progressDialog.dismiss();
+
 
             }
         });
 
 
     }
-
-    public String returnedValue(){return returnedValue;}
-
-
-
-
-
-
-
-    public void ReturnFirebaseChildValue(DatabaseReference databaseReference, final String childOne) {
-
-        this.databaseReference = databaseReference;
-        this.childOne = childOne;
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                returnedChildValue = dataSnapshot.child(childOne).getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public void ReturnFirebaseChildValue(DatabaseReference databaseReference, final String childOne, final String childTwo) {
-
-        this.databaseReference = databaseReference;
-        this.childOne = childOne;
-        this.childTwo = childTwo;
-
-
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                returnedChildValue = dataSnapshot.child(childOne).child(childTwo).getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
-
-    public String getReturnedChildValue() {
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                returnedChildValue = dataSnapshot.child(childOne).child(childTwo).getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-        return returnedChildValue;
-    }
-
-    public void ReturnFirebaseChildValue(String childOne, String childTwo, String childThree) {
-
-        this.childOne = childOne;
-        this.childTwo = childTwo;
-        this.childThree = childThree;
-
-        this.databaseReference = FirebaseDatabase.getInstance().getReference();
-
-        databaseReference.child(childOne).child(childTwo).addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                returnedChildValue = dataSnapshot.child("uid").getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-
-    public void ReturnFirebaseChildValue(DatabaseReference databaseReference, final String childOne, final String childTwo,
-                                         final String childThree, final String childFour) {
-
-        this.databaseReference = databaseReference;
-        this.childOne = childOne;
-        this.childTwo = childTwo;
-        this.childThree = childThree;
-        this.childFour = childFour;
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                returnedChildValue = dataSnapshot.child(childOne).child(childTwo).child(childThree).child(childFour).getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public void ReturnFirebaseChildValue(DatabaseReference databaseReference, final String childOne, final String childTwo,
-                                         final String childThree, final String childFour, final String childFive) {
-
-        this.databaseReference = databaseReference;
-        this.childOne = childOne;
-        this.childTwo = childTwo;
-        this.childThree = childThree;
-        this.childFour = childFour;
-        this.childFive = childFive;
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                returnedChildValue = dataSnapshot.child(childOne).child(childTwo).child(childThree).child(childFour).child(childFive).getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-
-
-
-
-
-    public void setReturnedChildValue(String returnedChildValue){this.returnedChildValue = returnedChildValue;}
-
-
 
 
 

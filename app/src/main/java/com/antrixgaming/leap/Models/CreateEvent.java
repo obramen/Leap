@@ -10,6 +10,7 @@ public class CreateEvent {
     long eventStartDate;
     long eventEndDate;
     String eventDescription;
+    String eventLocation;
 
 
     public CreateEvent(){
@@ -17,13 +18,14 @@ public class CreateEvent {
 
     }
 
-    public CreateEvent (String eventID, String eventBy, String eventTitle, long eventStartDate, long eventEndDate, String eventDescription){
+    public CreateEvent (String eventID, String eventBy, String eventTitle, long eventStartDate, long eventEndDate, String eventDescription, String eventLocation){
         this.eventID = eventID;
         this.eventBy = eventBy;
         this.eventTitle = eventTitle;
         this.eventStartDate = eventStartDate;
         this.eventEndDate = eventEndDate;
         this.eventDescription = eventDescription;
+        this.eventLocation = eventLocation;
     }
 
 
@@ -73,6 +75,14 @@ public class CreateEvent {
 
     public void setEventBy(String eventBy) {
         this.eventBy = eventBy;
+    }
+
+    public String getEventLocation() {
+        return eventLocation;
+    }
+
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
     }
 }
 

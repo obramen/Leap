@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ContactsDataKind
         android:mimeType="vnd.android.cursor.item/com.antrixgaming.leap"
-        android:icon="@mipmap/ic_launcher_antrix"
+        android:icon="@mipmap/ic_leap"
         android:summaryColumn="data2"
         android:detailColumn="data3" />
 </ContactsSource>

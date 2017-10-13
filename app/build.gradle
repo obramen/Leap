@@ -26,30 +26,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    //Country code
 
-    // circle profile image
-
-    // RecyclerView
 
 
     compile('com.mikepenz:materialdrawer:5.9.5@aar') {
         transitive = true
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

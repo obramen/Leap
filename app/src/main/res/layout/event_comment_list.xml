@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:descendantFocusability="afterDescendants"
+
+    >
+
+
+
+
+
+        <TextView
+            android:id="@+id/commentBy"
+            android:text="Comment by"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+             />
+
+
+
+    <TextView
+        android:id="@+id/comment"
+        android:text="Comment"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:id="@+id/commentDate"
+        android:text="Date:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/deleteComment"
+        android:text="Delete"
+        android:visibility="visible"
+        android:textSize="12sp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

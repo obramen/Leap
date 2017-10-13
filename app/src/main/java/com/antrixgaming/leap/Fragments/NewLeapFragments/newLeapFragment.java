@@ -113,6 +113,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
         leapUtilities = new LeapUtilities();
         mStorage = FirebaseStorage.getInstance().getReference();
+        leapDay = new Date().getTime();
 
 
         dbRef = FirebaseDatabase.getInstance().getReference();
@@ -194,15 +195,15 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
             {
 
                 new SingleDateAndTimePickerDialog.Builder(getContext())
-                        .bottomSheet()
+                        //.bottomSheet()
                         //.curved()
-                        //.minutesStep(15)
+                        .minutesStep(15)
                         //.defaultDate(new Date().getTime())
-                        .minDateRange(new Date())
+                        //.minDateRange(new Date())
 
                         //.displayHours(false)
                         //.displayMinutes(false)
-                        //.mustBeOnFuture()
+                        .mustBeOnFuture()
                         .backgroundColor(getResources().getColor(R.color.white))
                         .mainColor(getResources().getColor(R.color.colorPrimary))
                         .titleTextColor(getResources().getColor(R.color.colorPrimary))
@@ -219,11 +220,13 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                             @Override
                             public void onDateSelected(Date date) {
 
-                                CharSequence mDay = DateFormat.format("dd/MMM/yyyy", date.getTime());
+                                leapDay = date.getTime();
 
-                                CharSequence mTime = DateFormat.format("HH:MM", date.getTime());
 
-                                String leapDay = date.toString();
+                                CharSequence mDay = DateFormat.format("dd/MMM/yyyy", leapDay);
+
+                                CharSequence mTime = DateFormat.format("HH:MM", leapDay);
+
 
                                 timeTextView.setText(mTime);
                                 dateTextView.setText(mDay);

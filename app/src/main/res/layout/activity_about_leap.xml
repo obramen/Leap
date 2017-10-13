@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context="com.antrixgaming.leap.about_leap">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/leapVersion"
+            android:layout_centerHorizontal="true"
+            android:text="LEAP"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/aboutImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_leap" />
+
+        <TextView
+            android:id="@+id/leapVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/aboutImage"
+            android:layout_centerHorizontal="true"
+            android:text="Version 0.7"
+            android:textColor="@color/selectorcolor"
+            android:layout_marginBottom="15dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/aboutContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aboutImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/selectorcolor"
+            android:text="2017 AnTrix Gaming Ltd."
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

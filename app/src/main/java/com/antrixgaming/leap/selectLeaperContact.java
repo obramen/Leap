@@ -83,12 +83,7 @@ public class selectLeaperContact extends BaseActivity {
 
         contactPermissionStartService = new ContactPermissionStartService();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
-           contactPermissionStartService.ContactPermissionStartService(this);
 
-        } else {
-            contactPermissionStartService.ContactPermissionStartService(this);
-        }
 
 
         final FloatingActionButton addLeaperToGroupFAB = (FloatingActionButton) findViewById(R.id.addLeaperToGroupFAB);
@@ -333,10 +328,10 @@ public class selectLeaperContact extends BaseActivity {
             //finish();
             //startActivity(intent);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
-                //getContactRetrievalPermission();
+                contactPermissionStartService.ContactPermissionStartService(this);
+
             } else {
-                //Intent startContactService = new Intent(this, ContactService.class);
-                //startService(startContactService);
+                contactPermissionStartService.ContactPermissionStartService(this);
             }
             return true;
         }

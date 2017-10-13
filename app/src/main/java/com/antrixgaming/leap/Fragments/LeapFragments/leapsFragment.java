@@ -144,6 +144,10 @@ public class leapsFragment extends Fragment {
                 final CircleImageView leaperOneImage = (CircleImageView)v.findViewById(R.id.leaperOneImage);
                 final CircleImageView leaperTwoImage = (CircleImageView)v.findViewById(R.id.leaperTwoImage);
 
+                final TextView displayedLeaperOneName = (TextView)v.findViewById(R.id.displayedLeaperOneName);
+                final TextView displayedLeaperTwoName = (TextView)v.findViewById(R.id.displayedLeaperTwoName);
+
+
 
 
                 final String circleID = model.getCircleID();
@@ -372,7 +376,282 @@ public class leapsFragment extends Fragment {
 
                }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                /////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                ///////////////////////////////////////
+                //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+                //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(model.getleaperOne())
+                        .addValueEventListener(new ValueEventListener() {////////
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                        .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                    ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                    dbRef.child("userprofiles").child(model.getleaperOne()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                    .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperOneName.setText(model.getleaperOne());
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                            } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperOneName.setText("~ " + myName);
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                            }
+
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+
+
+
+                                } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                    String mName = dataSnapshot.child("name").getValue().toString();
+
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                    displayedLeaperOneName.setText(mName);
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
+
+
+                //////////////////   ENDING    ///////////////////////////////
+                ///////////////////////////////////////
+
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                ///////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if (Objects.equals(model.getleaperTwo(), "Open Leap")){
+
+
+                } else {
+
+
+
+
+
+
+
+
+                    /////////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////
+                    //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                    ///////////////////////////////////////
+                    //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+                    //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                    dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(model.getleaperTwo())
+                            .addValueEventListener(new ValueEventListener() {////////
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                            .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                        ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                        dbRef.child("userprofiles").child(model.getleaperTwo()).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                        .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                    displayedLeaperTwoName.setText(model.getleaperTwo());
+                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                                } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                    String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                    displayedLeaperTwoName.setText("~ " + myName);
+                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                                }
+
+
+
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
+
+
+
+
+
+                                    } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                        String mName = dataSnapshot.child("name").getValue().toString();
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        displayedLeaperTwoName.setText(mName);
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+
+
+
+
+                    //////////////////   ENDING    ///////////////////////////////
+                    ///////////////////////////////////////
+
+                    //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                    ///////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
+
+
+
+
 
         };
 

@@ -152,12 +152,23 @@
                             android:padding="5dp">
 
                             <TextView
+                                android:id="@+id/displayedLeaperOneName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Leaper One"
+                                android:textStyle="bold" />
+
+                            <TextView
                                 android:id="@+id/leaperOne"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:ellipsize="end"
                                 android:maxLines="1"
+                                android:visibility="invisible"
                                 android:text="Leaper One"
                                 android:textStyle="bold" />
 
@@ -218,6 +229,16 @@
                             android:padding="5dp">
 
                             <TextView
+                                android:id="@+id/displayedLeaperTwoName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Leaper Two"
+                                android:textStyle="bold" />
+
+                            <TextView
                                 android:id="@+id/leaperTwo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -225,6 +246,7 @@
                                 android:ellipsize="end"
                                 android:maxLines="1"
                                 android:text="Leaper Two"
+                                android:visibility="invisible"
                                 android:textStyle="bold" />
 
                         </RelativeLayout>

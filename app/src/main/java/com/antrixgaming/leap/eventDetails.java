@@ -119,6 +119,9 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
         commentButton = (Button) findViewById(R.id.commentButton);
         commentEditText = (EditText)findViewById(R.id.commentEditText);
 
+        final TextView displayedLeaperName = (TextView)findViewById(R.id.displayedLeaperName);
+
+
 
 
 
@@ -227,6 +230,152 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                     }
                 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                displayedLeaperName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(eventDetails.this, leaperProfileActivity.class);
+                        intent.putExtra("leaperPhoneNumber", eventByTextView.getText().toString());
+                        startActivity(intent);
+
+
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
+                /////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                ///////////////////////////////////////
+                //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+                //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(eventBy)
+                        .addValueEventListener(new ValueEventListener() {////////
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                        .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                    ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                    dbRef.child("userprofiles").child(eventBy).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                    .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperName.setText(eventBy);
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                            } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperName.setText("~ " + myName);
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                            }
+
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+
+
+
+                                } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                    String mName = dataSnapshot.child("name").getValue().toString();
+
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                    displayedLeaperName.setText(mName);
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
+
+
+                //////////////////   ENDING    ///////////////////////////////
+                ///////////////////////////////////////
+
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                ///////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
             @Override
@@ -275,8 +424,14 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                     @Override
                     public void onClick(View v) {
                         commentsDbRef.child(model.getCommentID()).removeValue();
+
                     }
                 });
+
+
+
+
+
 
 
 
@@ -292,6 +447,26 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
         ListView listView = (ListView) findViewById(R.id.list_of_EventComments);
         listView.setAdapter(adapter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

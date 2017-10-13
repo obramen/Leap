@@ -12,7 +12,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="colorPrimary">@color/appleRedLight</item>
         <item name="colorPrimaryDark">@color/appleRed</item>
         <item name="colorAccent">@color/colorAccent</item>

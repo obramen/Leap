@@ -96,7 +96,8 @@
             android:label="Events" />
         <activity
             android:name=".eventDetails"
-            android:label="Event Details" />
+            android:label="Event Details"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".about_leap"
             android:theme="@style/AppTheme.NoActionBar" />

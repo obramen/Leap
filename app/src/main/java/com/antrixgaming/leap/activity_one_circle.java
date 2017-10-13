@@ -68,6 +68,8 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
     String groupCreator;
 
+    String myUID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         editor = sharedPreferences.edit();
 
         dbRef = FirebaseDatabase.getInstance().getReference();
+        myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         groupCreator = "";
 
@@ -506,7 +509,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                         R.layout.messages_for_group, FirebaseDatabase.getInstance().getReference().child("groupcirclemessages")
                         .child(circleID)) {
                     @Override
-                    protected void populateView(View v, circleMessage model, int position) {
+                    protected void populateView(View v, final circleMessage model, int position) {
 
                         // Get references to the views of message.xml
                         TextView messageText = (TextView) v.findViewById(R.id.group_message_text);
@@ -516,9 +519,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                         TextView groupNotificationMessage = (TextView) v.findViewById(R.id.groupNotificationMessage);
                         LinearLayout groupTxtBracketTop = (LinearLayout) v.findViewById(R.id.groupTextBracketTop);
                         RelativeLayout groupTxtBracketBottom = (RelativeLayout) v.findViewById(R.id.groupTextBracketBottom);
-
-
-
+                        final TextView displayedLeaperName = (TextView) v.findViewById(R.id.displayedLeaperName);
 
 
                         ///// populate unread message list
@@ -527,7 +528,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
                         } */
 
-                        if (model.getmessageType() == null){
+                        if (model.getmessageType() == null) {
 
                         } else {
                             String messageType = model.getmessageType();
@@ -553,15 +554,121 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                         //messageUser.setText(model.getMessageUser());
 
                         // Format the date before showing it
-                        if (DateUtils.isToday(model.getMessageTime())){
+                        if (DateUtils.isToday(model.getMessageTime())) {
                             messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()));
 
-                        }
-                        else{
-                            messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()));
+                        } else {
+                            messageTime.setText(DateFormat.format("dd/MM/yyyy HH:mm", model.getMessageTime()));
                         }
 
+
+                        /////////////////////////////////////////////////////////////////////
+                        ///////////////////////////////////////////
+                        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                        ///////////////////////////////////////
+                        //////////////////   STARTING    ///////////////////////////////
+
+
+                        //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                        dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(model.getPhoneNumber())
+                                .addValueEventListener(new ValueEventListener() {////////
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                                .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+                                            ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                            dbRef.child("userprofiles").child(model.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                            .getValue().toString(), "")) {///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                        displayedLeaperName.setText(model.getPhoneNumber());
+                                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                                    } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                        String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                        displayedLeaperName.setText("~ " + myName);
+                                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                                    }
+
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+
+                                        } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                            String mName = dataSnapshot.child("name").getValue().toString();
+
+                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                            displayedLeaperName.setText(mName);
+                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                        //////////////////   ENDING    ///////////////////////////////
+                        ///////////////////////////////////////
+
+                        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                        ///////////////////////////////////////////
+                        /////////////////////////////////////////////////////////////////////
+
+
                     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 };
 
                 listOfMessages.setAdapter(adapter);

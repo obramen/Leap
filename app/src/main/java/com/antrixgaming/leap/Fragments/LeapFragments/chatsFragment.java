@@ -49,6 +49,8 @@ public class chatsFragment extends Fragment {
     StorageReference mLeaperStorageRef;
     String myPhoneNumber;
 
+    DatabaseReference dbRef;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,7 +60,7 @@ public class chatsFragment extends Fragment {
 
         final String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        dbRef = FirebaseDatabase.getInstance().getReference();
 
         leapUtilities = new LeapUtilities();
 
@@ -130,6 +132,7 @@ public class chatsFragment extends Fragment {
                 TextView messageText = (TextView)v.findViewById(R.id.lastLeaperMessage);
                 //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
                 TextView phoneNumber = (TextView)v.findViewById(R.id.leaperName);
+                final TextView displayedLeaperName = (TextView)v.findViewById(R.id.displayedLeaperName);
                 TextView messageTime = (TextView)v.findViewById(R.id.lastLeaperMessageTime);
                 final CircleImageView leaperImage = (CircleImageView)v.findViewById(R.id.leaper_image);
 
@@ -253,6 +256,124 @@ public class chatsFragment extends Fragment {
 
                                 }
                             }
+
+
+
+
+
+                            /////////////////////////////////////////////////////////////////////
+                            ///////////////////////////////////////////
+                            //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                            ///////////////////////////////////////
+                            //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+                                //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                                dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(model.getReceiverPhoneNumber())
+                                        .addValueEventListener(new ValueEventListener() {////////
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                                        .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                                    ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                                    dbRef.child("userprofiles").child(model.getReceiverPhoneNumber()).addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                                    .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                                displayedLeaperName.setText(model.getReceiverPhoneNumber());
+                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                                            } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                                displayedLeaperName.setText("~ " + myName);
+                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                                            }
+
+
+
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+
+
+
+
+
+
+                                                } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                                    String mName = dataSnapshot.child("name").getValue().toString();
+
+                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                    displayedLeaperName.setText(mName);
+                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                                }
+
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
+
+
+
+
+
+                            //////////////////   ENDING    ///////////////////////////////
+                            ///////////////////////////////////////
+
+                            //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                            ///////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         }
 
                         @Override
@@ -305,6 +426,122 @@ public class chatsFragment extends Fragment {
 
                                 }
                             }
+
+
+
+
+
+
+
+
+                            /////////////////////////////////////////////////////////////////////
+                            ///////////////////////////////////////////
+                            //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                            ///////////////////////////////////////
+                            //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+                            //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                            dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(model.getSenderPhoneNumber())
+                                    .addValueEventListener(new ValueEventListener() {////////
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                                    .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                                ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                                dbRef.child("userprofiles").child(model.getSenderPhoneNumber()).addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                                .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                            displayedLeaperName.setText(model.getReceiverPhoneNumber());
+                                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                                        } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                            String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                            displayedLeaperName.setText("~ " + myName);
+                                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                                        }
+
+
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+
+
+
+
+
+
+
+                                            } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                                String mName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperName.setText(mName);
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                            }
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+
+
+
+                            //////////////////   ENDING    ///////////////////////////////
+                            ///////////////////////////////////////
+
+                            //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                            ///////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         }
 
                         @Override

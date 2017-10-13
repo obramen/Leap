@@ -198,6 +198,18 @@
                                 app:civ_border_width="2dp" />
 
                             <TextView
+                                android:id="@+id/displayedLeaperOneName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="15dp"
+                                android:layout_toEndOf="@id/detailsLeaperOneImage"
+                                android:text="@string/leaper_one"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
                                 android:id="@+id/detailsLeaperOne"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -206,6 +218,7 @@
                                 android:layout_toEndOf="@id/detailsLeaperOneImage"
                                 android:text="@string/leaper_one"
                                 android:textColor="@color/white"
+                                android:visibility="invisible"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
 
@@ -236,7 +249,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_alignParentTop="true"
-                            android:background="@color/grey"
+                            android:background="@color/white"
                             android:layout_height="1dp"
                             android:layout_marginStart="70dp"
                             android:layout_marginEnd="20dp"></RelativeLayout>
@@ -262,11 +275,24 @@
                                 app:civ_border_width="2dp" />
 
                             <TextView
+                                android:id="@+id/displayedLeaperTwoName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="15dp"
+                                android:layout_toEndOf="@id/detailsLeaperTwoImage"
+                                android:text="@string/leaper_two"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
                                 android:id="@+id/detailsLeaperTwo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_marginStart="15dp"
+                                android:visibility="invisible"
                                 android:layout_toEndOf="@id/detailsLeaperTwoImage"
                                 android:text="@string/leaper_two"
                                 android:textColor="@color/white"

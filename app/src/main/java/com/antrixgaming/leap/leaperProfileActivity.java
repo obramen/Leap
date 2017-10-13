@@ -147,7 +147,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
-        getSupportActionBar().setTitle(leaperPhoneNumber);
+        //getSupportActionBar().setTitle(leaperPhoneNumber);
         imageutils = new ImageUtils(this);
         leapUtilities = new LeapUtilities();
 
@@ -165,6 +165,172 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+        profileLeaperName = (TextView) findViewById(R.id.profileLeaperName);
+        //profileLeaperName.setText(leaperPhoneNumber);
+
+
+
+
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+        ///////////////////////////////////////
+        //////////////////   STARTING    ///////////////////////////////
+
+        if (Objects.equals(leaperPhoneNumber, myPhoneNumber)){ //// IF AM CHECKING MY OWN PROFILE
+
+
+
+            //// QUERY USER PROFILES TABLE TO SEE IF I HAVE AN ENTRY IN THERE
+            dbRef.child("userprofiles").child(myPhoneNumber).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                            .getValue().toString(), "")){ /////IF I HAVEN'T SAVED MY PROFILE NAME OR THE NAME IS EMPTY, USE MY PHONE NUMBER
+
+                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                        getSupportActionBar().setTitle(leaperPhoneNumber);
+                        profileLeaperName.setText(leaperPhoneNumber);
+                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+                    } else { ////IF I HAVE SAVED MY PROFILE NAME USE IT
+
+                        String myName = dataSnapshot.child("name").getValue().toString();
+
+                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                        getSupportActionBar().setTitle(myName);
+                        profileLeaperName.setText(myName);
+                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                    }
+
+
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+        } else { ///////     IF I AM CHECKING SOMEONE ELSE'S PROFILE
+
+
+            //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+            dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(leaperPhoneNumber)
+                    .addValueEventListener(new ValueEventListener() {////////
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                            .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                        ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                        dbRef.child("userprofiles").child(leaperPhoneNumber).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                        .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                    getSupportActionBar().setTitle(leaperPhoneNumber);
+                                    profileLeaperName.setText(leaperPhoneNumber);
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                    String myName = dataSnapshot.child("name").getValue().toString();
+
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                    getSupportActionBar().setTitle(myName);
+                                    profileLeaperName.setText(myName);
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                }
+
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
+
+
+                    } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                        String mName = dataSnapshot.child("name").getValue().toString();
+
+                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                        getSupportActionBar().setTitle(mName);
+                        profileLeaperName.setText(mName);
+                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+
+
+
+
+        //////////////////   ENDING    ///////////////////////////////
+        ///////////////////////////////////////
+
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+        ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -174,8 +340,6 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         profileImageBackground = (ImageView) findViewById(R.id.profileImageBackground);
 
 
-        profileLeaperName = (TextView) findViewById(R.id.profileLeaperName);
-        profileLeaperName.setText(leaperPhoneNumber);
         leapStatusSwitch = (Switch) findViewById(R.id.leapStatusSwitch);
         statusPermissionSwitch = (Switch) findViewById(R.id.statusPermissionSwitch);
         editProfile = (TextView) findViewById(R.id.editProfle);

@@ -45,6 +45,7 @@ public class activity_one_chat extends BaseActivity {
     private String numberA;
     private String numberB;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -283,7 +284,7 @@ public class activity_one_chat extends BaseActivity {
                 R.layout.messages, FirebaseDatabase.getInstance().getReference().child("onecirclemessages")
                 .child(mCircleID)) {
             @Override
-            protected void populateView(View v, ChatMessage model, int position) {
+            protected void populateView(View v, final ChatMessage model, int position) {
 
 
                 //RelativeLayout sentMessageLayout = (RelativeLayout)v.findViewById(R.id.sentMessageLayout);
@@ -294,12 +295,14 @@ public class activity_one_chat extends BaseActivity {
                 //TextView messageUser = (TextView)v.findViewById(R.id.message_user);
                 TextView phoneNumber = (TextView) v.findViewById(R.id.phoneNumber);
                 TextView messageTime = (TextView) v.findViewById(R.id.message_time);
+                final TextView displayedLeaperName = (TextView)v.findViewById(R.id.displayedLeaperName);
 
 
 
 
 
-                    // Set their text
+
+                // Set their text
                 messageText.setText(model.getMessageText());
                 phoneNumber.setText(model.getSenderPhoneNumber());
                 //messageUser.setText(model.getMessageUser());
@@ -310,7 +313,7 @@ public class activity_one_chat extends BaseActivity {
 
                 }
                 else{
-                    messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()));
+                    messageTime.setText(DateFormat.format("dd/MM/yyyy HH:mm", model.getMessageTime()));
                 }
 
 
@@ -326,7 +329,127 @@ public class activity_one_chat extends BaseActivity {
 
 
 
-                }
+
+
+
+
+
+
+
+                /////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                ///////////////////////////////////////
+                //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+                //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                dbRef.child("ContactList").child(oneCircleFirstUserUid).child("leapSortedContacts").child(model.getSenderPhoneNumber())
+                        .addValueEventListener(new ValueEventListener() {////////
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                        .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                    ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                    dbRef.child("userprofiles").child(model.getSenderPhoneNumber()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                    .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperName.setText(model.getSenderPhoneNumber());
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                            } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                displayedLeaperName.setText("~ " + myName);
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                            }
+
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+
+
+
+                                } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                    String mName = dataSnapshot.child("name").getValue().toString();
+
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                    displayedLeaperName.setText(mName);
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
+
+
+                //////////////////   ENDING    ///////////////////////////////
+                ///////////////////////////////////////
+
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                ///////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
             };
 
             listOfMessages.setAdapter(adapter);

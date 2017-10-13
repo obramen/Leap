@@ -38,7 +38,7 @@
                         android:id="@+id/relativeLayout">
 
                         <TextView
-                            android:id="@+id/leaperOneText"
+                            android:id="@+id/displayedLeaperOneName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="LEAPER ONE"
@@ -49,10 +49,34 @@
                             android:layout_marginTop="13dp" />
 
                         <TextView
+                            android:id="@+id/leaperOneText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LEAPER ONE"
+                            android:layout_marginStart="10dp"
+                            android:visibility="invisible"
+                            android:layout_toEndOf="@+id/g1leaperOneScoreBox"
+                            android:textStyle="bold"
+                            android:layout_alignBaseline="@+id/g1leaperOneScoreBox"
+                            android:layout_marginTop="13dp" />
+
+                        <TextView
+                            android:id="@+id/displayedLeaperTwoName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LEAPER TWO"
+                            android:layout_toEndOf="@+id/g1leaperTwoScoreBox"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_alignBaseline="@+id/g1leaperTwoScoreBox"/>
+
+                        <TextView
                             android:id="@+id/leaperTwoText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="LEAPER TWO"
+                            android:visibility="invisible"
                             android:layout_toEndOf="@+id/g1leaperTwoScoreBox"
                             android:textStyle="bold"
                             android:layout_marginBottom="15dp"

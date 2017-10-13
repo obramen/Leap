@@ -47,12 +47,24 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/displayedLeaperName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="name"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"/>
+
+            <TextView
                 android:id="@+id/groupInfoLeaperName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="name"
+                android:visibility="invisible"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"/>

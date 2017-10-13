@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,21 +7,77 @@
     android:orientation="vertical"
     tools:context="com.antrixgaming.leap.new_event">
 
-    <ImageView
-        android:id="@+id/eventImage"
+    <RelativeLayout
+        android:id="@+id/imageContainer"
         android:layout_width="match_parent"
-        android:layout_height="180dp" />
+        android:layout_height="180dp">
 
-    <TextView
+        <ImageView
+            android:id="@+id/eventImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"/>
+
+        <Button
+            android:id="@+id/addImage"
+            style="@style/redButtonLight"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="ADD PHOTO"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+
+
+
+    <EditText
         android:id="@+id/eventTitle"
+        android:layout_below="@+id/imageContainer"
         android:textSize="20sp"
         android:hint="Event name"
+        android:maxLength="25"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:layout_below="@id/eventTitle"
+        android:layout_marginStart="20dp"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today"/>
 
 
 
 
-</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        style="@style/redButtonDark"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"/>
+
+
+
+
+
+
+
+</RelativeLayout>

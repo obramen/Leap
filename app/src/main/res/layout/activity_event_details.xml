@@ -203,6 +203,19 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/displayedLeaperName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Liam"
+                    android:layout_toEndOf="@id/hostHeader"
+                    android:layout_marginStart="5dp"
+                    android:layout_below="@id/eventLocation"
+                    android:textSize="13sp" />
+
+                <TextView
                     android:id="@+id/eventByTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -210,6 +223,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Liam"
+                    android:visibility="invisible"
                     android:layout_toEndOf="@id/hostHeader"
                     android:layout_marginStart="5dp"
                     android:layout_below="@id/eventLocation"

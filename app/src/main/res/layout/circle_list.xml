@@ -73,7 +73,7 @@
                 android:id="@+id/lastCircleMessageBy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/circleName"
+                android:layout_below="@+id/circleName"
                 android:layout_marginTop="5dp"
                 android:textSize="14sp"
                 android:maxLines="1"
@@ -83,22 +83,32 @@
                 android:id="@+id/displayedLeaperName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/circleName"
+                android:layout_below="@+id/circleName"
                 android:layout_marginTop="5dp"
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
             <TextView
+                android:id="@+id/hyphen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/circleName"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"
+                android:text=": "
+                android:layout_toEndOf="@+id/displayedLeaperName"/>
+
+            <TextView
                 android:id="@+id/lastCircleMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/circleName"
+                android:layout_below="@+id/circleName"
                 android:layout_marginTop="5dp"
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_toRightOf="@+id/lastCircleMessageBy"/>
+                android:layout_toEndOf="@+id/hyphen"/>
 
 
         </RelativeLayout>
@@ -126,6 +136,7 @@
                 android:background="@drawable/redbutton"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
+                android:visibility="gone"
                 android:padding="2dp"/>
 
 

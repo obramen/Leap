@@ -100,6 +100,8 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
     Long leapDay;
 
 
+    TextView displayedLeaperOneName;
+    TextView displayedLeaperTwoName;
 
 
 
@@ -134,6 +136,9 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
         newLeaperTwoUID = (TextView) view.findViewById(R.id.freeLeaperTwoUID);
         searchBox = (EditText)view.findViewById(R.id.newLeapSearchBox);
         newLeapDimmer = (FrameLayout)view.findViewById(R.id.newLeapDimmer);
+
+        displayedLeaperOneName = (TextView)view.findViewById(R.id.displayedLeaperOneName);
+        displayedLeaperTwoName = (TextView)view.findViewById(R.id.displayedLeaperTwoName);
 
 
 
@@ -195,10 +200,64 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
             {
 
                 new SingleDateAndTimePickerDialog.Builder(getContext())
-                        //.bottomSheet()
+                        .bottomSheet()
                         //.curved()
-                        .minutesStep(15)
-                        //.defaultDate(new Date().getTime())
+                        //.minutesStep(15)
+                        //.defaultDate(new Date())
+                        //.minDateRange(new Date())
+
+                        //.displayHours(false)
+                        //.displayMinutes(false)
+                        .mustBeOnFuture()
+                        .backgroundColor(getResources().getColor(R.color.white))
+                        .mainColor(getResources().getColor(R.color.colorPrimary))
+                        .titleTextColor(getResources().getColor(R.color.colorPrimary))
+
+                        .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
+                            @Override
+                            public void onDisplayed(SingleDateAndTimePicker picker) {
+                                //retrieve the SingleDateAndTimePicker
+                            }
+                        })
+
+                        .title("Leap time")
+                        .listener(new SingleDateAndTimePickerDialog.Listener() {
+                            @Override
+                            public void onDateSelected(Date date) {
+
+                                leapDay = date.getTime();
+
+
+                                CharSequence mDay = DateFormat.format("dd-MMM-yyyy", leapDay);
+
+                                CharSequence mTime = DateFormat.format("HH:mm", leapDay);
+
+
+                                timeTextView.setText(mTime);
+                                dateTextView.setText(mDay);
+
+
+                            }
+                        }).display();
+
+
+
+
+
+            }
+
+
+        });
+
+        timeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new SingleDateAndTimePickerDialog.Builder(getContext())
+                        .bottomSheet()
+                        //.curved()
+                        //.minutesStep(15)
+                        //.defaultDate(new Date())
                         //.minDateRange(new Date())
 
                         //.displayHours(false)
@@ -225,7 +284,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
                                 CharSequence mDay = DateFormat.format("dd/MMM/yyyy", leapDay);
 
-                                CharSequence mTime = DateFormat.format("HH:MM", leapDay);
+                                CharSequence mTime = DateFormat.format("HH:mm", leapDay);
 
 
                                 timeTextView.setText(mTime);
@@ -234,13 +293,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
                             }
                         }).display();
-
-
-
-
             }
-
-
         });
 
         leapButton.setOnClickListener(new View.OnClickListener() {
@@ -586,6 +639,245 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
 
 
+        /////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+        ///////////////////////////////////////
+        //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+        //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+        dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(leaperOne.getText().toString())
+                .addValueEventListener(new ValueEventListener() {////////
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                            ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                            dbRef.child("userprofiles").child(leaperOne.getText().toString()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                            .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        displayedLeaperOneName.setText(leaperOne.getText().toString());
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                    } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                        String myName = dataSnapshot.child("name").getValue().toString();
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        displayedLeaperOneName.setText("~ " + myName);
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                    }
+
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+
+
+
+
+                        } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                            String mName = dataSnapshot.child("name").getValue().toString();
+
+                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                            displayedLeaperOneName.setText(mName);
+                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+        //////////////////   ENDING    ///////////////////////////////
+        ///////////////////////////////////////
+
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+        ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if (Objects.equals(leaperTwo.getText().toString(), "Open Leap")){
+
+            displayedLeaperTwoName.setText("Open Leap");
+
+
+        } else {
+
+
+
+
+
+
+
+
+            /////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////
+            //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+            ///////////////////////////////////////
+            //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+            //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+            dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(leaperTwo.getText().toString())
+                    .addValueEventListener(new ValueEventListener() {////////
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                    .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                dbRef.child("userprofiles").child(leaperTwo.getText().toString()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                            displayedLeaperTwoName.setText(leaperTwo.getText().toString());
+                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                        } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                            String myName = dataSnapshot.child("name").getValue().toString();
+
+                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                            displayedLeaperTwoName.setText("~ " + myName);
+                                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                        }
+
+
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+
+
+
+
+
+                            } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                String mName = dataSnapshot.child("name").getValue().toString();
+
+                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                displayedLeaperTwoName.setText(mName);
+                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+
+
+
+
+            //////////////////   ENDING    ///////////////////////////////
+            ///////////////////////////////////////
+
+            //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+            ///////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
         return view;
 
 
@@ -605,6 +897,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                     // TODO Extract the data returned from the child Activity.
                     String leaperTwoResult = data.getStringExtra("SecondLeaper");
                     leaperTwo.setText(leaperTwoResult);
+                    displayedLeaperTwoName.setText(leaperTwoResult);
 
 
 

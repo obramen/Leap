@@ -316,6 +316,15 @@ public class leapDetailsActivity extends BaseActivity {
                     }
                 });
 
+                displayedLeaperOneName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(leapDetailsActivity.this, leaperProfileActivity.class);
+                        intent.putExtra("leaperPhoneNumber", leaperOne.getText().toString());
+                        startActivity(intent);
+                    }
+                });
+
                 detailsLeaperOneImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -353,6 +362,15 @@ public class leapDetailsActivity extends BaseActivity {
                         }
                     });
 
+                    displayedLeaperTwoName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(leapDetailsActivity.this, leaperProfileActivity.class);
+                            intent.putExtra("leaperPhoneNumber", leaperTwo.getText().toString());
+                            startActivity(intent);
+                        }
+                    });
+
                     detailsLeaperTwoImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -383,8 +401,8 @@ public class leapDetailsActivity extends BaseActivity {
 
 
                 /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME
-                CharSequence mDay = DateFormat.format("dd/MMM/yyyy", model.getleapDay());
-                CharSequence mTime = DateFormat.format("HH:MM", model.getleapDay());
+                CharSequence mDay = DateFormat.format("dd-MMM-yyyy", model.getleapDay());
+                CharSequence mTime = DateFormat.format("HH:mm", model.getleapDay());
 
 
                 CharSequence lDay;
@@ -1119,10 +1137,15 @@ public class leapDetailsActivity extends BaseActivity {
                                 .bottomSheet()
                                 //.curved()
                                 //.minutesStep(15)
+                                //.defaultDate(new Date())
+                                //.minDateRange(new Date())
 
                                 //.displayHours(false)
                                 //.displayMinutes(false)
                                 .mustBeOnFuture()
+                                .backgroundColor(getResources().getColor(R.color.white))
+                                .mainColor(getResources().getColor(R.color.colorPrimary))
+                                .titleTextColor(getResources().getColor(R.color.colorPrimary))
 
                                 .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
                                     @Override
@@ -1138,7 +1161,7 @@ public class leapDetailsActivity extends BaseActivity {
 
                                         CharSequence mDay = DateFormat.format("dd/MMM/yyyy", date.getTime());
 
-                                        CharSequence mTime = DateFormat.format("HH:MM", date.getTime());
+                                        CharSequence mTime = DateFormat.format("HH:mm", date.getTime());
 
                                         long leapDay = date.getTime();
 
@@ -1472,7 +1495,10 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
+
                 if (Objects.equals(model.getleaperTwo(), "Open Leap")){
+
+                    displayedLeaperTwoName.setText("Open Leap");
 
 
                 } else {

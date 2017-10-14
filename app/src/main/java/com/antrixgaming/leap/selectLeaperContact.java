@@ -31,8 +31,11 @@ import com.antrixgaming.leap.Models.savePhoneContacts;
 import com.antrixgaming.leap.Models.sendNotification;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -49,6 +52,8 @@ public class selectLeaperContact extends BaseActivity {
     String myUID;
     String myPhoneNumber;
     DatabaseReference dbRef;
+    DatabaseReference leapContactRef;
+    DatabaseReference circleMembersRef;
     String selectedContact = null;
 
     LeapUtilities leapUtilities;
@@ -74,7 +79,8 @@ public class selectLeaperContact extends BaseActivity {
 
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        dbRef = FirebaseDatabase.getInstance().getReference().child("ContactList").child(myUID).child("leapSortedContacts");
+        dbRef = FirebaseDatabase.getInstance().getReference();
+        leapContactRef = dbRef.child("ContactList").child(myUID).child("leapSortedContacts");
 
         mStorage = FirebaseStorage.getInstance().getReference();
         leapUtilities = new LeapUtilities();
@@ -96,7 +102,7 @@ public class selectLeaperContact extends BaseActivity {
         FirebaseListAdapter<savePhoneContacts> adapter;
 
         adapter = new FirebaseListAdapter<savePhoneContacts>(this, savePhoneContacts.class,
-                R.layout.phone_contact_list, dbRef.orderByChild("name")) {  //dbRef.orderByChild("name")
+                R.layout.phone_contact_list, leapContactRef.orderByChild("name")) {  //dbRef.orderByChild("name")
             @Override
             protected void populateView(View v, savePhoneContacts model, int position) {
 
@@ -175,6 +181,8 @@ public class selectLeaperContact extends BaseActivity {
 
                 final TextView returnContact = (TextView)view.findViewById(R.id.phoneContactStatus);
                 switch (SourceActivity){
+
+
                     case "1":
                         String oneCircleSecondUser = returnContact.getText().toString();
                         Intent newChatIntent = new Intent(selectLeaperContact.this, activity_one_chat.class);
@@ -182,6 +190,11 @@ public class selectLeaperContact extends BaseActivity {
                         startActivity(newChatIntent);
                         finish();
                         break;
+
+
+
+
+
                     case "2":
                         String secondLeaper = returnContact.getText().toString();
                         Intent leaperTwoResult = new Intent();
@@ -189,6 +202,11 @@ public class selectLeaperContact extends BaseActivity {
                         setResult(Activity.RESULT_OK, leaperTwoResult);
                         finish();
                         break;
+
+
+
+
+
                     case "3":
 
 
@@ -235,6 +253,11 @@ public class selectLeaperContact extends BaseActivity {
 
 
                         break;
+
+
+
+
+
                 }
 
 
@@ -252,22 +275,59 @@ public class selectLeaperContact extends BaseActivity {
                 // 1 - type of notification
 
 
+                circleMembersRef = dbRef.child("groupcirclemembers").child(finalCircleID).child("currentmembers");
 
-                for(int x = 0; x < selectedNumbers.size(); x++ ){
-                    String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
-                            .push().getKey();
-                    FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
-                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
-                            "1", "0"));
+                circleMembersRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(myPhoneNumber)
-                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
-                            "1", "0"));
 
-                    Toast.makeText(selectLeaperContact.this, "Invitation sent", Toast.LENGTH_SHORT).show();
 
-                    finish();
-                }
+
+
+
+                        for(int x = 0; x < selectedNumbers.size(); x++ ){
+
+                            if (dataSnapshot.child(selectedNumbers.get(x)).exists()){
+
+
+                            } else {
+
+
+                                String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
+                                        .push().getKey();
+                                FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
+                                        .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                                        "1", "0"));
+
+                                FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(myPhoneNumber)
+                                        .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                                        "1", "0"));
+
+                                Toast.makeText(selectLeaperContact.this, "Invitation sent", Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                        }
+
+
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                finish();
+
 
 
 

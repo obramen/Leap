@@ -75,22 +75,6 @@ public class chatsFragment extends Fragment {
 
 
 
-        ListView listView = (ListView) view.findViewById(R.id.list_of_chats);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position,
-                                    long id) {
-
-
-                TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
-                //String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
-                TextView sendToPhoneNumber = (TextView) view.findViewById(R.id.leaperName);
-
-                Intent intent = new Intent(getActivity(), activity_one_chat.class);
-                intent.putExtra("oneCircleSecondUser", sendToPhoneNumber.getText().toString());
-                startActivity(intent);
-            }
-        });
 
 
 
@@ -572,6 +556,33 @@ public class chatsFragment extends Fragment {
         };
 
         listOfMessages.setAdapter(adapter);
+
+
+
+
+
+        ListView listView = (ListView) view.findViewById(R.id.list_of_chats);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position,
+                                    long id) {
+
+
+                //TextView newMessagePhoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
+                //String oneCircleSecondUser = newMessagePhoneNumber.getText().toString();
+                TextView sendToPhoneNumber = (TextView) view.findViewById(R.id.leaperName);
+
+                Intent intent = new Intent(getActivity(), activity_one_chat.class);
+                intent.putExtra("oneCircleSecondUser", sendToPhoneNumber.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
+
 
 
 

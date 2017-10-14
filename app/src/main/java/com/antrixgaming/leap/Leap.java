@@ -881,6 +881,7 @@ public class Leap extends BaseActivity
             Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
             startActivity(openNotificationsIntent);
 
+
             return true;
         }
 

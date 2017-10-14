@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.antrixgaming.leap.LeapClasses.ImageUtils;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.LeapClasses.OnlinePressence;
 import com.antrixgaming.leap.Models.CreateEvent;
+import com.antrixgaming.leap.Models.EventAttenders;
 import com.antrixgaming.leap.Models.EventComment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -54,6 +56,7 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
     DatabaseReference dbRef;
     DatabaseReference eventsDbRef;
     DatabaseReference commentsDbRef;
+    DatabaseReference attendersDbRef;
     StorageReference mStorage;
     StorageReference mEventStorage;
 
@@ -66,6 +69,9 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
     TextView eventByTextView;
     TextView eventLocation;
 
+    TextView attendTextView;
+    ImageView leapInButton;
+
     Button commentButton;
     EditText commentEditText;
 
@@ -75,6 +81,7 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
     ImageUtils imageutils;
 
     FirebaseListAdapter<EventComment> adapter;
+    FirebaseListAdapter<EventAttenders> adapter2;
 
 
 
@@ -96,6 +103,8 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
         dbRef = FirebaseDatabase.getInstance().getReference();
         eventsDbRef = dbRef.child("AnTrixEvents");
+        commentsDbRef = dbRef.child("eventComments").child(eventID);
+        attendersDbRef = dbRef.child("eventAttenders").child(eventID);
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         leapUtilities = new LeapUtilities();
@@ -108,21 +117,21 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
 
         eventImage = (ImageView) findViewById(R.id.eventImage);
-        eventDay = (TextView)findViewById(R.id.eventDay);
-        eventMonth = (TextView)findViewById(R.id.eventMonth);
-        eventTitle = (TextView)findViewById(R.id.eventTitle);
-        eventDescription = (TextView)findViewById(R.id.eventDescription);
-        eventPeriod = (TextView)findViewById(R.id.eventPeriod);
-        eventByTextView = (TextView)findViewById(R.id.eventByTextView);
-        eventLocation = (TextView)findViewById(R.id.eventLocation);
+        eventDay = (TextView) findViewById(R.id.eventDay);
+        eventMonth = (TextView) findViewById(R.id.eventMonth);
+        eventTitle = (TextView) findViewById(R.id.eventTitle);
+        eventDescription = (TextView) findViewById(R.id.eventDescription);
+        eventPeriod = (TextView) findViewById(R.id.eventPeriod);
+        eventByTextView = (TextView) findViewById(R.id.eventByTextView);
+        eventLocation = (TextView) findViewById(R.id.eventLocation);
 
         commentButton = (Button) findViewById(R.id.commentButton);
-        commentEditText = (EditText)findViewById(R.id.commentEditText);
+        commentEditText = (EditText) findViewById(R.id.commentEditText);
 
-        final TextView displayedLeaperName = (TextView)findViewById(R.id.displayedLeaperName);
+        attendTextView = (TextView) findViewById(R.id.attendTextView);
+        leapInButton = (ImageView) findViewById(R.id.leapInButton);
 
-
-
+        final TextView displayedLeaperName = (TextView) findViewById(R.id.displayedLeaperName);
 
 
         commentButton.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +146,7 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                 }
 
                 String key = dbRef.child("eventComments").child(eventID).push().getKey();
-                dbRef.child("eventComments").child(eventID).child(key) .setValue(new EventComment(eventID, key, myPhoneNumber, commentEditText.getText().toString().trim()));
+                dbRef.child("eventComments").child(eventID).child(key).setValue(new EventComment(eventID, key, myPhoneNumber, commentEditText.getText().toString().trim()));
 
                 commentEditText.setText("");
                 commentEditText.setHint("Comment...");
@@ -146,21 +155,35 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
         });
 
 
+        leapInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (Objects.equals(attendTextView.getText().toString(), "Leap in")){
+                    dbRef.child("eventAttenders").child(eventID).child(myPhoneNumber).setValue(new EventAttenders(eventID, myPhoneNumber));
+
+                } else if (Objects.equals(attendTextView.getText().toString(), "Leap out")){
+
+                    dbRef.child("eventAttenders").child(eventID).child(myPhoneNumber).removeValue();
+
+
+                    attendTextView.setText("Leap in");
+                    leapInButton.setImageResource(R.drawable.done_check_mark);
+                    leapInButton.setBackground(getResources().getDrawable(R.drawable.green_button));
+
+
+                }
 
 
 
-
-
-
-
+            }
+        });
 
 
         eventsDbRef.child(eventID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
 
 
                 String mEventTitle = dataSnapshot.child("eventTitle").getValue().toString();
@@ -169,9 +192,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                 long eventStartDate = Long.parseLong(dataSnapshot.child("eventStartDate").getValue().toString());
                 long eventEndDate = Long.parseLong(dataSnapshot.child("eventEndDate").getValue().toString());
                 String mEventLocation = dataSnapshot.child("eventLocation").getValue().toString();
-
-
-
 
 
                 getSupportActionBar().setTitle(eventTitle.getText().toString());
@@ -195,16 +215,13 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                 eventPeriod.setText(periodStart + " to " + periodEnd);
 
 
-
                 mEventStorage = mStorage.child("events").child(eventBy).child(eventID).child(eventID);
                 leapUtilities.SquareImageFromFirebase(eventDetails.this, mEventStorage, eventImage);
 
 
-
-                if (Objects.equals(myPhoneNumber, eventBy)){
+                if (Objects.equals(myPhoneNumber, eventBy)) {
                     eventImage.setEnabled(true);
-                }
-                else{
+                } else {
                     eventImage.setEnabled(false);
                 }
 
@@ -220,7 +237,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                 });
 
 
-
                 eventByTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -229,19 +245,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                         startActivity(intent);
                     }
                 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 displayedLeaperName.setOnClickListener(new View.OnClickListener() {
@@ -253,14 +256,8 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                         startActivity(intent);
 
 
-
                     }
                 });
-
-
-
-
-
 
 
 
@@ -273,8 +270,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                 //////////////////   STARTING    ///////////////////////////////
 
 
-
-
                 //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
                 dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(eventBy)
                         .addValueEventListener(new ValueEventListener() {////////
@@ -285,13 +280,12 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                                         .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
 
 
-
                                     ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
                                     dbRef.child("userprofiles").child(eventBy).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
-                                                    .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+                                                    .getValue().toString(), "")) {///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
 
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
                                                 displayedLeaperName.setText(eventBy);
@@ -310,8 +304,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                                             }
 
 
-
-
                                         }
 
                                         @Override
@@ -319,11 +311,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
                                         }
                                     });
-
-
-
-
-
 
 
                                 } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
@@ -348,32 +335,12 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                         });
 
 
-
-
-
-
-
                 //////////////////   ENDING    ///////////////////////////////
                 ///////////////////////////////////////
 
                 //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
                 ///////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             }
@@ -385,18 +352,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-        commentsDbRef = dbRef.child("eventComments").child(eventID);
         Query query = commentsDbRef.orderByChild("commentDate");
 
         adapter = new FirebaseListAdapter<EventComment>(eventDetails.this, EventComment.class, R.layout.event_comment_list, query) {
@@ -405,17 +360,17 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
                 TextView commentBy = (TextView) v.findViewById(R.id.commentBy);
                 TextView commentDate = (TextView) v.findViewById(R.id.commentDate);
-                TextView comment = (TextView)v.findViewById(R.id.comment);
-                TextView deleteComment = (TextView)v.findViewById(R.id.deleteComment);
+                TextView comment = (TextView) v.findViewById(R.id.comment);
+                TextView deleteComment = (TextView) v.findViewById(R.id.deleteComment);
 
                 commentBy.setText(model.getCommentBy());
-                commentDate.setText(DateFormat.format("dd/MMM/yyyy HH:MM", model.getCommentDate()));
+                commentDate.setText(DateFormat.format("dd/MMM/yyyy HH:mm", model.getCommentDate()));
                 comment.setText(model.getComment());
 
 
-                if (Objects.equals(commentBy.getText().toString(), myPhoneNumber)){
+                if (Objects.equals(commentBy.getText().toString(), myPhoneNumber)) {
                     deleteComment.setVisibility(v.VISIBLE);
-                } else{
+                } else {
                     deleteComment.setVisibility(v.GONE);
 
                 }
@@ -427,19 +382,6 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
                     }
                 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             }
@@ -455,15 +397,119 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
 
 
+        Query query2 = attendersDbRef.orderByChild("leapInDate");
+
+        adapter2 = new FirebaseListAdapter<EventAttenders>(eventDetails.this, EventAttenders.class, R.layout.event_attenders_list, query2) {
+            @Override
+            protected void populateView(View v, final EventAttenders model, int position) {
+
+                final TextView attenderName = (TextView) v.findViewById(R.id.attenderName);
+
+                attenderName.setText(model.getAttenderName());
+
+                if (Objects.equals(model.getAttenderName(), myPhoneNumber)) {
+
+                    attendTextView.setText("Leap out");
+                    leapInButton.setImageResource(R.drawable.ic_action_cancel);
+                    leapInButton.setBackground(getResources().getDrawable(R.drawable.redbutton));
+
+                } else {
+
+
+                }
 
 
 
 
 
+                /////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+                ///////////////////////////////////////
+                //////////////////   STARTING    ///////////////////////////////
+
+
+                //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(model.getAttenderName())
+                        .addValueEventListener(new ValueEventListener() {////////
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                        .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+                                    ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                    dbRef.child("userprofiles").child(model.getAttenderName()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                    .getValue().toString(), "")) {///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                attenderName.setText(model.getAttenderName());
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                            } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                attenderName.setText("~ " + myName);
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                            }
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+                                } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                    String mName = dataSnapshot.child("name").getValue().toString();
+
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                    attenderName.setText(mName);
+                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                //////////////////   ENDING    ///////////////////////////////
+                ///////////////////////////////////////
+
+                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                ///////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////
 
 
 
+            }
 
+        };
+
+        ListView listView2 = (ListView) findViewById(R.id.list_of_EventAttenders);
+        listView2.setAdapter(adapter2);
 
 
 
@@ -471,6 +517,31 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -43,8 +43,15 @@
             android:layout_marginTop="5dp">
 
             <TextView
+                android:id="@+id/displayedLeaperName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite by"/>
+
+            <TextView
                 android:id="@+id/notificationInviteBy"
                 android:layout_width="wrap_content"
+                android:visibility="invisible"
                 android:layout_height="wrap_content"
                 android:text="Invite by"/>
 

@@ -65,9 +65,126 @@ public class activity_one_chat extends BaseActivity {
         // One Circle second user details ***phone number and UID***
         Bundle bundle = getIntent().getExtras();
         oneCircleSecondUserPhoneNumber = bundle.getString("oneCircleSecondUser"); //phone number
+
+
+
+
+
+
+
+
+
+
+
+
+        /////////////////////// ************* KEEP THIS HERE ************ //////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+        ///////////////////////////////////////
+        //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+        //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+        dbRef.child("ContactList").child(oneCircleFirstUserUid).child("leapSortedContacts").child(oneCircleSecondUserPhoneNumber)
+                .addValueEventListener(new ValueEventListener() {////////
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                            ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                            dbRef.child("userprofiles").child(oneCircleSecondUserPhoneNumber).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                            .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        getSupportActionBar().setTitle(oneCircleSecondUserPhoneNumber);
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                    } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                        String myName = dataSnapshot.child("name").getValue().toString();
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        getSupportActionBar().setTitle("~ " + myName);
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                    }
+
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+
+
+
+
+                        } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                            String mName = dataSnapshot.child("name").getValue().toString();
+
+                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                            getSupportActionBar().setTitle(mName);
+                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+        //////////////////   ENDING    ///////////////////////////////
+        ///////////////////////////////////////
+
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+        ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
         /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-        getSupportActionBar().setTitle(oneCircleSecondUserPhoneNumber);
-        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 
 
         ///////////////////////////////////////////////////////////////////////

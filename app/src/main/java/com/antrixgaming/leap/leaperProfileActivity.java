@@ -144,6 +144,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
         Bundle bundle = getIntent().getExtras();
         final String leaperPhoneNumber = bundle.getString("leaperPhoneNumber");
+        myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
 

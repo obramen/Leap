@@ -178,8 +178,8 @@ public class game1Fragment extends Fragment {
 
                         g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.md_green_900));
                         g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.md_green_900));
-                        g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        leaperOneText.setTextColor(getResources().getColor(R.color.md_green_900));
+                        leaperTwoText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
 
                     }
 
@@ -451,6 +451,8 @@ public class game1Fragment extends Fragment {
 
 
         if (Objects.equals(leaperTwo, "Open Leap")){
+
+            displayedLeaperTwoName.setText("Open Leap");
 
 
         } else {

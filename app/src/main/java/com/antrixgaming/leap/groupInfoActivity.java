@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -102,6 +103,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
     String groupCreator;
     DatabaseReference dbRef;
+    CollapsingToolbarLayout toolbar_layout;
 
 
     @Override
@@ -122,6 +124,8 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
         groupCreator = "";
 
+
+        toolbar_layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
 
 
@@ -182,8 +186,8 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                                             if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name").getValue().toString(), "")){
 
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                toolbar.setTitle(groupName);
-                                                toolbar.setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                getSupportActionBar().setTitle(groupName);
+                                                getSupportActionBar().setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
 
                                             } else {
@@ -191,9 +195,14 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                                                 String myName = dataSnapshot.child("name").getValue().toString();
 
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                toolbar.setTitle(groupName);
-                                                toolbar.setSubtitle("Created by " + myName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
-                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+                                                getSupportActionBar().setTitle(groupName);
+                                                getSupportActionBar().setSubtitle("Created by " + myName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                ///
+                                                /// /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                toolbar_layout.setTitle(groupName);
+                                                //toolbar_layout.setSubtitle("Created by " + myName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
 
 
                                             }
@@ -222,8 +231,9 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
                                             if(dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name").getValue() == ""){
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                toolbar.setTitle(groupName);
-                                                toolbar.setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                getSupportActionBar().setTitle(groupName);
+                                                getSupportActionBar().setSubtitle("Created by " + groupCreator +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                toolbar_layout.setTitle(groupName);
 
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
 
@@ -233,8 +243,10 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                                                 String mName = dataSnapshot.child("name").getValue().toString();
 
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                toolbar.setTitle(groupName);
-                                                toolbar.setSubtitle("Created by " + mName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
+                                                getSupportActionBar().setTitle(groupName);
+                                                toolbar_layout.setTitle(groupName);
+
+                                                getSupportActionBar().setSubtitle("Created by " + mName +", " + DateFormat.format("dd-MMM-yy", Long.parseLong(groupCreatedOn)));
 
                                                 /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
 

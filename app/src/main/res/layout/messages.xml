@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/phoneNumber"
                 android:textStyle="normal|bold"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:textSize="14sp" />
 
             <TextView

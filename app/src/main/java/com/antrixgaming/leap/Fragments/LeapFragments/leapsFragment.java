@@ -182,7 +182,7 @@ public class leapsFragment extends Fragment {
 
                 /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME
                 CharSequence mDay = DateFormat.format("dd-MMM-yy", model.getleapDay());
-                CharSequence mTime = DateFormat.format("HH:MM", model.getleapDay());
+                CharSequence mTime = DateFormat.format("HH:mm", model.getleapDay());
 
 
                 CharSequence lDay;
@@ -506,6 +506,8 @@ public class leapsFragment extends Fragment {
 
 
                 if (Objects.equals(model.getleaperTwo(), "Open Leap")){
+
+                    displayedLeaperTwoName.setText("Open Leap");
 
 
                 } else {

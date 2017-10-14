@@ -13,7 +13,7 @@
             android:title="Notifications" />
         <item
             android:id="@+id/nav_leap_events"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_events"
             android:title="Events" />
         <item
             android:id="@+id/nav_pending_leaps"

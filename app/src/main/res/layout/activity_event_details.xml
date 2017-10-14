@@ -161,73 +161,105 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
+                android:background="@color/colorPrimary"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp">
 
                 <TextView
                     android:id="@+id/locationHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="2dp"
                     android:ellipsize="end"
+                    android:textColor="@color/white"
                     android:maxLines="1"
                     android:text="LOCATION:"
-                    android:textStyle="bold"
-                    android:layout_marginStart="20dp"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/eventLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:ellipsize="end"
-                    android:layout_toEndOf="@+id/locationHeader"
-                    android:maxLines="1"
-                    android:textStyle=""
-                    android:text="Kempinski Hotel"
                     android:layout_marginStart="5dp"
-                    android:textSize="13sp" />
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/locationHeader"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:text="Kempinski Hotel"
+                    android:textSize="13sp"
+                    android:textStyle="" />
+
+                <TextView
+                    android:id="@+id/attendTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toStartOf="@+id/leapInButton"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Leap in"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="" />
+
+                <ImageView
+                    android:id="@+id/leapInButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="21dp"
+                    android:background="@drawable/green_button"
+                    android:padding="5dp"
+                    android:src="@drawable/done_check_mark"
+                    android:tint="@color/white"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/hostHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/locationHeader"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="HOST:"
-                    android:textStyle="bold"
-                    android:layout_marginStart="20dp"
-                    android:layout_below="@+id/locationHeader"
-                    android:textSize="13sp" />
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/displayedLeaperName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/eventLocation"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@id/hostHeader"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Liam"
-                    android:layout_toEndOf="@id/hostHeader"
-                    android:layout_marginStart="5dp"
-                    android:layout_below="@id/eventLocation"
+                    android:textColor="@color/white"
                     android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/eventByTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/eventLocation"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@id/hostHeader"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Liam"
-                    android:visibility="invisible"
-                    android:layout_toEndOf="@id/hostHeader"
-                    android:layout_marginStart="5dp"
-                    android:layout_below="@id/eventLocation"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 
@@ -313,6 +345,7 @@
                             android:layout_weight="1">
 
                             <TextView
+                                android:id="@+id/attendingHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
@@ -320,6 +353,16 @@
                                 android:layout_marginTop="10dp"
                                 android:textStyle="bold"
                                 android:text="ATTENDING" />
+
+                            <ListView
+                                android:id="@+id/list_of_EventAttenders"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/attendingHeader"
+                                android:divider="@android:color/transparent"
+                                android:dividerHeight="4dp"
+                                android:scrollbarSize="5dp"
+                                />
 
 
                         </RelativeLayout>

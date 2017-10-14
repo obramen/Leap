@@ -31,6 +31,7 @@
         android:layout_alignParentTop="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="1dp"
+        android:stackFromBottom="true"
         android:scrollbarSize="5dp"
         android:choiceMode="multipleChoice"/>
 

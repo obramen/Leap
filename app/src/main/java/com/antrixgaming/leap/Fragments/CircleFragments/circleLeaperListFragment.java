@@ -176,7 +176,7 @@ public class circleLeaperListFragment extends Fragment {
                     public void onClick(View v) {
 
                         Intent intent = new Intent(getActivity(), leaperProfileActivity.class);
-                        intent.putExtra("leaperPhoneNumber", model.getPhoneNumber());
+                        intent.putExtra("leaperPhoneNumber", leaperPhoneNumber);
                         startActivity(intent);
 
 

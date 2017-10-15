@@ -23,6 +23,33 @@
             android:layout_marginTop="0.5dp"
             android:layout_marginBottom="0.5dp"
             android:background="@color/white">
+
+            <TextView
+                android:id="@+id/selectorText"
+                android:layout_margin="15dp"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="0"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:visibility="invisible"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/deleteLeaper"
+                android:layout_alignBaseline="@id/selectorText"
+                android:textSize="16sp"
+                android:layout_toEndOf="@+id/selectorText"
+                android:text="delete"
+                android:visibility="invisible"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +102,26 @@
                 android:scrollbarSize="5dp"
                 android:transcriptMode="alwaysScroll"/>
 
-            </LinearLayout>
+        </LinearLayout>
+
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/exitTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Leap out of circle"
+                android:drawableLeft="@drawable/ic_exit"/>
+
+
+        </android.support.v7.widget.CardView>
+
+
+
 
 
 

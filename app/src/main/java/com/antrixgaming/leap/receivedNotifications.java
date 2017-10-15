@@ -175,7 +175,10 @@ public class receivedNotifications extends BaseActivity {
                         FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(model.getinviteBy()).child(model.getNotificationID())
                                 .child("notificationStatus").setValue("1");
                         Snackbar.make(v, "Invitation Accepted", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();                    }
+                                .setAction("Action", null).show();
+
+
+                    }
                 });
 
 

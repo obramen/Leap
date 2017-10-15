@@ -704,7 +704,7 @@ public class activity_one_chat extends BaseActivity {
             if (id == R.id.action_one_chat_new_leap) {
                 Intent startNewLeapIntent = new Intent(this, newLeap.class);
                 startNewLeapIntent.putExtra("leapedPhoneNumber", oneCircleSecondUserPhoneNumber);
-                startNewLeapIntent.putExtra("SourceActivity", "2");  // to be used to identify that the extras came from here
+                startNewLeapIntent.putExtra("SourceActivity", "1");  // to be used to identify that the extras came from here
                 startActivity(startNewLeapIntent);
                 return true;
             }

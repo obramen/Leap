@@ -11,11 +11,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -33,6 +35,7 @@ import com.antrixgaming.leap.LeapClasses.OnlinePressence;
 import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.Models.savePhoneContacts;
 import com.antrixgaming.leap.Models.circleMessage;
+import com.antrixgaming.leap.Models.sendNotification;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
@@ -55,6 +58,8 @@ import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -105,6 +110,13 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
     DatabaseReference dbRef;
     CollapsingToolbarLayout toolbar_layout;
 
+    TextView exitTextView;
+    TextView selectorText;
+    TextView deleteLeaper;
+
+    List<String> selectedNumbers;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +139,8 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
         toolbar_layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
+        selectedNumbers = new ArrayList<>();
+
 
 
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -139,6 +153,10 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         groupProfileImage = (ImageView) findViewById(R.id.groupProfileImage);
         imageutils = new ImageUtils(this);
         progressDialog = new ProgressDialog(this);
+
+        exitTextView = (TextView) findViewById(R.id.exitTextView);
+        selectorText = (TextView) findViewById(R.id.selectorText);
+        deleteLeaper = (TextView) findViewById(R.id.deleteLeaper);
 
 
 
@@ -464,6 +482,38 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
+        exitTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                /// remove from current members
+                dbRef.child("groupcirclemembers").child(circleID).child("currentmembers").child(myPhoneNumber)
+                        .removeValue();
+
+
+                /// add to exited member list
+                FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("exitedmembers").child(myPhoneNumber)
+                        .setValue(new CircleMember(myPhoneNumber,"false","1"));
+
+
+                //push new messages using Circle ID stored
+                /// 1 - shows it's a notification message // 0 - normal message
+                String key = dbRef.child("groupcirclemessages").child(circleID)
+                        .push().getKey();
+                dbRef.child("groupcirclemessages").child(circleID).child(key).setValue(new circleMessage(myPhoneNumber + " left",
+                        circleID, "", "", "1", "false"));
+                dbRef.child("groupcircles").child(circleID).child("lastgroupmessage").setValue(new circleMessage(myPhoneNumber + " left",
+                        circleID, "", "", "1", "true"));
+                //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                //.child(circleID).child("members").setValue(memberList);
+                dbRef.child("groupcirclelastmessages").child(circleID).setValue(new circleMessage(myPhoneNumber + " left", circleID,
+                                "", "", "1", "true"));
+
+
+
+
+            }
+        });
 
 
 
@@ -695,6 +745,202 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         listOfContacts.setAdapter(adapter);
 
         //leapUtilities.justifyListViewHeightBasedOnChildren(listOfContacts);
+
+
+
+
+
+
+
+
+        listOfContacts.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+
+
+
+
+                if (selectedNumbers.size() == 0){
+
+                    LinearLayout circleLeaperListLayout = (LinearLayout) v.findViewById(R.id.circleLeaperListLayout);
+                    TextView circleLeaperListLeaperName = (TextView) v.findViewById(R.id.circleLeaperListLeaperName);
+                    CircleImageView selectIndicator = (CircleImageView) v.findViewById(R.id.selectIndicator);
+
+
+                    if (Objects.equals(circleLeaperListLeaperName.getText().toString(), myPhoneNumber)){
+
+                    } else {
+
+                        if (selectedNumbers.contains(circleLeaperListLeaperName.getText().toString())){
+
+                            selectedNumbers.remove(circleLeaperListLeaperName.getText().toString());
+                            selectIndicator.setVisibility(View.GONE);
+                            circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+                            selectorText.setText(selectedNumbers.size());
+
+
+                        }else {
+                            selectedNumbers.add(circleLeaperListLeaperName.getText().toString());
+                            selectIndicator.setVisibility(View.VISIBLE);
+                            circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.selectorcolor));
+
+                            selectorText.setText(selectedNumbers.size());
+                            selectorText.setVisibility(View.VISIBLE);
+                            deleteLeaper.setVisibility(View.VISIBLE);
+
+                        }
+
+                    }
+
+
+
+
+
+                } else {
+
+                }
+
+
+                return false;
+            }
+        });
+
+
+
+
+        listOfContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+
+
+                if (selectedNumbers.size() > 0){
+
+
+
+                    LinearLayout circleLeaperListLayout = (LinearLayout) view.findViewById(R.id.circleLeaperListLayout);
+                    TextView circleLeaperListLeaperName = (TextView) view.findViewById(R.id.circleLeaperListLeaperName);
+                    CircleImageView selectIndicator = (CircleImageView) view.findViewById(R.id.selectIndicator);
+
+                    if (Objects.equals(circleLeaperListLeaperName.getText().toString(), myPhoneNumber)){
+
+                    }else {
+
+
+
+                        if (selectedNumbers.contains(circleLeaperListLeaperName.getText().toString())){
+
+                            selectedNumbers.remove(circleLeaperListLeaperName.getText().toString());
+                            selectIndicator.setVisibility(View.GONE);
+                            circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+
+                        }else {
+                            selectedNumbers.add(circleLeaperListLeaperName.getText().toString());
+                            selectIndicator.setVisibility(View.VISIBLE);
+                            circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.selectorcolor));
+
+
+
+                            if(selectedNumbers.size() == 0){
+
+                                selectorText.setText(selectedNumbers.size());
+                                selectorText.setVisibility(View.GONE);
+                                deleteLeaper.setVisibility(View.GONE);
+
+                            } else {
+                                selectorText.setText(selectedNumbers.size());
+                            }
+
+
+
+                        }
+
+
+                    }
+
+
+
+
+
+                } else {
+
+                }
+
+
+
+
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+        deleteLeaper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                for(int x = 0; x < selectedNumbers.size(); x++ ){
+
+
+                    /// remove from current members
+                    dbRef.child("groupcirclemembers").child(circleID).child("currentmembers").child(selectedNumbers.get(x))
+                            .removeValue();
+
+
+                    /// add to exited member list
+                    FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("deletedmembers").child(selectedNumbers.get(x))
+                            .setValue(new CircleMember(myPhoneNumber,"false","1"));
+
+
+                    //push new messages using Circle ID stored
+                    /// 1 - shows it's a notification message // 0 - normal message
+                    String key = dbRef.child("groupcirclemessages").child(circleID)
+                            .push().getKey();
+                    dbRef.child("groupcirclemessages").child(circleID).child(key).setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber,
+                            circleID, "", "", "1", "false"));
+                    dbRef.child("groupcircles").child(circleID).child("lastgroupmessage").setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber,
+                            circleID, "", "", "1", "true"));
+                    //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                    //.child(circleID).child("members").setValue(memberList);
+                    dbRef.child("groupcirclelastmessages").child(circleID).setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber, circleID,
+                            "", "", "1", "true"));
+
+                }
+
+
+                selectorText.setText(selectedNumbers.size());
+                selectorText.setVisibility(View.GONE);
+                deleteLeaper.setVisibility(View.GONE);
+
+
+
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

@@ -204,7 +204,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginStart="15dp"
                                 android:layout_toEndOf="@id/detailsLeaperOneImage"
-                                android:text="@string/leaper_one"
+                                android:text=""
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -281,7 +281,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginStart="15dp"
                                 android:layout_toEndOf="@id/detailsLeaperTwoImage"
-                                android:text="@string/leaper_two"
+                                android:text=""
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />

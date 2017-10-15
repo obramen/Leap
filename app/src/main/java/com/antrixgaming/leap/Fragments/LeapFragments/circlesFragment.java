@@ -2,6 +2,7 @@ package com.antrixgaming.leap.Fragments.LeapFragments;
 
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -81,6 +82,18 @@ public class circlesFragment extends Fragment {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
         final ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_groupCircles);
 
         FirebaseListAdapter<createGroupCircle> adapter;
@@ -92,7 +105,7 @@ public class circlesFragment extends Fragment {
             protected void populateView(final View v, final createGroupCircle model, int position) {
                 // Get references to the views of message_for_group.xml
                 TextView circleName = (TextView)v.findViewById(R.id.circleName);
-                TextView circleID = (TextView)v.findViewById(R.id.circleID);
+                final TextView circleID = (TextView)v.findViewById(R.id.circleID);
                 // Set their text
                 circleName.setText(model.getGroupName());
                 circleID.setText(model.getGroupid());
@@ -106,16 +119,34 @@ public class circlesFragment extends Fragment {
 
 
 
-                try{
 
-                    ////GETTING THE NUMBER OF UNREAD MESSAGES FOR A PARTICULAR CIRCLE AND PUSHING IT TO THE QUANTITY OF UNREAD MESSAGES
-                    FirebaseListAdapter<circleMessage> adapter2;
-                    adapter2 = new FirebaseListAdapter<circleMessage>(getActivity(), circleMessage.class, R.layout.circle_list,
-                            FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID.getText().toString())) {
-                        @Override
-                        protected void populateView(View v, circleMessage model, int position) {
 
-                            TextView pendingMessageQuantity = (TextView)v.findViewById(R.id.pendingMessageQuantity);
+
+
+
+                dbRef.child("groupcirclemembers").child(circleID.getText().toString()).child("currentmembers").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.child(myPhoneNumber).exists()){
+
+
+
+
+
+
+
+
+                            try{
+
+                                ////GETTING THE NUMBER OF UNREAD MESSAGES FOR A PARTICULAR CIRCLE AND PUSHING IT TO THE QUANTITY OF UNREAD MESSAGES
+                                FirebaseListAdapter<circleMessage> adapter2;
+                                adapter2 = new FirebaseListAdapter<circleMessage>(getActivity(), circleMessage.class, R.layout.circle_list,
+                                        FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID.getText().toString())) {
+                                    @Override
+                                    protected void populateView(View v, circleMessage model, int position) {
+
+                                        TextView pendingMessageQuantity = (TextView)v.findViewById(R.id.pendingMessageQuantity);
 
 
                             /*if (Objects.equals(model.getReadFlag(), "false")){
@@ -125,44 +156,47 @@ public class circlesFragment extends Fragment {
                             }*/
 
 
-                        }
-                    };
-
-
-                    /// GET DATA FROM THE LAST MESSAGE SENT TO GROUP (GROUPCIRCLELASTMESSAGES) TABLE AND FIT THE DETAILS TO VIEWS
-                    FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID.getText().toString())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    String mLastCircleMessageText = dataSnapshot.child("messageText").getValue().toString();
-                                    Long mLastCircleMessageTime = Long.parseLong(dataSnapshot.child("messageTime").getValue().toString());
-                                    final String mLastCircleMessageUser = dataSnapshot.child("phoneNumber").getValue().toString();
-
-
-                                    TextView lastCircleMessage = (TextView) v.findViewById(R.id.lastCircleMessage);
-                                    TextView lastCircleMessageBy = (TextView)v.findViewById(R.id.lastCircleMessageBy);
-                                    TextView lastCircleMessageTime = (TextView) v.findViewById(R.id.lastCircleMessageTime);
-                                    final TextView displayedLeaperName = (TextView)v.findViewById(R.id.displayedLeaperName);
-
-
-                                    // Set their text
-                                    lastCircleMessage.setText(mLastCircleMessageText);
-                                    lastCircleMessageBy.setText(mLastCircleMessageUser + ": ");
-                                    //lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
-                                    //messageUser.setText(model.getMessageUser());
-
-                                    // Format the date before showing it
-                                    //lastCircleMessageTime.setText(DateFormat.format("HH:mm",model.getMessageTime()));
-                                    // Format the date before showing it
-
-                                    if (DateUtils.isToday(mLastCircleMessageTime)){
-                                        lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
-
                                     }
-                                    else{
-                                        lastCircleMessageTime.setText(DateFormat.format("dd/MM/yyyy", mLastCircleMessageTime));
-                                    }
+                                };
+
+
+                                /// GET DATA FROM THE LAST MESSAGE SENT TO GROUP (GROUPCIRCLELASTMESSAGES) TABLE AND FIT THE DETAILS TO VIEWS
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID.getText().toString())
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                String mLastCircleMessageText = dataSnapshot.child("messageText").getValue().toString();
+                                                Long mLastCircleMessageTime = Long.parseLong(dataSnapshot.child("messageTime").getValue().toString());
+                                                final String mLastCircleMessageUser = dataSnapshot.child("phoneNumber").getValue().toString();
+
+
+                                                TextView lastCircleMessage = (TextView) v.findViewById(R.id.lastCircleMessage);
+                                                TextView lastCircleMessageBy = (TextView)v.findViewById(R.id.lastCircleMessageBy);
+                                                TextView lastCircleMessageTime = (TextView) v.findViewById(R.id.lastCircleMessageTime);
+                                                final TextView displayedLeaperName = (TextView)v.findViewById(R.id.displayedLeaperName);
+
+
+                                                lastCircleMessage.setTypeface(lastCircleMessage.getTypeface(), Typeface.NORMAL);
+
+
+                                                // Set their text
+                                                lastCircleMessage.setText(mLastCircleMessageText);
+                                                lastCircleMessageBy.setText(mLastCircleMessageUser + ": ");
+                                                //lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
+                                                //messageUser.setText(model.getMessageUser());
+
+                                                // Format the date before showing it
+                                                //lastCircleMessageTime.setText(DateFormat.format("HH:mm",model.getMessageTime()));
+                                                // Format the date before showing it
+
+                                                if (DateUtils.isToday(mLastCircleMessageTime)){
+                                                    lastCircleMessageTime.setText(DateFormat.format("HH:mm", mLastCircleMessageTime));
+
+                                                }
+                                                else{
+                                                    lastCircleMessageTime.setText(DateFormat.format("dd/MM/yyyy", mLastCircleMessageTime));
+                                                }
 
 
 
@@ -174,51 +208,78 @@ public class circlesFragment extends Fragment {
 
 
 
-                                    /////////////////////////////////////////////////////////////////////
-                                    ///////////////////////////////////////////
-                                    //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                                                /////////////////////////////////////////////////////////////////////
+                                                ///////////////////////////////////////////
+                                                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
 
-                                    ///////////////////////////////////////
-                                    //////////////////   STARTING    ///////////////////////////////
-
-
-
-
-                                    //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
-                                    dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(mLastCircleMessageUser)
-                                            .addValueEventListener(new ValueEventListener() {////////
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                                    if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
-                                                            .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+                                                ///////////////////////////////////////
+                                                //////////////////   STARTING    ///////////////////////////////
 
 
 
-                                                        ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
-                                                        dbRef.child("userprofiles").child(mLastCircleMessageUser).addValueEventListener(new ValueEventListener() {
+
+                                                //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+                                                dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(mLastCircleMessageUser)
+                                                        .addValueEventListener(new ValueEventListener() {////////
                                                             @Override
                                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
-                                                                        .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                                if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                                                        .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                                                                    ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                                                                    dbRef.child("userprofiles").child(mLastCircleMessageUser).addValueEventListener(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                            if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                                                                    .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                                                displayedLeaperName.setText(mLastCircleMessageUser);
+                                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                                                            } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                                                                String myName = dataSnapshot.child("name").getValue().toString();
+
+                                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                                                                displayedLeaperName.setText("~ " + myName);
+                                                                                /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                                                            }
+
+
+
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                                        }
+                                                                    });
+
+
+
+
+
+
+
+                                                                } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                                                                    String mName = dataSnapshot.child("name").getValue().toString();
 
                                                                     /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                                    displayedLeaperName.setText(mLastCircleMessageUser);
+                                                                    displayedLeaperName.setText(mName);
                                                                     /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-
-
-                                                                } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
-
-                                                                    String myName = dataSnapshot.child("name").getValue().toString();
-
-                                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                                    displayedLeaperName.setText("~ " + myName);
-                                                                    /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
 
 
                                                                 }
-
-
 
 
                                                             }
@@ -235,57 +296,81 @@ public class circlesFragment extends Fragment {
 
 
 
-                                                    } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+                                                //////////////////   ENDING    ///////////////////////////////
+                                                ///////////////////////////////////////
 
-
-                                                        String mName = dataSnapshot.child("name").getValue().toString();
-
-                                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-                                                        displayedLeaperName.setText(mName);
-                                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
-
-
-                                                    }
-
-
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
+                                                //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+                                                ///////////////////////////////////////////
+                                                /////////////////////////////////////////////////////////////////////
 
 
 
 
 
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                            }
+
+                            catch(Exception e){
 
 
-                                    //////////////////   ENDING    ///////////////////////////////
-                                    ///////////////////////////////////////
-
-                                    //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
-                                    ///////////////////////////////////////////
-                                    /////////////////////////////////////////////////////////////////////
+                            }
 
 
 
 
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                }
-
-                catch(Exception e){
+                        } else {
 
 
-                }
+
+
+                            TextView lastCircleMessage = (TextView) v.findViewById(R.id.lastCircleMessage);
+                            lastCircleMessage.setText("no longer member");
+                            lastCircleMessage.setTypeface(lastCircleMessage.getTypeface(), Typeface.ITALIC);
+
+
+
+
+
+
+
+
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -296,6 +381,23 @@ public class circlesFragment extends Fragment {
         };
 
         listOfMessages.setAdapter(adapter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

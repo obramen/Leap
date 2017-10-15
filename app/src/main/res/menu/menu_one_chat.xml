@@ -15,11 +15,6 @@
     android:title="New leap"
     app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_one_chat_leap_history"
-        android:orderInCategory="100"
-        android:title="Leap history"
-        app:showAsAction="never" />
 
 
 

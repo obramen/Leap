@@ -779,6 +779,48 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+        leaperProfileNewLeap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(Objects.equals(leaperPhoneNumber, myPhoneNumber)){
+
+
+                } else {
+
+                    Intent startNewLeapIntent = new Intent(leaperProfileActivity.this, newLeap.class);
+                    startNewLeapIntent.putExtra("leapedPhoneNumber", leaperPhoneNumber);
+                    startNewLeapIntent.putExtra("SourceActivity", "1");  // to be used to identify that the extras came from here
+                    startActivity(startNewLeapIntent);
+
+                }
+
+            }
+        });
+
+
+        leaperProfileNewMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(Objects.equals(leaperPhoneNumber, myPhoneNumber)){
+
+
+                } else {
+
+
+                    String oneCircleSecondUser = leaperPhoneNumber;
+                    Intent newChatIntent = new Intent(leaperProfileActivity.this, activity_one_chat.class);
+                    newChatIntent.putExtra("oneCircleSecondUser", oneCircleSecondUser);
+                    startActivity(newChatIntent);
+                    finish();
+
+                }
+
+
+
+            }
+        });
 
 
 

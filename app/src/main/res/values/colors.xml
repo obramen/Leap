@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#C02F1D</color>
-    <color name="colorPrimaryDark">#9A2617</color>
-    <color name="colorAccent">#d12a25</color>
+    <color name="colorPrimary">#1E88E5</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#42A5F5</color>
 
-    <color name="nightRedA">#e31616</color>
-    <color name="nightRedB">#F70025</color>
+    <color name="nightRedA">#1E88E5</color>
+    <color name="nightRedB">#1976D2</color>
     <color name="indieA">#283655</color>
     <color name="indieDark">#223051</color>
     <color name="swissCheese">#F2C057</color>

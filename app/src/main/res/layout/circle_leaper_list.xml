@@ -85,13 +85,14 @@
                     android:id="@+id/circleLeaperListButton"
                     android:layout_width="50dp"
                     android:layout_height="20dp"
-                    android:layout_centerInParent="true"
                     android:background="@drawable/white_button"
                     android:padding="5dp"
                     android:text="LEAP"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
 
 
             </RelativeLayout>

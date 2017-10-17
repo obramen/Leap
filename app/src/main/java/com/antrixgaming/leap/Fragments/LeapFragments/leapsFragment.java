@@ -224,17 +224,85 @@ public class leapsFragment extends Fragment {
                 // 3 - cancelled leap
                 switch (leapStatus){
 
+
+
+
                     case 0:
                         leapsDetails.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         break;
 
+
+
+
+
+
                     case 1:
                         leapsDetails.setBackgroundColor(getResources().getColor(R.color.green));
+
+
+
+
+
+                        long NowTime = new Date().getTime();
+
+
+                        if (model.getleapDay() >=  NowTime){
+
+                            long countDown = TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) - TimeUnit.MILLISECONDS.toSeconds(NowTime);
+                            long seconds = TimeUnit.MILLISECONDS.toSeconds(countDown);
+                            long days = TimeUnit.MILLISECONDS.toDays(countDown);
+
+
+
+
+                            new CountDownTimer(seconds, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    countdownTimer.setText("" + millisUntilFinished / 1000);
+                                }
+
+                                public void onFinish() {
+
+                                    countdownTimer.setVisibility(View.VISIBLE);
+
+                                    countdownTimer.setText("LIVE");
+                                    countdownTimer.setTextColor(getResources().getColor(R.color.white));
+                                    countdownTimer.setBackgroundColor(getResources().getColor(R.color.berry));
+                                }
+                            }.start();
+
+
+                        }
+
+                        if ((TimeUnit.MILLISECONDS.toSeconds(NowTime) > TimeUnit.MILLISECONDS.toSeconds(model.getleapDay())) &&
+                                (TimeUnit.MILLISECONDS.toSeconds(NowTime) < TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+
+                            countdownTimer.setText("LIVE");
+                            countdownTimer.setVisibility(View.VISIBLE);
+
+                        }
+
+                        if (TimeUnit.MILLISECONDS.toSeconds(NowTime) >= (TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+
+                            countdownTimer.setVisibility(View.GONE);
+
+                        }
+
                         break;
 
+
+
+
+
+
+
                     case 2:
-                        leapsDetails.setBackgroundColor(getResources().getColor(R.color.black));
+                        leapsDetails.setBackgroundColor(getResources().getColor(R.color.berry));
                         break;
+
+
+
+
 
                     case 3:
                         leapsDetails.setBackgroundColor(getResources().getColor(R.color.black));
@@ -310,52 +378,6 @@ public class leapsFragment extends Fragment {
                     }
                 });
 
-
-
-                long NowTime = new Date().getTime();
-
-
-                if (model.getleapDay() >=  NowTime){
-
-                    long countDown = model.getleapDay() - NowTime;
-                    long seconds = TimeUnit.MILLISECONDS.toSeconds(countDown);
-                    long days = TimeUnit.MILLISECONDS.toDays(countDown);
-
-
-
-
-                    new CountDownTimer(seconds, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            countdownTimer.setText("" + millisUntilFinished / 1000);
-                        }
-
-                        public void onFinish() {
-
-                            countdownTimer.setVisibility(View.VISIBLE);
-
-                            countdownTimer.setText("LIVE");
-                            countdownTimer.setTextColor(getResources().getColor(R.color.white));
-                            countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                        }
-                    }.start();
-
-
-                }
-
-                if ((TimeUnit.MILLISECONDS.toSeconds(NowTime) > TimeUnit.MILLISECONDS.toSeconds(model.getleapDay())) &&
-                        (TimeUnit.MILLISECONDS.toSeconds(NowTime) < TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
-
-                    countdownTimer.setText("LIVE");
-                    countdownTimer.setVisibility(View.VISIBLE);
-
-                }
-
-                if (TimeUnit.MILLISECONDS.toSeconds(NowTime) >= (TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
-
-                    countdownTimer.setVisibility(View.GONE);
-
-                }
 
 
 

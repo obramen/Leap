@@ -144,7 +144,7 @@
                         <TextView
                             android:id="@+id/disputeScoreButton"
                             android:layout_marginStart="15dp"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/berry"
                             android:layout_below="@id/editScoreButton"
                             android:layout_marginTop="10dp"
                             android:layout_alignParentEnd="true"

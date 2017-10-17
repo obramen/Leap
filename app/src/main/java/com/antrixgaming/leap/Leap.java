@@ -79,6 +79,9 @@ public class Leap extends BaseActivity
 
     String countryCode;
 
+    TextView displayedLeaperName;
+
+
 
 
 
@@ -233,6 +236,9 @@ public class Leap extends BaseActivity
 
 
 
+        displayedLeaperName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.displayedLeaperName);
+
+
 
 
         final FloatingActionButton leapFAB = (FloatingActionButton)findViewById(R.id.leapFAB);
@@ -278,8 +284,10 @@ public class Leap extends BaseActivity
         profileImageFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "Change profile picture", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();            }
+                Intent intent = new Intent(Leap.this, leaperProfileActivity.class);
+                intent.putExtra("leaperPhoneNumber", myPhoneNumber);
+                startActivity(intent);
+            }
 
 
         });
@@ -497,6 +505,138 @@ public class Leap extends BaseActivity
         txtProfileName.setText(userPhoneNumber);
 
 
+
+
+
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+
+        ///////////////////////////////////////
+        //////////////////   STARTING    ///////////////////////////////
+
+
+
+
+        //// CHECK MY CONTACT LIST IF THIS PERSON IS A CONTACT
+        dbRef.child("ContactList").child(myUID).child("leapSortedContacts").child(userPhoneNumber)
+                .addValueEventListener(new ValueEventListener() {////////
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
+                                .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
+
+
+
+                            ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE
+                            dbRef.child("userprofiles").child(userPhoneNumber).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.child("name").getValue() == null || Objects.equals(dataSnapshot.child("name")
+                                            .getValue().toString(), "")){///IF THEY DON'T HAVE AN ENTRY USE THEIR PHONE NUMBER
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        displayedLeaperName.setText(userPhoneNumber);
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                                    } else { //// IF THEY HAVE AN ENTRY USE THEIR ENTERED NAME
+
+                                        String myName = dataSnapshot.child("name").getValue().toString();
+
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                                        displayedLeaperName.setText("~ " + myName);
+                                        /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////s
+
+
+                                    }
+
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+
+
+
+
+                        } else {/// IF THEY ARE A CONTACT USE THE SAVED NAME
+
+
+                            String mName = dataSnapshot.child("name").getValue().toString();
+
+                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+                            displayedLeaperName.setText(mName);
+                            /////////////////////// ************* KEEP THIS HERE ************ ///////////////////////////
+
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+
+        //////////////////   ENDING    ///////////////////////////////
+        ///////////////////////////////////////
+
+        //////// GETTING AND SETTING NAMES IN PLACE OF PHONE NUMBER
+        ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+        displayedLeaperName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Leap.this, leaperProfileActivity.class);
+                intent.putExtra("leaperPhoneNumber", myPhoneNumber);
+                startActivity(intent);
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
         Button leapOutButton = (Button) findViewById(R.id.leapOutButton);
         leapOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -534,6 +674,9 @@ public class Leap extends BaseActivity
         BugReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                drawer.closeDrawer(Gravity.START);
+
 
                 new LovelyTextInputDialog(Leap.this, R.style.MyDialogTheme)
                         .setTopColorRes(R.color.colorPrimary)
@@ -586,6 +729,9 @@ public class Leap extends BaseActivity
             public void onClick(View v) {
                 Intent aboutLeapIntent = new Intent(Leap.this, about_leap.class);
                 startActivity(aboutLeapIntent);
+
+                drawer.closeDrawer(Gravity.START);
+
             }
         });
 
@@ -878,6 +1024,8 @@ public class Leap extends BaseActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.nav_leap_notifications) {
 
+
+
             Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
             startActivity(openNotificationsIntent);
 
@@ -896,17 +1044,25 @@ public class Leap extends BaseActivity
 
         if (id == R.id.nav_notifications) {
 
+
+
+
             Intent openNotificationsIntent = new Intent(this, receivedNotifications.class);
             startActivity(openNotificationsIntent);
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
 
         }  else if (id == R.id.nav_leap_events){
             Intent openNotificationsIntent = new Intent(this, events.class);
             startActivity(openNotificationsIntent);
 
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 

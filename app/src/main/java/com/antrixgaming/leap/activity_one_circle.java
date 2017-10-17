@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -69,6 +70,9 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
     String groupCreator;
 
     String myUID;
+    String myPhoneNumber;
+
+    ImageView backImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,9 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         groupCreator = "";
+
+        myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+
 
 
 
@@ -335,6 +342,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
             }
         };
         drawer.setDrawerListener(toggle);
+        toggle.setDrawerIndicatorEnabled(false);
         toggle.syncState();
 
 
@@ -672,7 +680,38 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
                 };
 
                 listOfMessages.setAdapter(adapter);
+
+
+
+
+
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent groupInfoIntent = new Intent(activity_one_circle.this, groupInfoActivity.class);
+                groupInfoIntent.putExtra("circleID", groupID);
+                startActivity(groupInfoIntent);
+
             }
+        });
+
+
+
+
+
+        backImage = (ImageView) findViewById(R.id.backImage);
+        backImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+
+    }
 
 
 
@@ -811,9 +850,17 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
     @Override
     public boolean onSupportNavigateUp(){
+
+
         finish();
-        return true;
+        return false;
     }
+
+
+
+
+
+
 
 
 
@@ -834,55 +881,61 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
     }
 
 
-    public void useUpButton(boolean value, Toolbar toolbar) {
 
-        drawer = (DrawerLayout) findViewById(R.id.circle_leaper_list_drawer);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
 
+
+
+
+
+
+
+
+
+
+
+    @Override
+    protected void onResume() {
+
+
+
+        dbRef.child("groupcirclemembers").child(groupID).child("currentmembers").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                super.onDrawerClosed(drawerView);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                super.onDrawerOpened(drawerView);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            }
-        };
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-        ActionBar actionBar = getSupportActionBar();
-        if (value) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            toggle.setDrawerIndicatorEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
+                EditText input = (EditText) findViewById(R.id.input);
+                FloatingActionButton sendFab =
+                        (FloatingActionButton) findViewById(R.id.send_chat_fab);
+
+
+
+
+                if (dataSnapshot.child(myPhoneNumber).exists()) {
+
+                    input.setEnabled(true);
+                    sendFab.setEnabled(true);
+
+                } else {
+
+                    input.setEnabled(false);
+                    sendFab.setEnabled(false);
+
+
                 }
-            });
-        } else {
-            toggle.setDrawerIndicatorEnabled(true);
-            toggle.setToolbarNavigationClickListener(null);
-        }
 
+
+
+
+
+                }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        super.onResume();
     }
-
-
-
-
-
 }

@@ -104,11 +104,30 @@ public class circlesFragment extends Fragment {
             @Override
             protected void populateView(final View v, final createGroupCircle model, int position) {
                 // Get references to the views of message_for_group.xml
-                TextView circleName = (TextView)v.findViewById(R.id.circleName);
+                final TextView circleName = (TextView)v.findViewById(R.id.circleName);
                 final TextView circleID = (TextView)v.findViewById(R.id.circleID);
                 // Set their text
-                circleName.setText(model.getGroupName());
+                //circleName.setText(model.getGroupName());
                 circleID.setText(model.getGroupid());
+
+
+                FirebaseDatabase.getInstance().getReference().child("groupcirclenames").child(model.getGroupid())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                String mCircleName = dataSnapshot.child("circleName").getValue().toString();
+
+
+                                circleName.setText(mCircleName);
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
 
 
@@ -330,7 +349,7 @@ public class circlesFragment extends Fragment {
 
 
                             TextView lastCircleMessage = (TextView) v.findViewById(R.id.lastCircleMessage);
-                            lastCircleMessage.setText("no longer member");
+                            lastCircleMessage.setText("no longer a member");
                             lastCircleMessage.setTypeface(lastCircleMessage.getTypeface(), Typeface.ITALIC);
 
 
@@ -428,7 +447,7 @@ public class circlesFragment extends Fragment {
 
                 DatabaseReference circleIDRef = FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID.getText().toString()).child("currentmembers");
 
-                circleIDRef.addValueEventListener(new ValueEventListener() {
+                circleIDRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 

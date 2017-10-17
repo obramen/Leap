@@ -102,6 +102,7 @@ public class receivedNotifications extends BaseActivity {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     String circleName = dataSnapshot.child("circleName").getValue().toString();
+                                    groupName = dataSnapshot.child("circleName").getValue().toString();
 
 
                                     notificationsInviteMessage.setText("You have been invited to join " + circleName);
@@ -157,7 +158,7 @@ public class receivedNotifications extends BaseActivity {
                         String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                                 .push().getKey();
                         FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                                .child(key).setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "- joined circle",
+                                .child(key).setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
                                 circleID, "", "", "1", "false"));
                         FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
                                 .child("lastgroupmessage").setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
@@ -176,6 +177,8 @@ public class receivedNotifications extends BaseActivity {
                                 .child("notificationStatus").setValue("1");
                         Snackbar.make(v, "Invitation Accepted", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
+
+
 
 
                     }

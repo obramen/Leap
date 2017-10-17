@@ -326,12 +326,25 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                AdminFlag = dataSnapshot.child("admin").getValue().toString();
+                if (dataSnapshot.child("admin").getValue() == null){
 
-                if (Objects.equals(AdminFlag, TrueAdmin))
-                    fab.setVisibility(View.VISIBLE);
-                else if (Objects.equals(AdminFlag, FalseAdmin))
-                    fab.setVisibility(View.GONE);
+                    finish();
+
+
+                } else{
+
+
+                    AdminFlag = dataSnapshot.child("admin").getValue().toString();
+
+                    if (Objects.equals(AdminFlag, TrueAdmin))
+                        fab.setVisibility(View.VISIBLE);
+                    else if (Objects.equals(AdminFlag, FalseAdmin))
+                        fab.setVisibility(View.GONE);
+
+
+
+                }
+
 
             }
 
@@ -482,6 +495,13 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
+
+
+
+
+
+
+
         exitTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -509,6 +529,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                 dbRef.child("groupcirclelastmessages").child(circleID).setValue(new circleMessage(myPhoneNumber + " left", circleID,
                                 "", "", "1", "true"));
 
+                finish();
 
 
 
@@ -516,6 +537,18 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         });
 
 
+
+
+
+
+
+
+
+
+
+
+
+        
 
 
 
@@ -600,7 +633,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
                         Intent startNewLeapIntent = new Intent(groupInfoActivity.this, newLeap.class);
                         startNewLeapIntent.putExtra("leapedPhoneNumber", leaperPhoneNumber);
-                        startNewLeapIntent.putExtra("SourceActivity", "1");  // to be used to identify that the extras came from here
+                        startNewLeapIntent.putExtra("SourceActivity", "3");  // to be used to identify that the extras came from here
                         startNewLeapIntent.putExtra("circleID", circleID);
                         startActivity(startNewLeapIntent);
 
@@ -751,21 +784,16 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
-
-
-        listOfContacts.setOnLongClickListener(new View.OnLongClickListener() {
+        listOfContacts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-
-
-
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
 
                 if (selectedNumbers.size() == 0){
 
-                    LinearLayout circleLeaperListLayout = (LinearLayout) v.findViewById(R.id.circleLeaperListLayout);
-                    TextView circleLeaperListLeaperName = (TextView) v.findViewById(R.id.circleLeaperListLeaperName);
-                    CircleImageView selectIndicator = (CircleImageView) v.findViewById(R.id.selectIndicator);
+                    LinearLayout circleLeaperListLayout = (LinearLayout) view.findViewById(R.id.circleLeaperListLayout);
+                    TextView circleLeaperListLeaperName = (TextView) view.findViewById(R.id.circleLeaperListLeaperName);
+                    CircleImageView selectIndicator = (CircleImageView) view.findViewById(R.id.selectIndicator);
 
 
                     if (Objects.equals(circleLeaperListLeaperName.getText().toString(), myPhoneNumber)){

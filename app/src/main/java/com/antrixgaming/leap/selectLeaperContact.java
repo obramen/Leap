@@ -277,7 +277,7 @@ public class selectLeaperContact extends BaseActivity {
 
                 circleMembersRef = dbRef.child("groupcirclemembers").child(finalCircleID).child("currentmembers");
 
-                circleMembersRef.addValueEventListener(new ValueEventListener() {
+                circleMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 

@@ -220,6 +220,7 @@ public class Leap extends BaseActivity
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.leapsContainer);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
@@ -264,7 +265,7 @@ public class Leap extends BaseActivity
         //Tab layout with tabs
         tabLayout = (TabLayout) findViewById(R.id.mainTabs);
         tabLayout.setupWithViewPager(mViewPager);
-        setupTabIcons();
+        //setupTabIcons();
 
 
 
@@ -929,11 +930,11 @@ public class Leap extends BaseActivity
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return new userProfileFragment();
-                case 1:
-                    return new leapsFragment();
                 case 2:
+                    return new userProfileFragment();
+                case 0:
+                    return new leapsFragment();
+                case 1:
                     return new chatsFragment();
                 case 3:
                     return new circlesFragment();
@@ -945,18 +946,19 @@ public class Leap extends BaseActivity
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 4;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+
                 case 0:
-                    return "";
-                case 1:
                     return getString(R.string.Leaps);
-                case 2:
+                case 1:
                     return getString(R.string.Chats);
+                case 2:
+                    return "";
                 case 3:
                     return getString(R.string.Circles);
                 default:

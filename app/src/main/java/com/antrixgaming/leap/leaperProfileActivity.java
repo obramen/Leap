@@ -117,6 +117,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
     TextView xboxliveTextView;
     TextView originTextView;
     TextView steamTextView;
+    TextView myLeaperPhoneNumber;
 
     Button saveProfileButton;
     Button cancelProfileButton;
@@ -367,6 +368,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         xboxliveTextView = (TextView) findViewById(R.id.xboxliveTextView);
         originTextView = (TextView) findViewById(R.id.originTextView);
         steamTextView = (TextView) findViewById(R.id.steamTextView);
+        myLeaperPhoneNumber = (TextView) findViewById(R.id.leaperPhoneNumber);
 
         saveProfileButton = (Button) findViewById(R.id.saveProfileButton);
         cancelProfileButton = (Button) findViewById(R.id.cancelProfileButton);
@@ -462,6 +464,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+        myLeaperPhoneNumber.setText(leaperPhoneNumber);
 
 
 
@@ -709,21 +712,10 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
-        leapStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
-                            .child("leapStatus").setValue("1");
-                    //Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
-                }else{
-                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
-                            .child("leapStatus").setValue("0");
-                    //Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
 
-                }
-            }
-        });
+
+
+
 
         FirebaseDatabase.getInstance().getReference().child("connections").child(leaperPhoneNumber)
                 .addValueEventListener(new ValueEventListener() {
@@ -757,21 +749,57 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         });
 
 
-        statusPermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
-                            .child("statusPermission").setValue("1");
-                    Toast.makeText(leaperProfileActivity.this, "Privacy changed", Toast.LENGTH_SHORT).show();
-                }else{
-                    FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
-                            .child("statusPermission").setValue("0");
-                    Toast.makeText(leaperProfileActivity.this, "Privacy changed", Toast.LENGTH_SHORT).show();
 
+
+
+        if (Objects.equals(leaperPhoneNumber, myPhoneNumber)) {
+
+
+
+
+            statusPermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                                .child("statusPermission").setValue("1");
+                        Toast.makeText(leaperProfileActivity.this, "Privacy changed", Toast.LENGTH_SHORT).show();
+                    }else{
+                        FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                                .child("statusPermission").setValue("0");
+                        Toast.makeText(leaperProfileActivity.this, "Privacy changed", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
-            }
-        });
+            });
+
+
+
+
+
+            leapStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                                .child("leapStatus").setValue("1");
+                        //Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+                    }else{
+                        FirebaseDatabase.getInstance().getReference().child("connections").child(myPhoneNumber)
+                                .child("leapStatus").setValue("0");
+                        //Toast.makeText(leaperProfileActivity.this, "Leap status changed", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
+
+
+
+
+
+        }
+
+
 
 
 

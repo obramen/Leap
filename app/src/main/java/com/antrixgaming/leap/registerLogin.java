@@ -143,6 +143,7 @@ public class registerLogin extends AppCompatActivity {
 
 
                 signInWithPhoneAuthCredential(credential);
+                //btnSignIn.reset();
 
 
             }
@@ -237,6 +238,7 @@ public class registerLogin extends AppCompatActivity {
 
                 registerLogin.this.startActivity(openPhoneVerifyIntent);
                 spinner.setVisibility(View.GONE);
+                btnSignIn.reset();
 
             }
 
@@ -348,6 +350,7 @@ public class registerLogin extends AppCompatActivity {
 
                             registerLogin.this.startActivity(openLeapIntent);
                             finish();
+                            btnSignIn.reset();
 
 
 

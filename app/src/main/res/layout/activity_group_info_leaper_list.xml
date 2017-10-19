@@ -93,7 +93,7 @@
                 android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/redbutton"
+                android:background="@drawable/leap_button"
                 android:padding="5dp"
                 android:text="LEAP"
                 android:textAlignment="center"

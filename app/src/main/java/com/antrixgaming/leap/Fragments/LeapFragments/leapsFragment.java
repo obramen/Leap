@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import cn.iwgang.countdownview.CountdownView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -119,7 +121,7 @@ public class leapsFragment extends Fragment {
         final ListView listOfLeaps = (ListView)view.findViewById(R.id.list_of_leaps);
         FirebaseListAdapter<UserLeap> adapter;
         adapter = new FirebaseListAdapter<UserLeap>(getActivity(), UserLeap.class,
-                R.layout.leaps_list, dataSource.orderByChild("leapSetupTime")) {
+                R.layout.leaps_list, dataSource.orderByChild("index")) {
 
             private int layout;
 
@@ -146,6 +148,8 @@ public class leapsFragment extends Fragment {
 
                 final TextView displayedLeaperOneName = (TextView)v.findViewById(R.id.displayedLeaperOneName);
                 final TextView displayedLeaperTwoName = (TextView)v.findViewById(R.id.displayedLeaperTwoName);
+                CountdownView countdownTimerA = (CountdownView)v.findViewById(R.id.countdownTimerA);
+
 
 
 
@@ -248,45 +252,33 @@ public class leapsFragment extends Fragment {
 
                         if (model.getleapDay() >=  NowTime){
 
-                            long countDown = TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) - TimeUnit.MILLISECONDS.toSeconds(NowTime);
-                            long seconds = TimeUnit.MILLISECONDS.toSeconds(countDown);
-                            long days = TimeUnit.MILLISECONDS.toDays(countDown);
 
 
-
-
-                            new CountDownTimer(seconds, 1000) {
-
-                                public void onTick(long millisUntilFinished) {
-                                    countdownTimer.setText("" + millisUntilFinished / 1000);
-                                }
-
-                                public void onFinish() {
-
-                                    countdownTimer.setVisibility(View.VISIBLE);
-
-                                    countdownTimer.setText("LIVE");
-                                    countdownTimer.setTextColor(getResources().getColor(R.color.white));
-                                    countdownTimer.setBackgroundColor(getResources().getColor(R.color.berry));
-                                }
-                            }.start();
-
+                            countdownTimerA.start(model.getleapDay() - NowTime); // Millisecond
+                            //countdownTimerA.setText("LIVE");
+                            countdownTimer.setVisibility(View.GONE);
+                            countdownTimerA.setVisibility(View.VISIBLE);
 
                         }
 
-                        if ((TimeUnit.MILLISECONDS.toSeconds(NowTime) > TimeUnit.MILLISECONDS.toSeconds(model.getleapDay())) &&
-                                (TimeUnit.MILLISECONDS.toSeconds(NowTime) < TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+                        if (NowTime > model.getleapDay() && (NowTime < (model.getleapDay() + TimeUnit.HOURS.toMillis(6)))){
 
-                            countdownTimer.setText("LIVE");
                             countdownTimer.setVisibility(View.VISIBLE);
+                            countdownTimerA.setVisibility(View.GONE);
 
                         }
 
-                        if (TimeUnit.MILLISECONDS.toSeconds(NowTime) >= (TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
+                        if (NowTime > model.getleapDay() && (NowTime >= (model.getleapDay() + TimeUnit.HOURS.toMillis(6)))){
 
                             countdownTimer.setVisibility(View.GONE);
+                            countdownTimerA.setVisibility(View.GONE);
+                            leapsDetails.setBackgroundColor(getResources().getColor(R.color.black));
+
 
                         }
+
+
+
 
                         break;
 
@@ -314,6 +306,7 @@ public class leapsFragment extends Fragment {
 
 
 
+
                 scoreDbRef.orderByChild("winner").equalTo(model.leaperOne).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -321,7 +314,9 @@ public class leapsFragment extends Fragment {
                         mleaperOneScore = dataSnapshot.getChildrenCount();
                         leaperOneScore.setText(String.valueOf(mleaperOneScore));
 
-                    }
+                        }
+
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -342,6 +337,9 @@ public class leapsFragment extends Fragment {
                         } else {
                             mleaperTwoScore = dataSnapshot.getChildrenCount();
                             leaperTwoScore.setText(String.valueOf(mleaperTwoScore));
+
+
+
                         }
 
                     }
@@ -351,6 +349,12 @@ public class leapsFragment extends Fragment {
 
                     }
                 });
+
+
+
+
+
+
 
 
                 // Format the date before showing it

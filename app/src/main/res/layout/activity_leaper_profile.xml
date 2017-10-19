@@ -312,6 +312,29 @@
 
 
                                     <TextView
+                                        android:id="@+id/phoneHeader"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginTop="10dp"
+                                        android:text="Phone:" />
+
+                                    <TextView
+                                        android:id="@+id/leaperPhoneNumber"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="10dp"
+                                        android:layout_toRightOf="@+id/phoneHeader"
+                                        android:text="" />
+
+
+                                </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+
+                                    <TextView
                                         android:id="@+id/genderHeader"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"

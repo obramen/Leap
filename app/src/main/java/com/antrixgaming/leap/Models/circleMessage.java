@@ -18,6 +18,7 @@ public class circleMessage {
     private String circleid;
     private String messageType;
     private String ReadFlag;
+    long index;
 
 
 
@@ -32,10 +33,20 @@ public class circleMessage {
 
         // Initialize to current time
         messageTime = new Date().getTime();
+        index = -1 * messageTime;
+
     }
 
     public circleMessage(){
 
+    }
+
+    public long getIndex() {
+        return index;
+    }
+
+    public void setIndex(long index) {
+        this.index = index;
     }
 
     public String getMessageText() {

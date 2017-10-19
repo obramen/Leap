@@ -161,7 +161,7 @@ public class circlesFragment extends Fragment {
                                 ////GETTING THE NUMBER OF UNREAD MESSAGES FOR A PARTICULAR CIRCLE AND PUSHING IT TO THE QUANTITY OF UNREAD MESSAGES
                                 FirebaseListAdapter<circleMessage> adapter2;
                                 adapter2 = new FirebaseListAdapter<circleMessage>(getActivity(), circleMessage.class, R.layout.circle_list,
-                                        FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID.getText().toString())) {
+                                        FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID.getText().toString()).orderByChild("messageTime")) {
                                     @Override
                                     protected void populateView(View v, circleMessage model, int position) {
 

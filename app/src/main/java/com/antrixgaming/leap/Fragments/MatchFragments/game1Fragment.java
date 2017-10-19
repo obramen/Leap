@@ -3,9 +3,11 @@ package com.antrixgaming.leap.Fragments.MatchFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,9 @@ public class game1Fragment extends Fragment {
     TextView leaperOneText;
     TextView leaperTwoText;
     TextView disputeScoreButton;
+    TextView acceptReset;
+    TextView forceReset;
+    TextView requestBy;
     EditText g1leaperOneScoreBox;
     EditText g1leaperTwoScoreBox;
 
@@ -63,6 +68,10 @@ public class game1Fragment extends Fragment {
     String winner;
     String looser;
     int leapStatus;
+    String circleID;
+    String AdminFlag;
+    String mScoreStatus;
+    String resetBy;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +85,9 @@ public class game1Fragment extends Fragment {
         leaperOne = ((leapDetailsActivity)context).mLeaperOne;
         leaperTwo = ((leapDetailsActivity)context).mLeaperTwo;
         leapStatus = ((leapDetailsActivity)context).leapStatus;
+        circleID = ((leapDetailsActivity)context).mCircleID;
+        AdminFlag = ((leapDetailsActivity)context).AdminFlag;
+
 
 
         progressDialog = new ProgressDialog(getActivity());
@@ -94,9 +106,22 @@ public class game1Fragment extends Fragment {
         disputeScoreButton = (TextView) view.findViewById(R.id.disputeScoreButton);
         leaperOneText = (TextView) view.findViewById(R.id.leaperOneText);
         leaperTwoText = (TextView) view.findViewById(R.id.leaperTwoText);
+        acceptReset = (TextView) view.findViewById(R.id.acceptReset);
+        forceReset = (TextView) view.findViewById(R.id.forceReset);
+        requestBy = (TextView) view.findViewById(R.id.requestBy);
 
         final TextView displayedLeaperOneName = (TextView)view.findViewById(R.id.displayedLeaperOneName);
         final TextView displayedLeaperTwoName = (TextView)view.findViewById(R.id.displayedLeaperTwoName);
+
+
+
+        g1leaperOneScoreBox.setEnabled(false);
+        g1leaperTwoScoreBox.setEnabled(false);
+        g1SaveScoreButton.setVisibility(View.GONE);
+        g1CancelScoreButton.setVisibility(View.GONE);
+        editScoreButton.setVisibility(View.GONE);
+        requestBy.setVisibility(View.GONE);
+
 
 
 
@@ -110,6 +135,9 @@ public class game1Fragment extends Fragment {
 
             editScoreButton.setVisibility(View.GONE);
             disputeScoreButton.setVisibility(View.GONE);
+            acceptReset.setVisibility(View.GONE);
+            forceReset.setVisibility(View.GONE);
+            requestBy.setVisibility(View.GONE);
 
         }
 
@@ -117,6 +145,9 @@ public class game1Fragment extends Fragment {
 
             editScoreButton.setVisibility(View.GONE);
             disputeScoreButton.setVisibility(View.GONE);
+            acceptReset.setVisibility(View.GONE);
+            forceReset.setVisibility(View.GONE);
+            requestBy.setVisibility(View.GONE);
 
         }
 
@@ -124,7 +155,9 @@ public class game1Fragment extends Fragment {
 
 
 
-        game1DbRef.addValueEventListener(new ValueEventListener() {
+
+
+            game1DbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -136,14 +169,9 @@ public class game1Fragment extends Fragment {
 
 
 
-
-                    editScoreButton.setVisibility(View.GONE);
-                    disputeScoreButton.setVisibility(View.VISIBLE);
-
                     String L1Score = dataSnapshot.child("leaperOneScore").getValue().toString();
                     String L2Score = dataSnapshot.child("leaperTwoScore").getValue().toString();
 
-                    disputeScoreButton.setVisibility(View.VISIBLE);
 
                     g1leaperOneScoreBox.setText(L1Score);
                     g1leaperTwoScoreBox.setText(L2Score);
@@ -151,37 +179,42 @@ public class game1Fragment extends Fragment {
 
 
 
+                    /*
 
 
                     int mL1Score = Integer.parseInt(L1Score);
                     int mL2Score = Integer.parseInt(L2Score);
 
                     if(mL1Score < mL2Score){
-                        g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.md_green_900));
-                        leaperOneText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        leaperTwoText.setTextColor(getResources().getColor(R.color.md_green_900));
+                        g1leaperOneScoreBox.setTextColor(ContextCompat.getColor(getContext(),R.color.berry));
+                        g1leaperTwoScoreBox.setTextColor(ContextCompat.getColor(getContext(),R.color.md_green_900));
+                        displayedLeaperOneName.setTextColor(ContextCompat.getColor(getContext(),R.color.berry));
+                        displayedLeaperTwoName.setTextColor(ContextCompat.getColor(getContext(),R.color.md_green_900));
 
 
                     }
                     else if(mL1Score == mL2Score){
 
-                        g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.grey));
-                        g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.grey));
-                        leaperOneText.setTextColor(getResources().getColor(R.color.grey));
-                        leaperTwoText.setTextColor(getResources().getColor(R.color.grey));
+                        g1leaperOneScoreBox.setTextColor(ContextCompat.getColor(getContext(),R.color.grey));
+                        g1leaperTwoScoreBox.setTextColor(ContextCompat.getColor(getContext(),R.color.grey));
+                        displayedLeaperOneName.setTextColor(ContextCompat.getColor(getContext(),R.color.grey));
+                        displayedLeaperTwoName.setTextColor(ContextCompat.getColor(getContext(),R.color.grey));
 
 
                     }
 
                     else if(mL1Score > mL2Score){
 
-                        g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.md_green_900));
-                        g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        leaperOneText.setTextColor(getResources().getColor(R.color.md_green_900));
-                        leaperTwoText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        g1leaperOneScoreBox.setTextColor(ContextCompat.getColor(getContext(), R.color.md_green_900 ));
+                        g1leaperTwoScoreBox.setTextColor(ContextCompat.getColor(getContext(),R.color.berry));
+                        displayedLeaperOneName.setTextColor(ContextCompat.getColor(getContext(),R.color.md_green_900));
+                        displayedLeaperTwoName.setTextColor(ContextCompat.getColor(getContext(),R.color.berry));
 
                     }
+
+
+
+                    */
 
 
 
@@ -200,6 +233,10 @@ public class game1Fragment extends Fragment {
 
 
 
+
+
+
+
         editScoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,12 +250,7 @@ public class game1Fragment extends Fragment {
             }
         });
 
-        disputeScoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
 
         g1SaveScoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +272,8 @@ public class game1Fragment extends Fragment {
 
 
 
-
+                g1leaperOneScoreBox.setEnabled(false);
+                g1leaperTwoScoreBox.setEnabled(false);
 
 
                 progressDialog.setMessage("Saving score...");
@@ -259,19 +292,11 @@ public class game1Fragment extends Fragment {
                     looser  = leaperOne;
                     winner = leaperTwo;
 
-                    leaperOneText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    leaperTwoText.setTextColor(getResources().getColor(R.color.md_green_900));
-                    g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.md_green_900));
 
 
                 }
                 else if(mL1Score == mL2Score){
 
-                    leaperOneText.setTextColor(getResources().getColor(R.color.grey));
-                    leaperTwoText.setTextColor(getResources().getColor(R.color.grey));
-                    g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.grey));
-                    g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.grey));
                     looser  = "";
                     winner = "";
 
@@ -280,10 +305,6 @@ public class game1Fragment extends Fragment {
 
                 else if(mL1Score > mL2Score){
 
-                    leaperOneText.setTextColor(getResources().getColor(R.color.md_green_900));
-                    leaperTwoText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    g1leaperOneScoreBox.setTextColor(getResources().getColor(R.color.md_green_900));
-                    g1leaperTwoScoreBox.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
 
                     looser  = leaperTwo;
                     winner = leaperOne;
@@ -294,12 +315,6 @@ public class game1Fragment extends Fragment {
 
 
                 game1DbRef.setValue(new LeapScore(g1leapID, leaperOneScore, leaperTwoScore, "1", myPhoneNumber, winner, looser));
-
-                g1leaperOneScoreBox.setEnabled(false);
-                g1leaperTwoScoreBox.setEnabled(false);
-                g1SaveScoreButton.setVisibility(View.GONE);
-                g1CancelScoreButton.setVisibility(View.GONE);
-                editScoreButton.setVisibility(View.VISIBLE);
 
                 progressDialog.dismiss();
                 Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show();
@@ -539,6 +554,405 @@ public class game1Fragment extends Fragment {
             /////////////////////////////////////////////////////////////////////
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        if (Objects.equals(circleID, "null")){
+
+
+
+            game1DbRef.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+                    if (dataSnapshot.child("leapID").getValue() == null){
+
+                        if (Objects.equals(myPhoneNumber, leaperOne) || Objects.equals(myPhoneNumber, leaperTwo)){
+                            g1leaperOneScoreBox.setEnabled(false);
+                            g1leaperTwoScoreBox.setEnabled(false);
+                            g1SaveScoreButton.setVisibility(View.GONE);
+                            g1CancelScoreButton.setVisibility(View.GONE);
+                            editScoreButton.setVisibility(View.VISIBLE);
+                            acceptReset.setVisibility(View.GONE);
+                            requestBy.setVisibility(View.GONE);
+                            forceReset.setVisibility(View.GONE);
+
+                        } else {
+
+                            g1leaperOneScoreBox.setEnabled(false);
+                            g1leaperTwoScoreBox.setEnabled(false);
+                            g1SaveScoreButton.setVisibility(View.GONE);
+                            g1CancelScoreButton.setVisibility(View.GONE);
+                            editScoreButton.setVisibility(View.GONE);
+                            acceptReset.setVisibility(View.GONE);
+                            requestBy.setVisibility(View.GONE);
+                            forceReset.setVisibility(View.GONE);
+
+
+                        }
+
+
+
+                    }
+
+                    else {
+
+
+
+
+
+                        if (Objects.equals(myPhoneNumber, leaperOne) || Objects.equals(myPhoneNumber, leaperTwo)){
+
+
+
+
+
+                            mScoreStatus = dataSnapshot.child("scoreStatus").getValue().toString();
+
+
+                            if (Objects.equals(mScoreStatus, "2")) {
+
+
+                                resetBy = dataSnapshot.child("resetBy").getValue().toString();
+
+                                if (Objects.equals(resetBy, myPhoneNumber)) {
+
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.VISIBLE);
+                                } else {
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.VISIBLE);
+                                    forceReset.setVisibility(View.GONE);
+
+                                }
+
+                            } else if (Objects.equals(mScoreStatus, "0")) {
+
+                                g1SaveScoreButton.setVisibility(View.GONE);
+                                g1CancelScoreButton.setVisibility(View.GONE);
+                                editScoreButton.setVisibility(View.VISIBLE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+
+                            } else if (Objects.equals(mScoreStatus, "1")){
+
+                                g1SaveScoreButton.setVisibility(View.GONE);
+                                g1CancelScoreButton.setVisibility(View.GONE);
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.VISIBLE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+
+                            }
+
+
+
+
+
+
+
+                        } else {
+
+                            g1leaperOneScoreBox.setEnabled(false);
+                            g1leaperTwoScoreBox.setEnabled(false);
+                            g1SaveScoreButton.setVisibility(View.GONE);
+                            g1CancelScoreButton.setVisibility(View.GONE);
+                            editScoreButton.setVisibility(View.GONE);
+                            acceptReset.setVisibility(View.GONE);
+                            requestBy.setVisibility(View.GONE);
+                            forceReset.setVisibility(View.GONE);
+
+
+                        }
+
+
+
+
+
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+
+
+
+
+            disputeScoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+                    /////////// SCORE STATUS
+                    /////////// 0 - NOT ENTERED
+                    /////////// 1 - ENTERED (FIRST ENTRY)
+                    /////////// 2 - DISPUTED
+                    /////////// 3 - RESET REQUEST
+
+
+                    game1DbRef.child("resetBy").setValue(myPhoneNumber);
+                    game1DbRef.child("scoreStatus").setValue("2");
+
+                }
+            });
+
+
+            acceptReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    game1DbRef.child("scoreStatus").setValue("0");
+
+
+                }
+            });
+
+
+            forceReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    game1DbRef.child("scoreStatus").setValue("0");
+
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+        } else {
+
+
+
+
+
+
+
+
+
+            game1DbRef.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+                    if (dataSnapshot.child("leapID").getValue() == null){
+                        if (Objects.equals(myPhoneNumber, leaperOne) || Objects.equals(myPhoneNumber, leaperTwo) || Objects.equals(AdminFlag, "true")){
+                            g1leaperOneScoreBox.setEnabled(false);
+                            g1leaperTwoScoreBox.setEnabled(false);
+                            g1SaveScoreButton.setVisibility(View.GONE);
+                            g1CancelScoreButton.setVisibility(View.GONE);
+                            editScoreButton.setVisibility(View.VISIBLE);
+                            acceptReset.setVisibility(View.GONE);
+                            requestBy.setVisibility(View.GONE);
+                            forceReset.setVisibility(View.GONE);
+
+                        } else {
+
+                            g1leaperOneScoreBox.setEnabled(false);
+                            g1leaperTwoScoreBox.setEnabled(false);
+                            g1SaveScoreButton.setVisibility(View.GONE);
+                            g1CancelScoreButton.setVisibility(View.GONE);
+                            editScoreButton.setVisibility(View.GONE);
+                            acceptReset.setVisibility(View.GONE);
+                            requestBy.setVisibility(View.GONE);
+                            forceReset.setVisibility(View.GONE);
+
+
+                        }
+
+
+                    }
+
+                    else {
+
+
+
+
+
+                        if (Objects.equals(myPhoneNumber, leaperOne) || Objects.equals(myPhoneNumber, leaperTwo) || Objects.equals(AdminFlag, "true")){
+
+
+
+
+
+                            mScoreStatus = dataSnapshot.child("scoreStatus").getValue().toString();
+
+
+                            if (Objects.equals(mScoreStatus, "2")) {
+
+
+                                resetBy = dataSnapshot.child("resetBy").getValue().toString();
+
+                                if (Objects.equals(AdminFlag, "true")) {
+
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.VISIBLE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.VISIBLE);
+                                    requestBy.setText("Dispute request from " + requestBy);
+                                } else {
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+
+                                }
+
+                            } else if (Objects.equals(mScoreStatus, "0")) {
+
+                                g1SaveScoreButton.setVisibility(View.GONE);
+                                g1CancelScoreButton.setVisibility(View.GONE);
+                                editScoreButton.setVisibility(View.VISIBLE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+
+                            } else if (Objects.equals(mScoreStatus, "1")){
+
+                                g1SaveScoreButton.setVisibility(View.GONE);
+                                g1CancelScoreButton.setVisibility(View.GONE);
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.VISIBLE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+
+                            }
+
+
+
+
+
+
+
+                        } else {
+
+                            g1leaperOneScoreBox.setEnabled(false);
+                            g1leaperTwoScoreBox.setEnabled(false);
+                            g1SaveScoreButton.setVisibility(View.GONE);
+                            g1CancelScoreButton.setVisibility(View.GONE);
+                            editScoreButton.setVisibility(View.GONE);
+                            acceptReset.setVisibility(View.GONE);
+                            requestBy.setVisibility(View.GONE);
+                            forceReset.setVisibility(View.GONE);
+
+
+                        }
+
+
+
+
+
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+
+
+
+
+            disputeScoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+                    /////////// SCORE STATUS
+                    /////////// 0 - NOT ENTERED
+                    /////////// 1 - ENTERED (FIRST ENTRY)
+                    /////////// 2 - DISPUTED
+                    /////////// 3 - RESET REQUEST
+
+                    game1DbRef.child("resetBy").setValue(myPhoneNumber);
+                    game1DbRef.child("scoreStatus").setValue("2");
+
+                }
+            });
+
+
+            acceptReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    game1DbRef.child("scoreStatus").setValue("0");
+
+
+                }
+            });
+
+
+            forceReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    game1DbRef.child("scoreStatus").setValue("0");
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+
+
+
+
+
 
 
 

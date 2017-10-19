@@ -31,7 +31,7 @@ public class ContactPermissionStartService extends BaseActivity{
         android.Manifest.permission.READ_CONTACTS)
         != PackageManager.PERMISSION_GRANTED) {
 
-        Toast.makeText(context, "permission not available, request", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "permission not available, request", Toast.LENGTH_SHORT).show();
 
 
         // Should we show an explanation?
@@ -50,7 +50,7 @@ public class ContactPermissionStartService extends BaseActivity{
 
         // No explanation needed, we can request the permission.
 
-        Toast.makeText(context, "permission request starting", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "permission request starting", Toast.LENGTH_SHORT).show();
 
 
         ActivityCompat.requestPermissions((BaseActivity) context,
@@ -64,7 +64,7 @@ public class ContactPermissionStartService extends BaseActivity{
         }
         else {
 
-            Toast.makeText(context, "contactt permission already available", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "contactt permission already available", Toast.LENGTH_SHORT).show();
 
             Intent startContactService = new Intent(context, ContactService.class);
             context.startService(startContactService);
@@ -86,14 +86,14 @@ public class ContactPermissionStartService extends BaseActivity{
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
-                    Toast.makeText(context, "permission granted", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "permission granted", Toast.LENGTH_SHORT).show();
 
                     Intent startContactService = new Intent(context, ContactService.class);
                     context.startService(startContactService);
 
                 } else {
 
-                    Toast.makeText(context, "permission denied", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "permission denied", Toast.LENGTH_SHORT).show();
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.

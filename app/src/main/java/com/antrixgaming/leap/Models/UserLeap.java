@@ -22,6 +22,7 @@ public class UserLeap {
     private String leapID;
     private long leapStatusChangeTime;
     private String circleID;
+    long index;
 
 
 
@@ -40,6 +41,8 @@ public class UserLeap {
         leapSetupTime = new Date().getTime();
 
         leapStatusChangeTime = new Date().getTime();
+        index = -1 * leapSetupTime;
+
 
     }
 
@@ -65,6 +68,14 @@ public class UserLeap {
 
     public UserLeap(){
 
+    }
+
+    public long getIndex() {
+        return index;
+    }
+
+    public void setIndex(long index) {
+        this.index = index;
     }
 
     public String getleapID() {

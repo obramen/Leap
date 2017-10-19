@@ -28,7 +28,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/ic_leap" />
+            android:src="@mipmap/ic_leap"/>
 
         <TextView
             android:id="@+id/leapVersion"
@@ -37,7 +37,7 @@
             android:layout_above="@id/aboutImage"
             android:layout_centerHorizontal="true"
             android:text="Version 0.7"
-            android:textColor="@color/selectorcolor"
+            android:textColor="@color/white"
             android:layout_marginBottom="15dp"
             android:textSize="12sp" />
 
@@ -48,7 +48,7 @@
             android:layout_below="@id/aboutImage"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:textColor="@color/selectorcolor"
+            android:textColor="@color/white"
             android:text="2017 AnTrix Gaming Ltd."
             android:textSize="12sp" />
 

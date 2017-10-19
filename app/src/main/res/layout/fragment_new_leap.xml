@@ -482,7 +482,8 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="Leap"
-                    style="@style/redButtonDark"
+                    android:background="@drawable/leap_button"
+                    android:textColor="@color/white"
                     android:layout_below="@id/freeLeapOpponent"
                     android:layout_alignEnd="@id/freeLeapOpponent"
                     android:layout_marginTop="10dp" />

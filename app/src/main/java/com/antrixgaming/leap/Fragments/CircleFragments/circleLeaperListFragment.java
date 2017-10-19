@@ -106,6 +106,11 @@ public class circleLeaperListFragment extends Fragment {
                 leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
 
 
+                if (Objects.equals(myPhoneNumber, leaperPhoneNumber)){
+                    circleLeaperListButton.setVisibility(View.GONE);
+                }
+
+
 
 
 

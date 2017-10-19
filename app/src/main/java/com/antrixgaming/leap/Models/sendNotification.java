@@ -13,6 +13,7 @@ public class sendNotification {
     public String inviteType;
     public String notificationStatus;
     private long inviteTime;
+    long index;
 
 
 
@@ -27,10 +28,20 @@ public class sendNotification {
 
         // Initialize to current time
         inviteTime = new Date().getTime();
+        index = -1 * inviteTime;
+
     }
 
     public sendNotification(){
 
+    }
+
+    public long getInviteTime() {
+        return inviteTime;
+    }
+
+    public void setInviteTime(long inviteTime) {
+        this.inviteTime = inviteTime;
     }
 
     public String getNotificationID() {

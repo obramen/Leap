@@ -16,7 +16,6 @@
         android:divider="@android:color/transparent"
         android:id="@+id/list_of_notifications"
         android:scrollbarSize="5dp"
-        android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp" />

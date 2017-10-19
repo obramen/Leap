@@ -40,7 +40,7 @@
                         android:id="@+id/eventImage"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:src="@drawable/background_color"
+                        android:src="@color/colorPrimary"
                         />
 
                     <LinearLayout
@@ -360,7 +360,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/attendingHeader"
                                 android:divider="@android:color/transparent"
-                                android:dividerHeight="4dp"
+                                android:dividerHeight="1dp"
                                 android:scrollbarSize="5dp"
                                 />
 
@@ -418,7 +418,8 @@
 
         <Button
             android:id="@+id/commentButton"
-            style="@style/redButtonDark"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
             android:layout_width="70dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/commentEditText"

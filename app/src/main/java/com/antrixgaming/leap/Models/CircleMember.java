@@ -4,7 +4,7 @@ import java.util.Date;
 
 
 
-public class CircleMember {
+public class  CircleMember {
 
     private String phoneNumber;
     private String Admin;

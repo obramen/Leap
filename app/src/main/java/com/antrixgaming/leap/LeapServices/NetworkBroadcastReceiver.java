@@ -59,41 +59,6 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
                 if(snackbar != null) snackbar.dismiss();
 
 
-                FirebaseAuth mAuth;
-
-                mAuth = FirebaseAuth.getInstance();
-                mAuth.getCurrentUser().getToken(true)
-                        .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                if (task.isSuccessful()) {
-                                    //String idToken = task.getResult().getToken();
-                                    // Send token to your backend via HTTPS
-                                    // ...
-
-                                } else {
-
-                                    // TODO PUT CHECK FOR INTERNET AVAILABILITY
-                                    // TODO APPLY ONLINE STATUS HERE
-
-                                    // Handle error -> task.getException();
-                                    FirebaseAuth.getInstance().signOut();
-
-                                    Intent logoutIntent = new Intent(context, registerLogin.class);
-                                    logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    context.startActivity(logoutIntent);
-
-
-
-
-                                }
-                            }
-
-                        });
-
-
-
-
-
 
             }
 
@@ -112,21 +77,5 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-    public boolean isInternetAvailable() {
-        try {
-            final InetAddress address = InetAddress.getByName("www.google.com");
-            return !address.equals("");
-        } catch (UnknownHostException e) {
-            // Log error
-        }
-        return false;
-    }
-
-
-    public boolean isConnected() throws InterruptedException, IOException
-    {
-        String command = "ping -c 1 google.com";
-        return (Runtime.getRuntime().exec (command).waitFor() == 0);
-    }
 
 }

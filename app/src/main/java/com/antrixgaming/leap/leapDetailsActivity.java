@@ -55,6 +55,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import cn.iwgang.countdownview.CountdownView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -73,7 +74,7 @@ public class leapDetailsActivity extends BaseActivity {
     public String leaperOneUID;
 
     int loadFlag = 0;
-    String AdminFlag = "false";
+    public String AdminFlag = "false";
     private String TrueAdmin;
     private String FalseAdmin;
 
@@ -103,13 +104,14 @@ public class leapDetailsActivity extends BaseActivity {
     public String sourceActivity;
     public String mLeaperOne;
     public String mLeaperTwo;
+    public String mCircleID;
 
 
     Long mleaperOneScore;
     Long mleaperTwoScore;
 
     Query leapDbRef;
-    String circleID;
+    public String circleID;
 
 
     @Override
@@ -254,6 +256,9 @@ public class leapDetailsActivity extends BaseActivity {
                 final TextView displayedLeaperOneName = (TextView)v.findViewById(R.id.displayedLeaperOneName);
                 final TextView displayedLeaperTwoName = (TextView)v.findViewById(R.id.displayedLeaperTwoName);
 
+                CountdownView countdownTimerA = (CountdownView)v.findViewById(R.id.countdownTimerA);
+
+
 
 
 
@@ -297,7 +302,7 @@ public class leapDetailsActivity extends BaseActivity {
                 mLeaperOne = model.getleaperOne();
                 mLeaperTwo = model.getleaperTwo();
                 final String mLeapID = model.getleapID();
-                final String mCircleID = model.getCircleID();
+                mCircleID = model.getCircleID();
                 final String mPhoneNumber = myPhoneNumber;
 
                 detailsLeaperOneImage = (CircleImageView)v.findViewById(R.id.detailsLeaperOneImage);
@@ -486,41 +491,59 @@ public class leapDetailsActivity extends BaseActivity {
                 // 1 - accepted leap
                 // 2 - declined leap
                 // 3 - cancelled leap
-                switch (leapStatus){
-
-                    case 0:
-                        fab.setVisibility(v.VISIBLE);
-                        leapDetailsLeapInLayout.setVisibility(v.VISIBLE);
-                        leapDetailsScoreLayout.setVisibility(v.GONE);
 
 
-                        break;
-
-
-                    case 1:
-                        fab.setVisibility(v.VISIBLE);
-                        leapDetailsLeapInLayout.setVisibility(v.GONE);
-                        leapDetailsScoreLayout.setVisibility(v.VISIBLE);
-
-                        break;
+                if (Objects.equals(myPhoneNumber, model.leaperOne) || Objects.equals(myPhoneNumber, model.leaperTwo) || Objects.equals(AdminFlag, TrueAdmin)){
 
 
 
-                    case 2:
-                        fab.setVisibility(v.GONE);
-                        leapDetailsLeapInLayout.setVisibility(v.GONE);
-                        leapDetailsScoreLayout.setVisibility(v.GONE);
+                    switch (leapStatus){
 
-                        break;
+                        case 0:
+                            fab.setVisibility(v.VISIBLE);
+                            leapDetailsLeapInLayout.setVisibility(v.VISIBLE);
+                            leapDetailsScoreLayout.setVisibility(v.GONE);
+
+
+                            break;
+
+
+                        case 1:
+                            fab.setVisibility(v.VISIBLE);
+                            leapDetailsLeapInLayout.setVisibility(v.GONE);
+                            leapDetailsScoreLayout.setVisibility(v.VISIBLE);
+
+                            break;
 
 
 
-                    case 3:
-                        fab.setVisibility(v.GONE);
-                        leapDetailsLeapInLayout.setVisibility(v.GONE);
-                        leapDetailsScoreLayout.setVisibility(v.GONE);
+                        case 2:
+                            fab.setVisibility(v.GONE);
+                            leapDetailsLeapInLayout.setVisibility(v.GONE);
+                            leapDetailsScoreLayout.setVisibility(v.GONE);
 
-                        break;
+                            break;
+
+
+
+                        case 3:
+                            fab.setVisibility(v.GONE);
+                            leapDetailsLeapInLayout.setVisibility(v.GONE);
+                            leapDetailsScoreLayout.setVisibility(v.GONE);
+
+                            break;
+
+
+                    }
+
+
+
+                } else {
+
+
+                    fab.setVisibility(v.GONE);
+                    leapDetailsLeapInLayout.setVisibility(v.GONE);
+                    leapDetailsScoreLayout.setVisibility(v.GONE);
 
 
                 }
@@ -528,21 +551,6 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-
-
-                new CountDownTimer(300000, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                        countdownTimer.setText("" + millisUntilFinished / 1000);
-                    }
-
-                    public void onFinish() {
-                        countdownTimer.setText("LIVE!");
-                        countdownTimer.setTextColor(getResources().getColor(R.color.white));
-                        //countdownTimer.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    }
-                }.start();
 
 
 
@@ -563,6 +571,8 @@ public class leapDetailsActivity extends BaseActivity {
 
                         mleaperOneScore = dataSnapshot.getChildrenCount();
                         leaperOneScore.setText(String.valueOf(mleaperOneScore));
+
+
 
                     }
 
@@ -685,7 +695,7 @@ public class leapDetailsActivity extends BaseActivity {
                     }
 
 
-                    //// IF IT'S NOT AN OPEN LEAP, THAT MEANS LEAPER TWO PRESEND. SO USING
+                    //// IF IT'S NOT AN OPEN LEAP, THAT MEANS LEAPER TWO PRESENT. SO USING
                     //// HIS PHONE NUMBER (MODEL.GETLEAPERTWO) FIND HIS UID
                     else{
                         DatabaseReference leaperTwoDbRef = FirebaseDatabase.getInstance().getReference()
@@ -755,8 +765,8 @@ public class leapDetailsActivity extends BaseActivity {
                 }
 
                 else if (!Objects.equals(AdminFlag, FalseAdmin)) {
-                    leapDetailsPostpone.setVisibility(v.GONE);
-                    leapDetailsCancel.setVisibility(v.GONE);
+                    //leapDetailsPostpone.setVisibility(v.GONE);
+                    //leapDetailsCancel.setVisibility(v.GONE);
                 }
 
 
@@ -893,50 +903,7 @@ public class leapDetailsActivity extends BaseActivity {
                         //Long acceptTime = model.getLeapStatusChangeTime();
                         //Long matchTime = Long.parseLong(lDay + " "  + lTime);
 
-                        long NowTime = new Date().getTime();
 
-
-                        if (model.getleapDay() >=  NowTime){
-
-                            long countDown = model.getleapDay() - NowTime;
-                            long seconds = TimeUnit.MILLISECONDS.toSeconds(countDown);
-                            long days = TimeUnit.MILLISECONDS.toDays(countDown);
-
-
-
-
-                            new CountDownTimer(seconds, 1000) {
-
-                                public void onTick(long millisUntilFinished) {
-                                    countdownTimer.setText("" + millisUntilFinished / 1000);
-                                }
-
-                                public void onFinish() {
-
-                                    countdownTimer.setVisibility(View.VISIBLE);
-
-                                    countdownTimer.setText("LIVE");
-                                    countdownTimer.setTextColor(getResources().getColor(R.color.white));
-                                    countdownTimer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                                }
-                            }.start();
-
-
-                        }
-
-                        if ((TimeUnit.MILLISECONDS.toSeconds(NowTime) > TimeUnit.MILLISECONDS.toSeconds(model.getleapDay())) &&
-                                (TimeUnit.MILLISECONDS.toSeconds(NowTime) < TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
-
-                            countdownTimer.setText("LIVE");
-                            countdownTimer.setVisibility(View.VISIBLE);
-
-                        }
-
-                        if (TimeUnit.MILLISECONDS.toSeconds(NowTime) >= (TimeUnit.MILLISECONDS.toSeconds(model.getleapDay()) + TimeUnit.HOURS.toMillis(6))){
-
-                            countdownTimer.setVisibility(View.GONE);
-
-                        }
 
 
 
@@ -954,6 +921,43 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
+
+
+
+
+
+
+
+
+
+
+                long NowTime = new Date().getTime();
+
+
+                if (model.getleapDay() >=  NowTime){
+
+
+
+                    countdownTimerA.start(model.getleapDay() - NowTime); // Millisecond
+                    //countdownTimerA.setText("LIVE");
+                    countdownTimer.setVisibility(View.GONE);
+                    countdownTimerA.setVisibility(View.VISIBLE);
+
+                }
+
+                if (NowTime > model.getleapDay() && (NowTime < (model.getleapDay() + TimeUnit.HOURS.toMillis(6)))){
+
+                    countdownTimer.setVisibility(View.VISIBLE);
+                    countdownTimerA.setVisibility(View.GONE);
+
+                }
+
+                if (NowTime > model.getleapDay() && (NowTime >= (model.getleapDay() + TimeUnit.HOURS.toMillis(6)))){
+
+                    countdownTimer.setVisibility(View.GONE);
+                    countdownTimerA.setVisibility(View.GONE);
+
+                }
 
 
 
@@ -1314,6 +1318,132 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+                leapDetailsCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        /// IF I SENT THIS LEAP // I GET TO CHANGE TIME
+                        if (Objects.equals(myPhoneNumber, model.getleaperOne())){
+
+
+
+                            // IF THE LEAP IS NOT TO A CIRCLE
+                        if (Objects.equals(circleID, "null")) {
+
+                            // Change time for leaper one and two
+                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                            dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+
+                        } else { // IF THE LEAP IS TO A CIRCLE
+
+                            // IS IT AN OPEN LEAP
+                            if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
+
+                                // change time for open leaps
+                                dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+                                // change time for my leaps
+                                dbRef.child("leaps").child(myUID).child(leapID).child("leapStatus").setValue("3");
+
+
+
+                                Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+                            }
+
+
+
+                            else { // IT IS TO A PARTICULAR LEAPER
+
+                                // change time for list of leaper-to-leaper leaps
+                                dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+
+
+                                // Delete leap for leaper one and two
+                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+
+                            }
+
+
+                        }
+
+
+                    }
+
+
+
+
+
+                                        else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
+
+
+                            // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can change the time
+                            if (Objects.equals(circleID, "null")) {
+
+                                //change time for leaper one and two
+                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+
+
+                            } else { // IF THE LEAP IS TO A CIRCLE
+
+
+                                // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CHANGE THE TIME
+                                if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
+
+                                    // change timie for open leaps
+                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+
+
+                                    // change time for the sender // leaper one
+                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                    Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+                                } else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN CHANGE TIME
+
+                                    // change time for leapertoleaper leaps
+                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+
+
+                                    // change time for leaper one and two
+                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                    Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+
+
+                                }
+
+
+                            }
+
+
+                        }
+
+
+                    }
+                });
 
 
 

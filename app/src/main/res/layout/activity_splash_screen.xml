@@ -8,8 +8,7 @@
         android:id="@+id/splashscreen"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:paddingBottom="30dp"
-        android:background="@mipmap/ic_leap"
+        android:paddingBottom="15dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

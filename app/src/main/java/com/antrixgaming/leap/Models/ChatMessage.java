@@ -19,6 +19,7 @@ public class ChatMessage {
     private String receiverPhoneNumber;
     private String loadname;
     private String ReadFlag;
+    private long index;
 
 
 
@@ -35,10 +36,19 @@ public class ChatMessage {
 
         // Initialize to current time
         messageTime = new Date().getTime();
+        index = -1 * messageTime;
     }
 
     public ChatMessage(){
 
+    }
+
+    public long getIndex() {
+        return index;
+    }
+
+    public void setIndex(long index) {
+        this.index = index;
     }
 
     public String getMessageText() {

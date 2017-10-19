@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
+import com.antrixgaming.leap.LeapClasses.OnlinePressence;
 import com.antrixgaming.leap.Models.ChatMessage;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.activity_one_chat;
@@ -52,6 +53,7 @@ public class chatsFragment extends Fragment {
     DatabaseReference dbRef;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class chatsFragment extends Fragment {
         mStorage = FirebaseStorage.getInstance().getReference();
 
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+
 
 
 
@@ -105,7 +108,7 @@ public class chatsFragment extends Fragment {
         ListView listOfMessages = (ListView)view.findViewById(R.id.list_of_chats);
         FirebaseListAdapter<ChatMessage> adapter;
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.chats_list, FirebaseDatabase.getInstance().getReference().child("userchatlist").child(myUID)) {
+                R.layout.chats_list, FirebaseDatabase.getInstance().getReference().child("userchatlist").child(myUID).orderByChild("index")) {
 
 
 

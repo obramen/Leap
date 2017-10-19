@@ -14,6 +14,7 @@ public class oneCircleMessage {
     private String phoneNumber;
     private String uid;
     private String circleid;
+    long index;
 
 
     public oneCircleMessage(String messageText, String circleid, String phoneNumber, String uid) {
@@ -25,6 +26,7 @@ public class oneCircleMessage {
 
         // Initialize to current time
         messageTime = new Date().getTime();
+        index = -1 * messageTime;
     }
 
     public oneCircleMessage(){

@@ -76,7 +76,8 @@
                 android:id="@+id/notificationLeapInButton"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
-                style="@style/redButtonDark"
+                android:background="@drawable/leap_button"
+                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:text="Leap in"/>
             <Button
@@ -85,7 +86,8 @@
                 android:layout_height="35dp"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="Leap out"
-                style="@style/redButtonLight"
+                android:background="@drawable/leap_button_hollow"
+
                 android:layout_marginStart="10dp"
                 android:textSize="10sp"
                 android:layout_toRightOf="@id/notificationLeapInButton"/>

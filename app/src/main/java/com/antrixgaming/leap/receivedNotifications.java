@@ -44,7 +44,7 @@ public class receivedNotifications extends BaseActivity {
         FirebaseListAdapter<sendNotification> adapter;
         adapter = new FirebaseListAdapter<sendNotification>(this, sendNotification.class,
                 R.layout.notifications_list, FirebaseDatabase.getInstance().getReference().child("notifications").child(FirebaseAuth.getInstance()
-                .getCurrentUser().getPhoneNumber())) {
+                .getCurrentUser().getPhoneNumber()).orderByChild("index")) {
 
 
             @Override

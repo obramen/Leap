@@ -12,10 +12,12 @@ public class GameList {
 
     private String gameTitle;
     String addedDate;
+    String gameid;
 
 
-    public GameList(String gameTitle) {
+    public GameList(String gameTitle, String gameid) {
         this.gameTitle = gameTitle;
+        this.gameid = gameid;
 
 
         // Initialize to current time
@@ -24,6 +26,14 @@ public class GameList {
 
     public GameList(){
 
+    }
+
+    public String getGameid() {
+        return gameid;
+    }
+
+    public void setGameid(String gameid) {
+        this.gameid = gameid;
     }
 
     public void setAddedDate(String addedDate) {

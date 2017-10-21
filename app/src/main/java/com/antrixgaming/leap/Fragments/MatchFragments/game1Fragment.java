@@ -566,6 +566,10 @@ public class game1Fragment extends Fragment {
 
 
 
+
+
+
+
         if (Objects.equals(circleID, "null")){
 
 
@@ -589,6 +593,38 @@ public class game1Fragment extends Fragment {
                             requestBy.setVisibility(View.GONE);
                             forceReset.setVisibility(View.GONE);
 
+
+
+
+
+
+                            if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+                            if (leapStatus == 0){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+
+
+
+
+
+
+
                         } else {
 
                             g1leaperOneScoreBox.setEnabled(false);
@@ -599,6 +635,37 @@ public class game1Fragment extends Fragment {
                             acceptReset.setVisibility(View.GONE);
                             requestBy.setVisibility(View.GONE);
                             forceReset.setVisibility(View.GONE);
+
+
+
+
+
+                            if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+                            if (leapStatus == 0){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+
+
+
+
+
+
 
 
                         }
@@ -639,6 +706,36 @@ public class game1Fragment extends Fragment {
 
                                 }
 
+
+
+
+                                if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+                                if (leapStatus == 0){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+
+
+
+
+
+
+
                             } else if (Objects.equals(mScoreStatus, "0")) {
 
                                 g1SaveScoreButton.setVisibility(View.GONE);
@@ -648,6 +745,38 @@ public class game1Fragment extends Fragment {
                                 acceptReset.setVisibility(View.GONE);
                                 forceReset.setVisibility(View.GONE);
 
+
+
+                                if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+                                if (leapStatus == 0){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+
+
+
+
+
+
+
+
+
+
                             } else if (Objects.equals(mScoreStatus, "1")){
 
                                 g1SaveScoreButton.setVisibility(View.GONE);
@@ -656,6 +785,33 @@ public class game1Fragment extends Fragment {
                                 disputeScoreButton.setVisibility(View.VISIBLE);
                                 acceptReset.setVisibility(View.GONE);
                                 forceReset.setVisibility(View.GONE);
+
+
+                                if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+                                if (leapStatus == 0){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+
+
+
+
+
 
                             }
 
@@ -675,6 +831,34 @@ public class game1Fragment extends Fragment {
                             acceptReset.setVisibility(View.GONE);
                             requestBy.setVisibility(View.GONE);
                             forceReset.setVisibility(View.GONE);
+
+
+
+
+                            if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+                            if (leapStatus == 0){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+
+
+
+
 
 
                         }
@@ -782,6 +966,35 @@ public class game1Fragment extends Fragment {
                             requestBy.setVisibility(View.GONE);
                             forceReset.setVisibility(View.GONE);
 
+
+
+
+                            if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+                            if (leapStatus == 0){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+
+
+
+
+
+
                         } else {
 
                             g1leaperOneScoreBox.setEnabled(false);
@@ -792,6 +1005,32 @@ public class game1Fragment extends Fragment {
                             acceptReset.setVisibility(View.GONE);
                             requestBy.setVisibility(View.GONE);
                             forceReset.setVisibility(View.GONE);
+
+
+
+                            if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+                            if (leapStatus == 0){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+
+
+
 
 
                         }
@@ -826,11 +1065,67 @@ public class game1Fragment extends Fragment {
                                     forceReset.setVisibility(View.GONE);
                                     requestBy.setVisibility(View.VISIBLE);
                                     requestBy.setText("Dispute request from " + requestBy);
+
+
+
+                                    if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                        editScoreButton.setVisibility(View.GONE);
+                                        disputeScoreButton.setVisibility(View.GONE);
+                                        acceptReset.setVisibility(View.GONE);
+                                        forceReset.setVisibility(View.GONE);
+                                        requestBy.setVisibility(View.GONE);
+
+                                    }
+
+                                    if (leapStatus == 0){
+
+                                        editScoreButton.setVisibility(View.GONE);
+                                        disputeScoreButton.setVisibility(View.GONE);
+                                        acceptReset.setVisibility(View.GONE);
+                                        forceReset.setVisibility(View.GONE);
+                                        requestBy.setVisibility(View.GONE);
+
+                                    }
+
+
+
+
+
+
+
+
                                 } else {
                                     disputeScoreButton.setVisibility(View.GONE);
                                     acceptReset.setVisibility(View.GONE);
                                     forceReset.setVisibility(View.GONE);
                                     requestBy.setVisibility(View.GONE);
+
+
+                                    if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                        editScoreButton.setVisibility(View.GONE);
+                                        disputeScoreButton.setVisibility(View.GONE);
+                                        acceptReset.setVisibility(View.GONE);
+                                        forceReset.setVisibility(View.GONE);
+                                        requestBy.setVisibility(View.GONE);
+
+                                    }
+
+                                    if (leapStatus == 0){
+
+                                        editScoreButton.setVisibility(View.GONE);
+                                        disputeScoreButton.setVisibility(View.GONE);
+                                        acceptReset.setVisibility(View.GONE);
+                                        forceReset.setVisibility(View.GONE);
+                                        requestBy.setVisibility(View.GONE);
+
+                                    }
+
+
+
+
+
 
 
                                 }
@@ -846,6 +1141,33 @@ public class game1Fragment extends Fragment {
                                 requestBy.setVisibility(View.GONE);
 
 
+
+                                if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+                                if (leapStatus == 0){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+
+
+
+
+
+
                             } else if (Objects.equals(mScoreStatus, "1")){
 
                                 g1SaveScoreButton.setVisibility(View.GONE);
@@ -855,6 +1177,31 @@ public class game1Fragment extends Fragment {
                                 acceptReset.setVisibility(View.GONE);
                                 forceReset.setVisibility(View.GONE);
                                 requestBy.setVisibility(View.GONE);
+
+
+                                if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+                                if (leapStatus == 0){
+
+                                    editScoreButton.setVisibility(View.GONE);
+                                    disputeScoreButton.setVisibility(View.GONE);
+                                    acceptReset.setVisibility(View.GONE);
+                                    forceReset.setVisibility(View.GONE);
+                                    requestBy.setVisibility(View.GONE);
+
+                                }
+
+
+
+
 
 
                             }
@@ -875,6 +1222,32 @@ public class game1Fragment extends Fragment {
                             acceptReset.setVisibility(View.GONE);
                             requestBy.setVisibility(View.GONE);
                             forceReset.setVisibility(View.GONE);
+
+
+
+                            if (Objects.equals(leaperTwo, "Open Leap")){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+                            if (leapStatus == 0){
+
+                                editScoreButton.setVisibility(View.GONE);
+                                disputeScoreButton.setVisibility(View.GONE);
+                                acceptReset.setVisibility(View.GONE);
+                                forceReset.setVisibility(View.GONE);
+                                requestBy.setVisibility(View.GONE);
+
+                            }
+
+
+
+                            
 
 
                         }

@@ -415,7 +415,7 @@ public class registerLogin extends AppCompatActivity {
                             // Handle error -> task.getException();
 
                             FirebaseAuth.getInstance().signOut();
-                            Toast.makeText(registerLogin.this, "This doesn't work, re-login", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(registerLogin.this, "This doesn't work, re-login", Toast.LENGTH_LONG).show();
 
 
 

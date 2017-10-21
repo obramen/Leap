@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -51,6 +52,7 @@ import com.antrixgaming.leap.Models.getPhoneContacts;
 import com.antrixgaming.leap.Models.savePhoneContacts;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -80,6 +82,8 @@ public class Leap extends BaseActivity
     String countryCode;
 
     TextView displayedLeaperName;
+
+    FirebaseAuth.AuthStateListener mAuthListener;
 
 
 
@@ -139,8 +143,8 @@ public class Leap extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leap);
 
-        contactPermissionStartService = new ContactPermissionStartService();
-        contactPermissionStartService.ContactPermissionStartService(Leap.this);
+        //contactPermissionStartService = new ContactPermissionStartService();
+        //contactPermissionStartService.ContactPermissionStartService(Leap.this);
 
         leapUtilities = new LeapUtilities();
 
@@ -265,7 +269,7 @@ public class Leap extends BaseActivity
         //Tab layout with tabs
         tabLayout = (TabLayout) findViewById(R.id.mainTabs);
         tabLayout.setupWithViewPager(mViewPager);
-        //setupTabIcons();
+        setupTabIcons();
 
 
 
@@ -448,9 +452,10 @@ public class Leap extends BaseActivity
 
                                         // Save group UID and name in different list
                                         dbRef.child("groupcirclenames").child(key)
-                                                .child("circleName").setValue(text);
-                                        dbRef.child("groupcirclenames").child(key)
                                                 .child("circleID").setValue(key);
+                                        dbRef.child("groupcirclenames").child(key)
+                                                .child("circleName").setValue(text);
+
 
 
 
@@ -930,11 +935,11 @@ public class Leap extends BaseActivity
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
             switch (position) {
-                case 2:
-                    return new userProfileFragment();
                 case 0:
-                    return new leapsFragment();
+                    return new userProfileFragment();
                 case 1:
+                    return new leapsFragment();
+                case 2:
                     return new chatsFragment();
                 case 3:
                     return new circlesFragment();
@@ -946,7 +951,7 @@ public class Leap extends BaseActivity
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 2;
+            return 4;
         }
 
         @Override
@@ -954,11 +959,11 @@ public class Leap extends BaseActivity
             switch (position) {
 
                 case 0:
-                    return getString(R.string.Leaps);
-                case 1:
-                    return getString(R.string.Chats);
-                case 2:
                     return "";
+                case 1:
+                    return "Leaps";
+                case 2:
+                    return "Chats";
                 case 3:
                     return getString(R.string.Circles);
                 default:
@@ -1089,26 +1094,27 @@ public class Leap extends BaseActivity
     }
 
 
+    @Override
+    protected void onResumeFragments() {
 
+         mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // Sign in logic here.
+                }
+                else {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(Leap.this, registerLogin.class);
+                    startActivity(intent);
 
+                }
+            }
+        };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        super.onResumeFragments();
+    }
 }
 
 

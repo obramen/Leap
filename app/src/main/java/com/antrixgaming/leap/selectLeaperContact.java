@@ -88,7 +88,7 @@ public class selectLeaperContact extends BaseActivity {
         selectedNumbers = new ArrayList<>();
 
         contactPermissionStartService = new ContactPermissionStartService();
-
+        contactPermissionStartService.ContactPermissionStartService(selectLeaperContact.this);
 
 
 

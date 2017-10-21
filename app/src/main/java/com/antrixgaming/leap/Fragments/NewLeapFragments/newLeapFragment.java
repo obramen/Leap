@@ -27,6 +27,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -42,6 +43,7 @@ import com.antrixgaming.leap.leapDetailsActivity;
 import com.antrixgaming.leap.newLeap;
 import com.antrixgaming.leap.selectLeaperContact;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.google.firebase.auth.FirebaseAuth;
@@ -102,6 +104,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
     TextView displayedLeaperOneName;
     TextView displayedLeaperTwoName;
+
 
 
 
@@ -324,6 +327,9 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                 }
 
 
+                leapButton.setEnabled(false);
+
+
                 // initialize views
                 final String mGameType = gameType.getText().toString();
                 final String mGameFormat = gameFormat.getSelectedItem().toString();
@@ -514,10 +520,17 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
             @Override
             protected void populateView(View v, final GameList model, int position) {
 
-                //CircleImageView gameListGameImage = (CircleImageView)v.findViewById(R.id.gameListGameImage);
+                ImageView gameListImage = (ImageView)v.findViewById(R.id.gameListImage);
                 gameTitle = (TextView)v.findViewById(R.id.gameListGameTitle);
+                TextView gameListId = (TextView)v.findViewById(R.id.gameListId);
 
                 gameTitle.setText(model.getGameTitle());
+
+                String gameid = model.getGameid();
+                gameListId.setText(gameid);
+
+                StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameid  + ".jpg");
+                leapUtilities.SquareImageFromFirebase(getActivity(), mGameImageStorage, gameListImage);
 
 
 
@@ -537,14 +550,21 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
 
 
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 gameTitle = (TextView)view.findViewById(R.id.gameListGameTitle);
                 gameType.setText(gameTitle.getText().toString());
+                TextView gameListId = (TextView)view.findViewById(R.id.gameListId);
+
 
 
                 newLeapDimmer.setVisibility(View.GONE);
+                StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameListId.getText().toString() + ".jpg");
+                leapUtilities.CircleImageFromFirebase(getActivity(), mGameImageStorage, gameTypeImage);
+
             }
         });
 
@@ -588,10 +608,15 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
                     @Override
                     protected void populateView(View v, GameList model, int position) {
 
-                        CircleImageView gameListGameImage = (CircleImageView)v.findViewById(R.id.gameListGameImage);
+                        ImageView gameListImage = (ImageView)v.findViewById(R.id.gameListImage);
                         gameTitle = (TextView)v.findViewById(R.id.gameListGameTitle);
 
                         gameTitle.setText(model.getGameTitle());
+
+                        String gameid = model.getGameid();
+
+                        StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameid);
+                        leapUtilities.SquareImageFromFirebase(getActivity(), mGameImageStorage, gameListImage);
 
 
 

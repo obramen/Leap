@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,11 +34,47 @@ public class splashScreen extends Activity {
 
 
 
+
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
+
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+
+                    Intent openLeapIntent = new Intent(splashScreen.this, Leap.class);
+                    //code status is used to tell the Leap activity where the extras is coming from.
+                    // the number "0" is used to signal that the intent is coming from splash screen activity.
+                    // Hence it comes with no country code attached to it
+                    openLeapIntent.putExtra("countryCodeStatus", "0");
+                    openLeapIntent.putExtra("countryCode", "0");
+
+                    splashScreen.this.startActivity(openLeapIntent);
+                    splashScreen.this.finish();
+
+
+                } else {
+                    // No user is signed in
+                    Intent openRegisterLoginIntent = new Intent(splashScreen.this, registerLogin.class);
+                    splashScreen.this.startActivity(openRegisterLoginIntent);
+                    FirebaseAuth.getInstance().signOut();
+                    splashScreen.this.finish();
+                }
+
+
+
+
+
+
+
+                /*
+
+
+
 
                 //Check if user is already logged in
                 //if true, go to app
@@ -94,6 +131,8 @@ public class splashScreen extends Activity {
 
 
                 }
+
+                */
 
 
 

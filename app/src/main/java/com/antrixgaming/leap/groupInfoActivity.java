@@ -150,6 +150,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         // Set material sheet item click listeners
         final LinearLayout groupInfoNewLeaper = (LinearLayout)findViewById(R.id.groupInfoNewLeaper);
         LinearLayout groupInfoNewNotice = (LinearLayout)findViewById(R.id.groupInfoNewNotice);
+        LinearLayout renameGroup = (LinearLayout)findViewById(R.id.renameGroup);
         groupProfileImage = (ImageView) findViewById(R.id.groupProfileImage);
         imageutils = new ImageUtils(this);
         progressDialog = new ProgressDialog(this);
@@ -172,7 +173,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
         Bundle bundle = getIntent().getExtras();
-        final String groupName = bundle.getString("groupName");
+        //final String groupName = bundle.getString("groupName");
         final String circleID = bundle.getString("circleID");
 
 
@@ -497,6 +498,50 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
+        renameGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                new LovelyTextInputDialog(groupInfoActivity.this, R.style.MyDialogTheme)
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setTitle("Rename Circle")
+                        .setMessage("Enter new name")
+                        .setIcon(R.drawable.ic_chat)
+                        .setInputFilter("Enter circle name", new LovelyTextInputDialog.TextFilter() {
+                            @Override
+                            public boolean check(String text) {
+                                //return text.matches("\\w{3,23}\\b");     //("\\w+");
+                                return text.matches("^\\w+( +\\w+)*$");     //("\\w+");
+                                //return text.matches("\\w+");
+                            }
+
+                        })
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                return;
+                            }
+                        })
+                        .setConfirmButton("Rename", new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
+
+                                dbRef.child("groupcirclenames").child(circleID).child("circleName").setValue(text);
+                                dbRef.child("groupcircles").child(circleID).child("groupName").setValue(text);
+
+                                Toast.makeText(groupInfoActivity.this, "Circle renamed", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        })
+                        .show();
+
+
+            }
+        });
+
 
 
 
@@ -577,6 +622,10 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                 circleLeaperListLeaperName.setText(model.getPhoneNumber());
 
                 final String leaperPhoneNumber = model.getPhoneNumber();
+
+                if (Objects.equals(myPhoneNumber, leaperPhoneNumber)){
+                    circleLeaperListButton.setVisibility(View.GONE);
+                }
 
 
                 mLeaperStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child(leaperPhoneNumber);

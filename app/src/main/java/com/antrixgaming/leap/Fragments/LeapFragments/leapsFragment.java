@@ -130,7 +130,7 @@ public class leapsFragment extends Fragment {
             protected void populateView(final View v, final UserLeap model, int position) {
                 // Get references to the views of message.xml
                 final TextView leapID = (TextView)v.findViewById(R.id.leapID);
-                TextView gameType = (TextView)v.findViewById(R.id.gameType);
+                final TextView gameType = (TextView)v.findViewById(R.id.gameType);
                 TextView gameFormat = (TextView)v.findViewById(R.id.gameFormat);
                 final TextView countdownTimer = (TextView)v.findViewById(R.id.countdownTimer);
                 TextView leaperOne = (TextView)v.findViewById(R.id.leaperOne);
@@ -182,6 +182,14 @@ public class leapsFragment extends Fragment {
 
 
                 }
+
+
+                String gameId = model.getgameType().replaceAll("\\s+","").toLowerCase();
+                CircleImageView gameImage = (CircleImageView)v.findViewById(R.id.gameImage);
+                StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameId + ".jpg");
+                leapUtilities.CircleImageFromFirebase(getActivity(), mGameImageStorage, gameImage);
+
+
 
 
                 /// SPLIT LEAP TIME OF LONG FORMAT INTO DAY AND TIME

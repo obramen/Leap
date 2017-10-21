@@ -52,7 +52,7 @@ public class ContactService extends IntentService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        Toast.makeText(this, "Contacts Sync Service Starting", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Contacts Sync Service Starting", Toast.LENGTH_LONG).show();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -60,7 +60,7 @@ public class ContactService extends IntentService {
     public void onDestroy() {
 
         super.onDestroy();
-        Toast.makeText(this, "Contacts Sync Service Stopped", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Contacts Sync Service Stopped", Toast.LENGTH_LONG).show();
 
     }
 
@@ -71,7 +71,7 @@ public class ContactService extends IntentService {
 
         synchronized (this) {
 
-            Toast.makeText(this, "Service Toasted", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Service Toasted", Toast.LENGTH_SHORT).show();
             //sortCotact();
             retrieveContact();
 

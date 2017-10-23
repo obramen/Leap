@@ -1,6 +1,9 @@
 package com.antrixgaming.leap;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,6 +20,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -33,6 +37,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +62,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -90,10 +96,18 @@ public class Leap extends BaseActivity
 
 
 
+
     // NOTIFICATIONS
     long count = 0;
     MenuItem menuItem;
     int loadFlag = 0;
+
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private int notification_id;
+    private RemoteViews remoteViews;
+    private Context context;
+
 
 
 
@@ -147,6 +161,8 @@ public class Leap extends BaseActivity
         //contactPermissionStartService.ContactPermissionStartService(Leap.this);
 
         leapUtilities = new LeapUtilities();
+
+        context = this;
 
         userPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
@@ -870,6 +886,10 @@ public class Leap extends BaseActivity
 
 
 
+        ////// NOTIFICATIONS
+
+
+
 
         FirebaseDatabase.getInstance().getReference().child("notifications").child(myPhoneNumber).orderByChild("notificationStatus")
                 .equalTo("0").addValueEventListener(new ValueEventListener() {
@@ -895,8 +915,6 @@ public class Leap extends BaseActivity
 
             }
         });
-
-
 
 
 

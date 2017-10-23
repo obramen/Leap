@@ -275,41 +275,98 @@ public class selectLeaperContact extends BaseActivity {
                 // 1 - type of notification
 
 
+                for(int x = 0; x < selectedNumbers.size(); x++ ){
+
+
+                    String key = dbRef.child("notifications").child(selectedNumbers.get(x))
+                            .push().getKey();
+                    dbRef.child("notifications").child(selectedNumbers.get(x))
+                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                            "1", "0"));
+
+                    dbRef.child("sentnotifications").child(myPhoneNumber)
+                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                            "1", "0"));
+
+
+                    Toast.makeText(selectLeaperContact.this, "Invitation sent", Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+
+
+/*
+
                 circleMembersRef = dbRef.child("groupcirclemembers").child(finalCircleID).child("currentmembers");
 
                 circleMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
+                        if (dataSnapshot.getValue() == null){
+
+                            for(int x = 0; x < selectedNumbers.size(); x++ ){
 
 
 
 
 
-                        for(int x = 0; x < selectedNumbers.size(); x++ ){
+                                    String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
+                                            .push().getKey();
+                                    FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
+                                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                                            "1", "0"));
 
-                            if (dataSnapshot.child(selectedNumbers.get(x)).exists()){
+                                    FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(myPhoneNumber)
+                                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                                            "1", "0"));
 
 
-                            } else {
+                                    Toast.makeText(selectLeaperContact.this, "Invitation sent", Toast.LENGTH_SHORT).show();
 
 
-                                String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
-                                        .push().getKey();
-                                FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
-                                        .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
-                                        "1", "0"));
+                            }
 
-                                FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(myPhoneNumber)
-                                        .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
-                                        "1", "0"));
+                        } {
+
+                            for(int x = 0; x < selectedNumbers.size(); x++ ){
+
+                                if (dataSnapshot.child(selectedNumbers.get(x)).exists()){
+
+
+                                } else {
+
+
+                                    String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
+                                            .push().getKey();
+                                    FirebaseDatabase.getInstance().getReference().child("notifications").child(selectedNumbers.get(x))
+                                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                                            "1", "0"));
+
+                                    FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(myPhoneNumber)
+                                            .child(key).setValue(new sendNotification(key, "CIRCLE INVITATION", finalCircleID, myPhoneNumber, selectedNumbers.get(x),
+                                            "1", "0"));
+
+
+
+                                }
 
                                 Toast.makeText(selectLeaperContact.this, "Invitation sent", Toast.LENGTH_SHORT).show();
 
 
                             }
 
+
                         }
+
+
+
+
+
+
+
 
 
 
@@ -325,6 +382,8 @@ public class selectLeaperContact extends BaseActivity {
                     }
                 });
 
+                */
+
 
                 finish();
 
@@ -336,12 +395,6 @@ public class selectLeaperContact extends BaseActivity {
 
 
 
-        listView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return false;
-            }
-        });
     }
 
 

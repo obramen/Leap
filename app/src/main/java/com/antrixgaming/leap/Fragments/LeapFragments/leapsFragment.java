@@ -123,6 +123,8 @@ public class leapsFragment extends Fragment {
         adapter = new FirebaseListAdapter<UserLeap>(getActivity(), UserLeap.class,
                 R.layout.leaps_list, dataSource.orderByChild("index")) {
 
+
+
             private int layout;
 
 

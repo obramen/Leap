@@ -3,8 +3,11 @@ package com.antrixgaming.leap.Fragments.NewLeapFragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -30,11 +34,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.Leap;
+import com.antrixgaming.leap.LeapClasses.LeapNotify;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.Models.GameList;
 import com.antrixgaming.leap.Models.UserLeap;
@@ -62,6 +69,8 @@ import java.util.Date;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 
 public class newLeapFragment extends Fragment implements newLeap.KeyEventListener {
@@ -104,6 +113,8 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
     TextView displayedLeaperOneName;
     TextView displayedLeaperTwoName;
+
+
 
 
 
@@ -152,6 +163,7 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
         leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperOneStorageRef, leaperOneImage);
         //leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperTwoStorageRef, leaperTwoImage);
+
 
 
 
@@ -454,16 +466,6 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
 
 
-
-
-
-
-
-
-
-
-
-
                         }
 
 
@@ -481,9 +483,10 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
 
 
-
             }
         });
+
+
 
         leaperTwo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -531,6 +534,10 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
                 StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameid  + ".jpg");
                 leapUtilities.SquareImageFromFirebase(getActivity(), mGameImageStorage, gameListImage);
+
+
+
+
 
 
 
@@ -905,6 +912,8 @@ public class newLeapFragment extends Fragment implements newLeap.KeyEventListene
 
 
         }
+
+
 
 
 

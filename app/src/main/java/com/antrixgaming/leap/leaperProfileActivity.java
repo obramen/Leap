@@ -435,7 +435,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         } else if (editFlag == 1){
 
             profileImage.setEnabled(true);
-            changeBackgroundImage.setVisibility(View.VISIBLE);
+            //changeBackgroundImage.setVisibility(View.VISIBLE);
             editProfile.setVisibility(View.VISIBLE);
             leapStatusSwitch.setVisibility(View.VISIBLE);
             leapLayout.setVisibility(View.VISIBLE);

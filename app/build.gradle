@@ -7,8 +7,8 @@ android {
         applicationId "com.antrixgaming.leap"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.2"
+        versionCode 9
+        versionName "1.6.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -32,6 +32,8 @@ dependencies {
     compile('com.mikepenz:materialdrawer:5.9.5@aar') {
         transitive = true
     }
+
+
 
 
 
@@ -63,8 +65,8 @@ dependencies {
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     compile 'com.github.florent37:singledateandtimepicker:1.2.2'
     compile 'com.github.iwgang:countdownview:2.1.6'
+    compile 'com.github.deluakin:hubtel-payment:v1.3'
     testCompile 'junit:junit:4.12'
-
 }
 
 

@@ -17,7 +17,6 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_leap"
@@ -98,11 +97,23 @@
         <activity
             android:name=".eventDetails"
             android:label="Event Details"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".about_leap"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".new_event"></activity>
+        <activity android:name=".new_event" />
+        <activity
+            android:name=".Account"
+            android:label="@string/title_activity_account"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver android:name=".LeapServices.Open_Notification">
+            <intent-filter>
+                <action android:name="Open_Notification"/>
+
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

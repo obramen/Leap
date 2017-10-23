@@ -23,10 +23,11 @@
                 android:id="@+id/topLayout"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:background="@color/white">
+                android:background="@color/colorPrimary">
 
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/profileImageBackground"
                     android:layout_width="match_parent"
                     android:layout_height="205dp" />
@@ -40,7 +41,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/ic_add_attachment"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:civ_border_color="@color/white"
                     app:civ_border_width="1dp"
                     app:civ_fill_color="@color/white" />
@@ -54,30 +55,19 @@
                     android:layout_marginTop="1dp"
                     android:background="@color/colorPrimary">
 
-                    <TextView
-                        android:id="@+id/profileLeaperName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="90dp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="Profile Name"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
 
-                        android:textStyle="bold" />
 
                     <RelativeLayout
+
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/profileLeaperName"
+                        android:layout_height="50dp"
+                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="false">
 
                         <ImageView
                             android:id="@+id/leaperProfileNewMessage"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
                             android:layout_alignParentStart="true"
                             android:layout_marginStart="10dp"
                             android:padding="5dp"
@@ -85,8 +75,8 @@
 
                         <ImageView
                             android:id="@+id/leaperProfileNewLeap"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
                             android:layout_alignParentEnd="true"
@@ -99,14 +89,28 @@
 
                 </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/profileLeaperName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Profile Name"
+                    android:textColor="@color/white"
+                    android:layout_below="@+id/profileImage"
+                    android:layout_marginTop="18dp"
+                    android:textSize="20sp"
+
+                    android:textStyle="bold" />
+
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profileImage"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_alignParentBottom="true"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="78dp"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/games_fifa_17"
                     app:civ_border_color="#EEE"
                     app:civ_border_width="2dp" />
@@ -553,13 +557,12 @@
 
                                     <Button
                                         android:id="@+id/saveProfileButton"
-                                        style="@style/redButtonDark"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/leap_button"
+                                        android:layout_width="80dp"
+                                        android:layout_height="40dp"
                                         android:layout_alignParentEnd="true"
                                         android:layout_alignParentTop="true"
                                         android:layout_margin="20dp"
-
                                         android:layout_marginEnd="19dp"
                                         android:text="save"
                                         android:textColor="@color/white"
@@ -568,8 +571,8 @@
                                     <Button
                                         android:id="@+id/cancelProfileButton"
                                         style="@style/redButtonDark"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                        android:layout_width="80dp"
+                                        android:layout_height="40dp"
                                         android:layout_alignBaseline="@id/saveProfileButton"
                                         android:layout_gravity="end"
                                         android:layout_toStartOf="@+id/saveProfileButton"

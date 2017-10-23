@@ -95,6 +95,8 @@ public class circleLeaperListFragment extends Fragment {
                 final TextView displayedLeaperName = (TextView)v.findViewById(R.id.displayedLeaperName);
 
 
+
+
                 // Populate the data into the template view using the data object
                 //circleLeaperListLeaperName.setText(model.getcontactName());
                 circleLeaperListLeaperName.setText(model.getPhoneNumber());

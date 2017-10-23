@@ -120,8 +120,22 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="5dp"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/displayedLeaperOneName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/circleOpenListImage" />
 
 
         </RelativeLayout>

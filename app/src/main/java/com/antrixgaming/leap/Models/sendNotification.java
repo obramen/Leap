@@ -12,7 +12,7 @@ public class sendNotification {
     private String inviteMessage;
     public String inviteType;
     public String notificationStatus;
-    private long inviteTime;
+    long inviteTime;
     long index;
 
 
@@ -34,15 +34,13 @@ public class sendNotification {
 
     public sendNotification(){
 
+
+
     }
 
-    public long getInviteTime() {
-        return inviteTime;
-    }
 
-    public void setInviteTime(long inviteTime) {
-        this.inviteTime = inviteTime;
-    }
+
+
 
     public String getNotificationID() {
         return notificationID;
@@ -82,5 +80,11 @@ public class sendNotification {
     public String getnotificationStatus(){return notificationStatus;}
     public void setnotificationStatus(String notificationStatus){this.notificationStatus = notificationStatus;}
 
+    public long getIndex() {
+        return index;
+    }
 
+    public void setIndex(long index) {
+        this.index = index;
+    }
 }

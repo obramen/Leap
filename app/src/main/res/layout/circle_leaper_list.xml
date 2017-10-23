@@ -86,7 +86,7 @@
                     android:layout_width="50dp"
                     android:layout_height="20dp"
                     android:background="@drawable/white_button"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:text="LEAP"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"

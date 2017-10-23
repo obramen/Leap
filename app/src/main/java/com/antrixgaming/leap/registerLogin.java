@@ -119,8 +119,6 @@ public class registerLogin extends AppCompatActivity {
 
 
 
-
-
         //assign Leap button
 
 
@@ -201,6 +199,7 @@ public class registerLogin extends AppCompatActivity {
                 //btnSignIn.loadingSuccessful();
 
 
+                btnSignIn.reset();
 
                 Toast.makeText(registerLogin.this, "Sent: Check for verification code", Toast.LENGTH_LONG).show();
 
@@ -274,7 +273,6 @@ public class registerLogin extends AppCompatActivity {
                     //mVerificationField.setError("Cannot be empty.");
                     phoneNumber.setHint("Phone Number");
                     phoneNumber.setHintTextColor(getResources().getColor(R.color.cherry));
-                    btnSignIn.cancelLoading();
                     btnSignIn.cancelLoading();
 
 

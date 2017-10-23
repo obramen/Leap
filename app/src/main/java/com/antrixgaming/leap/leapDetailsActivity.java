@@ -565,6 +565,8 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
+
+
                 scoreDbRef.orderByChild("winner").equalTo(model.leaperOne).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -692,6 +694,9 @@ public class leapDetailsActivity extends BaseActivity {
 
                         leaperOneUID = myUID;
 
+
+
+
                     }
 
 
@@ -722,6 +727,7 @@ public class leapDetailsActivity extends BaseActivity {
                 /// IF THE PERSON TO ACCEPT IS THE ONE OPENING THE LEAP
                 else{
 
+                    fab.setVisibility(v.VISIBLE);
                     leapDetailsLeapIn.setVisibility(v.VISIBLE);
                     leapDetailsLeapOut.setVisibility(v.VISIBLE);
                     leapDetailsPostpone.setVisibility(v.VISIBLE);
@@ -767,6 +773,14 @@ public class leapDetailsActivity extends BaseActivity {
                 else if (!Objects.equals(AdminFlag, FalseAdmin)) {
                     //leapDetailsPostpone.setVisibility(v.GONE);
                     //leapDetailsCancel.setVisibility(v.GONE);
+                }
+
+                if (Objects.equals(model.leaperTwo, "Open Leap") && !Objects.equals(myPhoneNumber, model.leaperOne)){
+                    fab.setVisibility(v.VISIBLE);
+                    leapDetailsLeapIn.setVisibility(v.VISIBLE);
+                    leapDetailsLeapOut.setVisibility(v.VISIBLE);
+                    leapDetailsPostpone.setVisibility(v.VISIBLE);
+                    leapDetailsCancel.setVisibility(v.VISIBLE);
                 }
 
 

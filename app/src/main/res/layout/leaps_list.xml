@@ -180,7 +180,7 @@
                                 android:layout_centerVertical="true"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Leaper One"
+                                android:text=""
                                 android:textStyle="bold" />
 
                             <TextView
@@ -191,7 +191,7 @@
                                 android:ellipsize="end"
                                 android:maxLines="1"
                                 android:visibility="invisible"
-                                android:text="Leaper One"
+                                android:text=""
                                 android:textStyle="bold" />
 
                         </RelativeLayout>
@@ -257,7 +257,7 @@
                                 android:layout_centerVertical="true"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Leaper Two"
+                                android:text=""
                                 android:textStyle="bold" />
 
                             <TextView
@@ -267,7 +267,7 @@
                                 android:layout_centerVertical="true"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Leaper Two"
+                                android:text=""
                                 android:visibility="invisible"
                                 android:textStyle="bold" />
 

@@ -229,7 +229,7 @@ public class activity_one_chat extends BaseActivity {
         oneCircleSecondUserUidReference.getParent().child("lastseenwith" + oneCircleFirstUserUid).setValue(lastSeenTimeWithMe);
 
         /// add seen with time to ensure data change for value event listener
-        oneCircleSecondUserUidReference.addValueEventListener(new ValueEventListener() {
+        oneCircleSecondUserUidReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

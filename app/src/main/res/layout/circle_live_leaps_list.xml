@@ -117,6 +117,21 @@
                             android:text="name"
                             android:layout_marginStart="10dp"
                             android:textColor="@color/white"
+                            android:visibility="invisible"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/displayedLeaperOneName"
+                            android:layout_toEndOf="@id/circleLiveListImage1"
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text=""
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/white"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                         <TextView
@@ -162,6 +177,20 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="name"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/white"
+                            android:visibility="invisible"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/displayedLeaperTwoName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/circleLiveListImage2"
+                            android:layout_centerVertical="true"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text=""
                             android:layout_marginStart="10dp"
                             android:textColor="@color/white"
                             android:textSize="14sp"

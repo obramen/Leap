@@ -269,14 +269,14 @@ public class leapsFragment extends Fragment {
                             countdownTimer.setVisibility(View.GONE);
                             countdownTimerA.setVisibility(View.VISIBLE);
 
-                        }
+                        } else{}
 
                         if (NowTime > model.getleapDay() && (NowTime < (model.getleapDay() + TimeUnit.HOURS.toMillis(6)))){
 
                             countdownTimer.setVisibility(View.VISIBLE);
                             countdownTimerA.setVisibility(View.GONE);
 
-                        }
+                        } else{}
 
                         if (NowTime > model.getleapDay() && (NowTime >= (model.getleapDay() + TimeUnit.HOURS.toMillis(6)))){
 
@@ -285,7 +285,7 @@ public class leapsFragment extends Fragment {
                             leapsDetails.setBackgroundColor(getResources().getColor(R.color.black));
 
 
-                        }
+                        }else {}
 
 
 
@@ -449,7 +449,6 @@ public class leapsFragment extends Fragment {
 
                                 if (dataSnapshot.child("name").getValue() == null || dataSnapshot.child("name")
                                         .getValue() == "") {///// IF THEY ARE NOT A CONTACT OR THE VALUE IS EMPTY
-
 
 
                                     ///// CHECK THE USERS PROFILES TO SEE IF THEY HAVE AN ENTRY THERE

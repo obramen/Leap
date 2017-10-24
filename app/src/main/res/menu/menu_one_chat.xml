@@ -15,6 +15,12 @@
     android:title="New leap"
     app:showAsAction="never" />
 
+    <item
+    android:id="@+id/action_one_chat_profile"
+    android:orderInCategory="100"
+    android:title="Profile"
+    app:showAsAction="never" />
+
 
 
 

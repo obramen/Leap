@@ -727,11 +727,24 @@ public class leapDetailsActivity extends BaseActivity {
                 /// IF THE PERSON TO ACCEPT IS THE ONE OPENING THE LEAP
                 else{
 
-                    fab.setVisibility(v.VISIBLE);
-                    leapDetailsLeapIn.setVisibility(v.VISIBLE);
-                    leapDetailsLeapOut.setVisibility(v.VISIBLE);
-                    leapDetailsPostpone.setVisibility(v.VISIBLE);
-                    leapDetailsCancel.setVisibility(v.VISIBLE);
+                    if (leapStatus == 0){
+                        leapDetailsLeapInLayout.setVisibility(v.VISIBLE);
+                        fab.setVisibility(v.VISIBLE);
+                        leapDetailsLeapIn.setVisibility(v.VISIBLE);
+
+                    } else if (leapStatus == 1){
+                        fab.setVisibility(v.VISIBLE);
+                        leapDetailsLeapInLayout.setVisibility(v.GONE);
+                        leapDetailsLeapIn.setVisibility(v.VISIBLE);
+                        leapDetailsLeapOut.setVisibility(v.VISIBLE);
+                        leapDetailsPostpone.setVisibility(v.VISIBLE);
+                        leapDetailsCancel.setVisibility(v.VISIBLE);
+
+                    } else {
+                        fab.setVisibility(v.GONE);
+                    }
+
+
 
 
 

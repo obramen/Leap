@@ -101,6 +101,9 @@ public class selectLeaperContact extends BaseActivity {
 
         FirebaseListAdapter<savePhoneContacts> adapter;
 
+
+
+
         adapter = new FirebaseListAdapter<savePhoneContacts>(this, savePhoneContacts.class,
                 R.layout.phone_contact_list, leapContactRef.orderByChild("name")) {  //dbRef.orderByChild("name")
             @Override
@@ -117,8 +120,13 @@ public class selectLeaperContact extends BaseActivity {
 
 
 
-                mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getcontactPhoneNumber()).child(model.getcontactPhoneNumber());
-                leapUtilities.CircleImageFromFirebase(selectLeaperContact.this, mLeaperStorageRef, contact_list_image);
+                if (model.getcontactPhoneNumber() == null){
+
+                } else {
+                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getcontactPhoneNumber()).child(model.getcontactPhoneNumber());
+                    leapUtilities.CircleImageFromFirebase(selectLeaperContact.this, mLeaperStorageRef, contact_list_image);
+                }
+
 
 
 

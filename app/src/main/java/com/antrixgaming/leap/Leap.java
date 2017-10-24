@@ -160,6 +160,11 @@ public class Leap extends BaseActivity
         //contactPermissionStartService = new ContactPermissionStartService();
         //contactPermissionStartService.ContactPermissionStartService(Leap.this);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().getReference().keepSynced(true);
+
+
+
         leapUtilities = new LeapUtilities();
 
         context = this;
@@ -168,18 +173,6 @@ public class Leap extends BaseActivity
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        //contactPermissionStartService = new ContactPermissionStartService();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && this != null) {
-            //getContactRetrievalPermission();
-            //contactPermissionStartService.ContactPermissionStartService(this);
-        } else {
-            //contactPermissionStartService.ContactPermissionStartService(this);
-
-            //Intent startContactService = new Intent(this, ContactService.class);
-            //startService(startContactService);
-        }
 
 
         // [START initialize_auth]

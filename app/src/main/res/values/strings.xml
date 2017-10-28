@@ -67,5 +67,6 @@
     <string name="title_activity_viewing">Activity Viewing</string>
     <string name="title_activity_about_leap">about_leap</string>
     <string name="title_activity_account">Account</string>
+    <string name="title_activity_tutorial">Leap - How To</string>
 
 </resources>

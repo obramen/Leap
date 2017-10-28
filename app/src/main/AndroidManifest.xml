@@ -105,15 +105,18 @@
         <activity
             android:name=".Account"
             android:label="@string/title_activity_account"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".LeapServices.Open_Notification">
             <intent-filter>
-                <action android:name="Open_Notification"/>
-
+                <action android:name="Open_Notification" />
             </intent-filter>
-
         </receiver>
+
+        <activity
+            android:name=".tutorialActivity"
+            android:label="@string/title_activity_tutorial"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

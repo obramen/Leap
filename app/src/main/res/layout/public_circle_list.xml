@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="130dp"
+        android:layout_height="190dp">
+
+
+        <ImageView
+            android:id="@+id/gameImage"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/circleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Circle Name"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_alignParentTop
+                    ="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:textSize="13sp"
+                />
+
+            <TextView
+                android:id="@+id/defaultGame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="Default Game"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toLeftOf="@+id/leapInText"
+                android:layout_alignParentStart="true"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/leapInText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leap in"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_alignParentEnd="true"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

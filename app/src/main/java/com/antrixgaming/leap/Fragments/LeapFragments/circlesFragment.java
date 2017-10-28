@@ -98,8 +98,7 @@ public class circlesFragment extends Fragment {
 
         FirebaseListAdapter<createGroupCircle> adapter;
         adapter = new FirebaseListAdapter<createGroupCircle>(getActivity(), createGroupCircle.class,
-                R.layout.circle_list, FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                R.layout.circle_list, dbRef.child("usergroupcirclelist").child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
             @Override
             protected void populateView(final View v, final createGroupCircle model, int position) {

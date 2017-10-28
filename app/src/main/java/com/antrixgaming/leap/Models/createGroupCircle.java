@@ -11,13 +11,26 @@ public class createGroupCircle {
     private String createdBy;
     private String groupName;
     private String groupid;
+    private String publicGroup;
     private long createdOn;
+    private String defaultGame;
 
 
     public createGroupCircle(String createdBy, String groupName, String groupid) {
         this.createdBy = FirebaseAuth.getInstance().getCurrentUser().getUid();
         this.groupName = groupName;
         this.groupid = groupid;
+
+        // Initialize to current time
+        createdOn = new Date().getTime();
+    }
+
+    public createGroupCircle(String createdBy, String groupName, String groupid, String publicGroup, String defaultGame) {
+        this.createdBy = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.groupName = groupName;
+        this.groupid = groupid;
+        this.publicGroup = publicGroup;
+        this.defaultGame = defaultGame;
 
         // Initialize to current time
         createdOn = new Date().getTime();
@@ -59,6 +72,19 @@ public class createGroupCircle {
         this.createdOn = createdOn;
     }
 
+    public String getPublicGroup() {
+        return publicGroup;
+    }
 
+    public void setPublicGroup(String publicGroup) {
+        this.publicGroup = publicGroup;
+    }
 
+    public String getDefaultGame() {
+        return defaultGame;
+    }
+
+    public void setDefaultGame(String defaultGame) {
+        this.defaultGame = defaultGame;
+    }
 }

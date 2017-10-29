@@ -38,7 +38,7 @@
             android:src="@drawable/ic_emoji"
             android:gravity="bottom|start"/>
 
-        <EditText
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Type a message"
@@ -46,7 +46,8 @@
             android:id="@+id/input"
             android:background="@null"
             android:layout_margin="6dp"
-            android:layout_toRightOf="@id/emojiChat" />
+            android:layout_toRightOf="@id/emojiChat"
+            />
 
 
     </RelativeLayout>

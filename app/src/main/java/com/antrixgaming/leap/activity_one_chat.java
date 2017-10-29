@@ -15,7 +15,9 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,6 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.Objects;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+
 public class activity_one_chat extends BaseActivity {
 
 
@@ -44,6 +49,8 @@ public class activity_one_chat extends BaseActivity {
     private DatabaseReference oneCircleSecondUserUidReference;
     private String numberA;
     private String numberB;
+
+    ImageView emojiChat;
 
 
     @Override
@@ -65,6 +72,7 @@ public class activity_one_chat extends BaseActivity {
         // One Circle second user details ***phone number and UID***
         Bundle bundle = getIntent().getExtras();
         oneCircleSecondUserPhoneNumber = bundle.getString("oneCircleSecondUser"); //phone number
+
 
 
 
@@ -276,7 +284,9 @@ public class activity_one_chat extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                EditText input = (EditText) findViewById(R.id.input);
+
+                final EmojiconEditText input = (EmojiconEditText) findViewById(R.id.input);
+
 
                 if (TextUtils.isEmpty(input.getText().toString().trim())) {
                     return;
@@ -624,6 +634,9 @@ public class activity_one_chat extends BaseActivity {
         });
 
 
+        /////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////
+        /////////////////////////// READ DATA END ///////////////////////
 
 
 
@@ -631,6 +644,18 @@ public class activity_one_chat extends BaseActivity {
 
 
 
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0);
+        final EmojiconEditText input = (EmojiconEditText) findViewById(R.id.input);
+        final EmojIconActions emojIcon=new EmojIconActions(this,viewGroup,input,emojiChat);
+
+        emojiChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                emojIcon.ShowEmojIcon();
+            }
+        });
 
 
     }
@@ -640,9 +665,7 @@ public class activity_one_chat extends BaseActivity {
 
 
 
-            /////////////////////////////////////////////////////////////////
-            /////////////////////////////////////////////////////////////////
-            /////////////////////////// READ DATA END ///////////////////////
+
 
 
         @Override

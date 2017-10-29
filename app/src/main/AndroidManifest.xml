@@ -116,7 +116,11 @@
         <activity
             android:name=".tutorialActivity"
             android:label="@string/title_activity_tutorial"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".settings_circle"
+            android:label="@string/title_activity_settings_circle" />
+        <activity android:name=".activity_circle_settings"></activity>
     </application>
 
 </manifest>

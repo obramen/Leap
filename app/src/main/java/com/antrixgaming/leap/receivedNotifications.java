@@ -1,5 +1,6 @@
 package com.antrixgaming.leap;
 
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.antrixgaming.leap.LeapClasses.ConfirmDialog;
 import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.Models.sendNotification;
 import com.antrixgaming.leap.Models.circleMessage;
@@ -28,6 +30,9 @@ public class receivedNotifications extends BaseActivity {
     String myPhoneNumber;
     String myUID;
 
+    ConfirmDialog confirmDialog;
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,9 @@ public class receivedNotifications extends BaseActivity {
 
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        confirmDialog = new ConfirmDialog();
+        context = receivedNotifications.this;
 
 
 
@@ -132,53 +140,66 @@ public class receivedNotifications extends BaseActivity {
                     @Override
                     public void onClick(View v) {
 
-                        // using the new key update members list under same table with the creator of the group setting status to true
-                        /// true = admin
-                        /// false = not admin
-                        FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("currentmembers").child(myPhoneNumber)
-                                .setValue(new CircleMember(myPhoneNumber,"false","1"));
-                        // update the usergroupcirclelist (a list containing all groups a leaper is part of
-                        FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(circleID).child("leapStatus").setValue("1");
+
+                        confirmDialog.NewConfirmDialog(context, "Leap Into Circle", "Confirm leap action", "Leap In", "Cancel");
+                        confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                confirmDialog.dialog.dismiss();
 
 
-                        // This list is used to load the circles fragment
-                        // First add the group id
-                        FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(circleID).child("groupid").setValue(circleID);
-                        // Next add the group name
-                        FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(circleID).child("groupName").setValue(groupName);
-                        // Lastly add the admin status
-                        FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(circleID).child("admin").setValue("false");
+                                // using the new key update members list under same table with the creator of the group setting status to true
+                                /// true = admin
+                                /// false = not admin
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("currentmembers").child(myPhoneNumber)
+                                        .setValue(new CircleMember(myPhoneNumber,"false","1"));
+                                // update the usergroupcirclelist (a list containing all groups a leaper is part of
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclesettings").child(myPhoneNumber).child(circleID).child("leapStatus").setValue("1");
 
 
-                        //push new messages using Circle ID stored
-                        /// 1 - shows it's a notification message // 0 - normal message
-                        String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                                .push().getKey();
-                        FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                                .child(key).setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
-                                circleID, "", "", "1", "false"));
-                        FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
-                                .child("lastgroupmessage").setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
-                                circleID, "", "", "1", "true"));
-                        //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                                // This list is used to load the circles fragment
+                                // First add the group id
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(circleID).child("groupid").setValue(circleID);
+                                // Next add the group name
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(circleID).child("groupName").setValue(groupName);
+                                // Lastly add the admin status
+                                FirebaseDatabase.getInstance().getReference().child("usergroupcirclelist")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(circleID).child("admin").setValue("false");
+
+
+                                //push new messages using Circle ID stored
+                                /// 1 - shows it's a notification message // 0 - normal message
+                                String key = FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                                        .push().getKey();
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                                        .child(key).setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
+                                        circleID, "", "", "1", "false"));
+                                FirebaseDatabase.getInstance().getReference().child("groupcircles").child(circleID)
+                                        .child("lastgroupmessage").setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle",
+                                        circleID, "", "", "1", "true"));
+                                //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
                                 //.child(circleID).child("members").setValue(memberList);
-                        FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
-                                .setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle", circleID,
-                                        "", "", "1", "true"));
+                                FirebaseDatabase.getInstance().getReference().child("groupcirclelastmessages").child(circleID)
+                                        .setValue(new circleMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + " joined circle", circleID,
+                                                "", "", "1", "true"));
 
 
 
-                        FirebaseDatabase.getInstance().getReference().child("notifications").child(FirebaseAuth.getInstance()
-                                .getCurrentUser().getPhoneNumber()).child(model.getNotificationID()).child("notificationStatus").setValue("1");
-                        FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(model.getinviteBy()).child(model.getNotificationID())
-                                .child("notificationStatus").setValue("1");
-                        Snackbar.make(v, "Invitation Accepted", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                                FirebaseDatabase.getInstance().getReference().child("notifications").child(FirebaseAuth.getInstance()
+                                        .getCurrentUser().getPhoneNumber()).child(model.getNotificationID()).child("notificationStatus").setValue("1");
+                                FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(model.getinviteBy()).child(model.getNotificationID())
+                                        .child("notificationStatus").setValue("1");
+                                Snackbar.make(v, "Invitation Accepted", Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
 
 
+
+
+                            }
+                        });
 
 
                     }
@@ -189,12 +210,23 @@ public class receivedNotifications extends BaseActivity {
                 notificationLeapOutButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FirebaseDatabase.getInstance().getReference().child("notifications").child(FirebaseAuth.getInstance()
-                                .getCurrentUser().getPhoneNumber()).child(model.getNotificationID()).child("notificationStatus").setValue("2");
-                        FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(model.getinviteBy()).child(model.getNotificationID())
-                                .child("notificationStatus").setValue("2");
-                        Snackbar.make(v, "Invitation Declined", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+
+                        confirmDialog.NewConfirmDialog(context, "Cancel Invite", "Confirm invite refusal", "Leap Out", "Cancel");
+                        confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                confirmDialog.dialog.dismiss();
+
+                                FirebaseDatabase.getInstance().getReference().child("notifications").child(FirebaseAuth.getInstance()
+                                        .getCurrentUser().getPhoneNumber()).child(model.getNotificationID()).child("notificationStatus").setValue("2");
+                                FirebaseDatabase.getInstance().getReference().child("sentnotifications").child(model.getinviteBy()).child(model.getNotificationID())
+                                        .child("notificationStatus").setValue("2");
+                                Snackbar.make(v, "Invitation Declined", Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
+                            }
+                        });
+
+
                     }
                 });
 

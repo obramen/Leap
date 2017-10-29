@@ -5,8 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:descendantFocusability="afterDescendants">
+    android:id="@+id/nameLayout"
+    android:background="@color/white">
 
 
 
@@ -19,8 +19,7 @@
         android:weightSum="10"
         android:id="@+id/circleLeaperListLayout"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp"
-        android:layout_marginEnd="5dp">
+        tools:layout_editor_absoluteX="8dp">
 
         <RelativeLayout
             android:layout_width="0dp"

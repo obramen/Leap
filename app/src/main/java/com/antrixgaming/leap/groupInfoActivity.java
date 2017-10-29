@@ -1,6 +1,7 @@
 package com.antrixgaming.leap;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.LeapClasses.ConfirmDialog;
 import com.antrixgaming.leap.LeapClasses.ImageUtils;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.LeapClasses.MenuFAB;
@@ -113,8 +115,17 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
     TextView exitTextView;
     TextView selectorText;
     TextView deleteLeaper;
+    TextView makeAdmin;
 
     List<String> selectedNumbers;
+
+    ConfirmDialog confirmDialog;
+
+    Context context;
+
+    View customView;
+    ListView listOfContacts;
+
 
 
 
@@ -136,21 +147,22 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
         groupCreator = "";
 
-
         toolbar_layout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         selectedNumbers = new ArrayList<>();
 
-
-
         myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+
+        confirmDialog = new ConfirmDialog();
+        context = groupInfoActivity.this;
 
 
         // Set material sheet item click listeners
         final LinearLayout groupInfoNewLeaper = (LinearLayout)findViewById(R.id.groupInfoNewLeaper);
         LinearLayout groupInfoNewNotice = (LinearLayout)findViewById(R.id.groupInfoNewNotice);
         LinearLayout renameGroup = (LinearLayout)findViewById(R.id.renameGroup);
+        LinearLayout circleSettings = (LinearLayout)findViewById(R.id.circleSettings);
         groupProfileImage = (ImageView) findViewById(R.id.groupProfileImage);
         imageutils = new ImageUtils(this);
         progressDialog = new ProgressDialog(this);
@@ -158,6 +170,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         exitTextView = (TextView) findViewById(R.id.exitTextView);
         selectorText = (TextView) findViewById(R.id.selectorText);
         deleteLeaper = (TextView) findViewById(R.id.deleteLeaper);
+        makeAdmin = (TextView) findViewById(R.id.makeAdmin);
 
 
 
@@ -357,6 +370,15 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
+
+        circleSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, activity_circle_settings.class);
+                intent.putExtra("circleID", circleID);
+                startActivity(intent);
+            }
+        });
 
 
 
@@ -598,9 +620,9 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
-        ListView listOfContacts = (ListView) findViewById(R.id.list_of_groupInfoLeapers);
+        listOfContacts = (ListView) findViewById(R.id.list_of_groupInfoLeapers);
 
-        DatabaseReference dbRefLeaper = dbRef.child("groupcirclemembers")
+        final DatabaseReference dbRefLeaper = dbRef.child("groupcirclemembers")
                 .child(circleID).child("currentmembers");
 
         FirebaseListAdapter<CircleMember> adapter;
@@ -609,10 +631,12 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
             @Override
             protected void populateView(final View v, final CircleMember model, int position) {
 
+                //customView = v;
 
-                TextView circleLeaperListLeaperName = (TextView) v.findViewById(R.id.circleLeaperListLeaperName);
+
+                final TextView circleLeaperListLeaperName = (TextView) v.findViewById(R.id.circleLeaperListLeaperName);
                 final Button circleLeaperListButton = (Button) v.findViewById(R.id.circleLeaperListButton);
-                LinearLayout circleLeaperListLayout = (LinearLayout) v.findViewById(R.id.circleLeaperListLayout);
+                final LinearLayout circleLeaperListLayout = (LinearLayout) v.findViewById(R.id.circleLeaperListLayout);
                 final CircleImageView leaperImage = (CircleImageView)v.findViewById(R.id.circleLeaperListImage);
                 final TextView displayedLeaperName = (TextView)v.findViewById(R.id.displayedLeaperName);
 
@@ -641,19 +665,26 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                     leapStatus.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            int mLeapStatus = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
+                            if (dataSnapshot.child("leapStatus").getValue().toString() == null){
+
+
+                            }else{
+                                int mLeapStatus = Integer.parseInt(dataSnapshot.child("leapStatus").getValue().toString());
 
 
 
-                            if(Objects.equals(mLeapStatus, 0)){
+                                if(Objects.equals(mLeapStatus, 0)){
 
-                                circleLeaperListButton.setVisibility(v.GONE);
-                                //leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
+                                    circleLeaperListButton.setVisibility(v.GONE);
+                                    //leaperImage.setBorderColor(getResources().getColor(R.color.md_red_900));
+                                }
+                                else if (Objects.equals(mLeapStatus, 1))
+                                    circleLeaperListButton.setVisibility(v.VISIBLE);
+                                //leaperImage.setBorderColor(getResources().getColor(R.color.green));
+
+
+
                             }
-                            else if (Objects.equals(mLeapStatus, 1))
-                                circleLeaperListButton.setVisibility(v.VISIBLE);
-                            //leaperImage.setBorderColor(getResources().getColor(R.color.green));
-
 
                         }
 
@@ -817,6 +848,201 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
+                circleLeaperListLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+
+                        if (selectedNumbers.size() == 0){
+
+                            CircleImageView selectIndicator = (CircleImageView) v.findViewById(R.id.selectIndicator);
+                            makeAdmin.setVisibility(View.GONE);
+
+
+                            if (Objects.equals(circleLeaperListLeaperName.getText().toString(), myPhoneNumber)){
+
+                            } else {
+
+                                if (selectedNumbers.contains(circleLeaperListLeaperName.getText().toString())){
+
+                                    selectedNumbers.remove(circleLeaperListLeaperName.getText().toString());
+                                    selectIndicator.setVisibility(View.GONE);
+                                    circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+                                    selectorText.setText(String.valueOf(selectedNumbers.size()));
+
+
+                                }else {
+                                    selectedNumbers.add(circleLeaperListLeaperName.getText().toString());
+                                    selectIndicator.setVisibility(View.VISIBLE);
+                                    circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.selectorcolor));
+
+                                    selectorText.setText(String.valueOf(selectedNumbers.size()));
+                                    selectorText.setVisibility(View.VISIBLE);
+                                    deleteLeaper.setVisibility(View.VISIBLE);
+
+                                }
+
+
+
+                            }
+
+
+                            if (Objects.equals(selectorText.getText().toString(), "0")){
+                                selectorText.setVisibility(View.GONE);
+                                deleteLeaper.setVisibility(View.GONE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            } else if (Objects.equals(selectorText.getText().toString(), "1")){
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.VISIBLE);
+
+                            } else {
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            }
+
+
+
+
+
+
+                        }  else{
+
+
+                            if (Objects.equals(selectorText.getText().toString(), "0")){
+                                selectorText.setVisibility(View.GONE);
+                                deleteLeaper.setVisibility(View.GONE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            } else if (Objects.equals(selectorText.getText().toString(), "1")){
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.VISIBLE);
+
+                            } else {
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            }
+
+
+                        }
+
+                        return true;
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+                circleLeaperListLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        if (selectedNumbers.size() > 0){
+
+
+
+
+                            CircleImageView selectIndicator = (CircleImageView) v.findViewById(R.id.selectIndicator);
+
+                            if (Objects.equals(circleLeaperListLeaperName.getText().toString(), myPhoneNumber)){
+
+                            }else {
+
+
+
+                                if (selectedNumbers.contains(circleLeaperListLeaperName.getText().toString())){
+
+                                    selectedNumbers.remove(circleLeaperListLeaperName.getText().toString());
+                                    selectIndicator.setVisibility(View.GONE);
+                                    circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+                                    selectorText.setText(String.valueOf(selectedNumbers.size()));
+
+
+                                }else {
+                                    selectedNumbers.add(circleLeaperListLeaperName.getText().toString());
+                                    selectIndicator.setVisibility(View.VISIBLE);
+                                    circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.selectorcolor));
+                                    selectorText.setText(String.valueOf(selectedNumbers.size()));
+
+
+                                }
+
+
+                            }
+
+
+
+
+
+
+                            if (Objects.equals(selectorText.getText().toString(), "0")){
+                                selectorText.setVisibility(View.GONE);
+                                deleteLeaper.setVisibility(View.GONE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            } else if (Objects.equals(selectorText.getText().toString(), "1")){
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.VISIBLE);
+
+                            } else {
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            }
+
+
+
+                        } else {
+
+
+                            if (Objects.equals(selectorText.getText().toString(), "0")){
+                                selectorText.setVisibility(View.GONE);
+                                deleteLeaper.setVisibility(View.GONE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            } else if (Objects.equals(selectorText.getText().toString(), "1")){
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.VISIBLE);
+
+                            } else {
+                                selectorText.setVisibility(View.VISIBLE);
+                                deleteLeaper.setVisibility(View.VISIBLE);
+                                makeAdmin.setVisibility(View.GONE);
+
+                            }
+
+
+                        }
+
+
+
+                    }
+                });
+
+
+
+
+
+
             }
 
 
@@ -830,6 +1056,54 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
+
+
+
+        makeAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                confirmDialog.NewConfirmDialog(context, "Make Admin", "Do you want to give admin privileges?", "Make Admin", "Cancel");
+                confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        confirmDialog.dialog.dismiss();
+
+                        dbRef.child("groupcirclemembers").child(circleID).child("currentmembers")
+                                .child(selectedNumbers.get(0)).child("admin").setValue("true");
+
+                        Toast.makeText(groupInfoActivity.this, "Admin privileges given", Toast.LENGTH_SHORT).show();
+
+
+
+                        for(int x = 0; x < listOfContacts.getChildCount(); x++ ){
+
+                            customView = listOfContacts.getChildAt(x);
+                            //customView = listOfContacts.getAdapter().getView(x, null, null);
+                            CircleImageView selectIndicator = (CircleImageView) customView.findViewById(R.id.selectIndicator);
+
+
+                            LinearLayout circleLeaperListLayout = (LinearLayout) customView.findViewById(R.id.circleLeaperListLayout);
+                            circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+                            selectIndicator.setVisibility(customView.GONE);
+
+                        }
+
+                        selectedNumbers.clear();
+                        selectorText.setText("0");
+                        selectorText.setVisibility(View.GONE);
+                        deleteLeaper.setVisibility(View.GONE);
+                        makeAdmin.setVisibility(View.GONE);
+
+
+
+                    }
+                });
+
+
+            }
+        });
 
 
 
@@ -854,7 +1128,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                             selectedNumbers.remove(circleLeaperListLeaperName.getText().toString());
                             selectIndicator.setVisibility(View.GONE);
                             circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
-                            selectorText.setText(selectedNumbers.size());
+                            selectorText.setText(String.valueOf(selectedNumbers.size()));
 
 
                         }else {
@@ -862,7 +1136,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                             selectIndicator.setVisibility(View.VISIBLE);
                             circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.selectorcolor));
 
-                            selectorText.setText(selectedNumbers.size());
+                            selectorText.setText(String.valueOf(selectedNumbers.size()));
                             selectorText.setVisibility(View.VISIBLE);
                             deleteLeaper.setVisibility(View.VISIBLE);
 
@@ -879,7 +1153,7 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
                 }
 
 
-                return false;
+                return true;
             }
         });
 
@@ -922,12 +1196,12 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
                             if(selectedNumbers.size() == 0){
 
-                                selectorText.setText(selectedNumbers.size());
+                                selectorText.setText(String.valueOf(selectedNumbers.size()));
                                 selectorText.setVisibility(View.GONE);
                                 deleteLeaper.setVisibility(View.GONE);
 
                             } else {
-                                selectorText.setText(selectedNumbers.size());
+                                selectorText.setText(String.valueOf(selectedNumbers.size()));
                             }
 
 
@@ -967,39 +1241,80 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
 
 
 
-                for(int x = 0; x < selectedNumbers.size(); x++ ){
+                confirmDialog.NewConfirmDialog(context, "Delete Leapers", "Confirm delete", "Delete", "Cancel");
+                confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        confirmDialog.dialog.dismiss();
+
+                        for(int x = 0; x < selectedNumbers.size(); x++ ){
 
 
-                    /// remove from current members
-                    dbRef.child("groupcirclemembers").child(circleID).child("currentmembers").child(selectedNumbers.get(x))
-                            .removeValue();
+                            /// remove from current members
+                            dbRef.child("groupcirclemembers").child(circleID).child("currentmembers").child(selectedNumbers.get(x))
+                                    .removeValue();
 
 
-                    /// add to exited member list
-                    FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("deletedmembers").child(selectedNumbers.get(x))
-                            .setValue(new CircleMember(myPhoneNumber,"false","1"));
+                            /// add to exited member list
+                            FirebaseDatabase.getInstance().getReference().child("groupcirclemembers").child(circleID).child("deletedmembers").child(selectedNumbers.get(x))
+                                    .setValue(new CircleMember(myPhoneNumber,"false","1"));
 
 
-                    //push new messages using Circle ID stored
-                    /// 1 - shows it's a notification message // 0 - normal message
-                    String key = dbRef.child("groupcirclemessages").child(circleID)
-                            .push().getKey();
-                    dbRef.child("groupcirclemessages").child(circleID).child(key).setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber,
-                            circleID, "", "", "1", "false"));
-                    dbRef.child("groupcircles").child(circleID).child("lastgroupmessage").setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber,
-                            circleID, "", "", "1", "true"));
-                    //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
-                    //.child(circleID).child("members").setValue(memberList);
-                    dbRef.child("groupcirclelastmessages").child(circleID).setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber, circleID,
-                            "", "", "1", "true"));
+                            //push new messages using Circle ID stored
+                            /// 1 - shows it's a notification message // 0 - normal message
+                            String key = dbRef.child("groupcirclemessages").child(circleID)
+                                    .push().getKey();
+                            dbRef.child("groupcirclemessages").child(circleID).child(key).setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber,
+                                    circleID, "", "", "1", "false"));
+                            dbRef.child("groupcircles").child(circleID).child("lastgroupmessage").setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber,
+                                    circleID, "", "", "1", "true"));
+                            //FirebaseDatabase.getInstance().getReference().child("groupcirclemessages").child(circleID)
+                            //.child(circleID).child("members").setValue(memberList);
+                            dbRef.child("groupcirclelastmessages").child(circleID).setValue(new circleMessage(selectedNumbers.get(x) + " was removed by" + myPhoneNumber, circleID,
+                                    "", "", "1", "true"));
 
-                }
+                        }
 
 
-                selectorText.setText(selectedNumbers.size());
-                selectorText.setVisibility(View.GONE);
-                deleteLeaper.setVisibility(View.GONE);
+                        selectorText.setText("0");
+                        selectorText.setVisibility(View.GONE);
+                        deleteLeaper.setVisibility(View.GONE);
+                        makeAdmin.setVisibility(View.GONE);
 
+                        Toast.makeText(context, "Leaper(s) deleted", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
+                        for(int x = 0; x < listOfContacts.getChildCount(); x++ ){
+
+                            customView = listOfContacts.getChildAt(x);
+                            //customView = listOfContacts.getAdapter().getView(x, null, null);
+                            CircleImageView selectIndicator = (CircleImageView) customView.findViewById(R.id.selectIndicator);
+
+
+                            LinearLayout circleLeaperListLayout = (LinearLayout) customView.findViewById(R.id.circleLeaperListLayout);
+                            circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+                            selectIndicator.setVisibility(customView.GONE);
+
+                        }
+
+                        selectedNumbers.clear();
+                        selectorText.setText("0");
+                        selectorText.setVisibility(View.GONE);
+                        deleteLeaper.setVisibility(View.GONE);
+                        makeAdmin.setVisibility(View.GONE);
+
+
+
+
+
+
+                    }
+                });
 
 
 
@@ -1156,9 +1471,41 @@ public class groupInfoActivity extends BaseActivity implements ImageUtils.ImageA
         if (materialSheetFab.isSheetVisible()) {
             materialSheetFab.hideSheet();
         } else {
-            super.onBackPressed();
+            if (Objects.equals(selectorText.getText().toString(), "0")){
+                super.onBackPressed();
+            } else{
+
+
+
+
+                for(int x = 0; x < listOfContacts.getChildCount(); x++ ){
+
+                    customView = listOfContacts.getChildAt(x);
+                    //customView = listOfContacts.getAdapter().getView(x, null, null);
+                    CircleImageView selectIndicator = (CircleImageView) customView.findViewById(R.id.selectIndicator);
+
+
+                    LinearLayout circleLeaperListLayout = (LinearLayout) customView.findViewById(R.id.circleLeaperListLayout);
+                    circleLeaperListLayout.setBackgroundColor(ActivityCompat.getColor(groupInfoActivity.this, R.color.white));
+                    selectIndicator.setVisibility(customView.GONE);
+
+                }
+
+                selectedNumbers.clear();
+                selectorText.setText("0");
+                selectorText.setVisibility(View.GONE);
+                deleteLeaper.setVisibility(View.GONE);
+                makeAdmin.setVisibility(View.GONE);
+
+
+
+            }
         }
     }
+
+
+
+
 
 
     @Override

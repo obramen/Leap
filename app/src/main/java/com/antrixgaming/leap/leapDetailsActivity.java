@@ -1,6 +1,7 @@
 package com.antrixgaming.leap;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -33,6 +34,7 @@ import com.antrixgaming.leap.Fragments.MatchFragments.game2Fragment;
 import com.antrixgaming.leap.Fragments.MatchFragments.game3Fragment;
 import com.antrixgaming.leap.Fragments.MatchFragments.game4Fragment;
 import com.antrixgaming.leap.Fragments.MatchFragments.game5Fragment;
+import com.antrixgaming.leap.LeapClasses.ConfirmDialog;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.LeapClasses.MenuFAB;
 import com.antrixgaming.leap.Models.UserLeap;
@@ -113,6 +115,9 @@ public class leapDetailsActivity extends BaseActivity {
     Query leapDbRef;
     public String circleID;
 
+    ConfirmDialog confirmDialog;
+    Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +129,9 @@ public class leapDetailsActivity extends BaseActivity {
         leapUtilities = new LeapUtilities();
         TrueAdmin = "true";
         FalseAdmin = "false";
+
+        confirmDialog = new ConfirmDialog();
+        context = leapDetailsActivity.this;
 
 
         fab = (MenuFAB) findViewById(R.id.leapDetailsMenuFAB);
@@ -832,108 +840,120 @@ public class leapDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
 
+                        confirmDialog.NewConfirmDialog(context, "Accept Leap", "Leap in and compete", "Leap In", "Cancel");
+                        confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                confirmDialog.dialog.dismiss();
+
+                                if(Objects.equals(circleID, "null")) {
 
 
-                        if(Objects.equals(circleID, "null")) {
-
-
-                            // Changes for sender
-                            dbRef.child("leaps").child(leaperOneUID)
-                                    .child(leapID).child("leapStatus").setValue("1");
-                            dbRef.child("leaps").child(leaperTwoUID)
-                                    .child(leapID).child("leapStatusChangeTime").setValue(new Date().getTime());
-
-
-
-                            // Changes for accepter
-                            dbRef.child("leaps").child(leaperTwoUID)
-                                    .child(leapID).child("leapStatus").setValue("1");
-                            dbRef.child("leaps").child(leaperTwoUID)
-                                    .child(leapID).child("leapStatusChangeTime").setValue(new Date().getTime());
-
-
-                        }
+                                    // Changes for sender
+                                    dbRef.child("leaps").child(leaperOneUID)
+                                            .child(leapID).child("leapStatus").setValue("1");
+                                    dbRef.child("leaps").child(leaperTwoUID)
+                                            .child(leapID).child("leapStatusChangeTime").setValue(new Date().getTime());
 
 
 
-                        else{
+                                    // Changes for accepter
+                                    dbRef.child("leaps").child(leaperTwoUID)
+                                            .child(leapID).child("leapStatus").setValue("1");
+                                    dbRef.child("leaps").child(leaperTwoUID)
+                                            .child(leapID).child("leapStatusChangeTime").setValue(new Date().getTime());
 
-                            if (Objects.equals(model.getleaperTwo(), "Open Leap")){
 
-                                // remove leap from open leaps
-                                dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID())
-                                        .removeValue();
+                                }
 
-                                // add to new live leaps
-                                dbRef.child("leapsforcircles").child("liveleaps").child(circleID).child(model.getleapID())
-                                        .setValue(new UserLeap(model.getleapID(), model.getgameType(), model.getgameFormat(), model.getleaperOne(),
+
+
+                                else{
+
+                                    if (Objects.equals(model.getleaperTwo(), "Open Leap")){
+
+                                        // remove leap from open leaps
+                                        dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID())
+                                                .removeValue();
+
+                                        // add to new live leaps
+                                        dbRef.child("leapsforcircles").child("liveleaps").child(circleID).child(model.getleapID())
+                                                .setValue(new UserLeap(model.getleapID(), model.getgameType(), model.getgameFormat(), model.getleaperOne(),
+                                                        myPhoneNumber, model.getleapDay(), "1", circleID));
+
+
+
+
+                                        // update for sender to show accepted // LEAPER ONE
+                                        // leaper two in this case is the other leaper in context
+                                        dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leapStatus").setValue("1");
+                                        dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leaperTwo").setValue(myPhoneNumber);
+
+
+
+                                        // update/add leap to list for acceptor // LEAPER TWO
+                                        dbRef.child("leaps").child(myUID).child(model.getleapID()).setValue(new UserLeap(model.getleapID(), model.getgameType()
+                                                , model.getgameFormat(), model.getleaperOne(),
+                                                myPhoneNumber, model.getleapDay(), "1", circleID));
+
+
+                                        finish();
+
+
+
+                                    }
+
+                                    else {
+
+                                        // remove leap from leapertoleaper leaps
+                                        dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID())
+                                                .removeValue();
+
+                                        // add to new live leaps
+                                        dbRef.child("leapsforcircles").child("liveleaps").child(circleID).child(model.getleapID())
+                                                .setValue(new UserLeap(model.getleapID(), model.getgameType(), model.getgameFormat(), model.getleaperOne(),
+                                                        myPhoneNumber, model.getleapDay(), "1", circleID));
+
+
+
+                                        /// UPDATE FOR SENDER OR LEAPER ONE
+                                        dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leapStatus").setValue("1");
+
+
+
+                                        /// UPDATE FOR ACCEPTOR OR LEAPER TWO
+                                        dbRef.child("leaps").child(leaperTwoUID).child(model.getleapID()).setValue(new UserLeap(model.getleapID(), model.getgameType()
+                                                , model.getgameFormat(), model.getleaperOne(),
                                                 myPhoneNumber, model.getleapDay(), "1", circleID));
 
 
 
 
-                                // update for sender to show accepted // LEAPER ONE
-                                // leaper two in this case is the other leaper in context
-                                dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leapStatus").setValue("1");
-                                dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leaperTwo").setValue(myPhoneNumber);
+                                    }
 
 
 
-                                // update/add leap to list for acceptor // LEAPER TWO
-                                dbRef.child("leaps").child(myUID).child(model.getleapID()).setValue(new UserLeap(model.getleapID(), model.getgameType()
-                                        , model.getgameFormat(), model.getleaperOne(),
-                                        myPhoneNumber, model.getleapDay(), "1", circleID));
+
+                                }
+
+                                Toast.makeText(leapDetailsActivity.this, "You leaped in", Toast.LENGTH_LONG).show();
 
 
-                                finish();
-
-
-
-                            }
-
-                            else {
-
-                                // remove leap from leapertoleaper leaps
-                                dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID())
-                                        .removeValue();
-
-                                // add to new live leaps
-                                dbRef.child("leapsforcircles").child("liveleaps").child(circleID).child(model.getleapID())
-                                        .setValue(new UserLeap(model.getleapID(), model.getgameType(), model.getgameFormat(), model.getleaperOne(),
-                                                myPhoneNumber, model.getleapDay(), "1", circleID));
+                                //Long acceptTime = model.getLeapStatusChangeTime();
+                                //Long matchTime = Long.parseLong(lDay + " "  + lTime);
 
 
 
-                                /// UPDATE FOR SENDER OR LEAPER ONE
-                                dbRef.child("leaps").child(leaperOneUID).child(model.getleapID()).child("leapStatus").setValue("1");
 
 
 
-                                /// UPDATE FOR ACCEPTOR OR LEAPER TWO
-                                dbRef.child("leaps").child(leaperTwoUID).child(model.getleapID()).setValue(new UserLeap(model.getleapID(), model.getgameType()
-                                        , model.getgameFormat(), model.getleaperOne(),
-                                        myPhoneNumber, model.getleapDay(), "1", circleID));
+
 
 
 
 
                             }
-
-
-
-
-                        }
-
-                        Toast.makeText(leapDetailsActivity.this, "You leaped in", Toast.LENGTH_LONG).show();
-
-
-                        //Long acceptTime = model.getLeapStatusChangeTime();
-                        //Long matchTime = Long.parseLong(lDay + " "  + lTime);
-
-
-
-
-
+                        });
 
 
 
@@ -998,10 +1018,15 @@ public class leapDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
 
+                        confirmDialog.NewConfirmDialog(context, "Decline Leap", "Confirm refusal of leap invite", "Leap Out", "Cancel");
+                        confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                confirmDialog.dialog.dismiss();
 
 
 
-                        // add leap out or decline commands here
+                                // add leap out or decline commands here
 
 
 
@@ -1009,145 +1034,154 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                        /// IF I SENT THIS LEAP // I GET TO CANCEL IT
-                        if (Objects.equals(myPhoneNumber, model.getleaperOne())){
+                                /// IF I SENT THIS LEAP // I GET TO CANCEL IT
+                                if (Objects.equals(myPhoneNumber, model.getleaperOne())){
 
 
-                            // IF THE LEAP IS NOT TO A CIRCLE
-                            if (Objects.equals(circleID, "null")) {
+                                    // IF THE LEAP IS NOT TO A CIRCLE
+                                    if (Objects.equals(circleID, "null")) {
 
-                                // Delete leap for leaper one and two
-                                dbRef.child("leaps").child(leaperOneUID).child(leapID).removeValue();
-                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).removeValue();
-
-
-                                Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
-                                finish();
+                                        // Delete leap for leaper one and two
+                                        dbRef.child("leaps").child(leaperOneUID).child(leapID).removeValue();
+                                        dbRef.child("leaps").child(leaperTwoUID).child(leapID).removeValue();
 
 
-                            } else { // IF THE LEAP IS TO A CIRCLE
+                                        Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+                                        finish();
 
 
-                                // IS IT AN OPEN LEAP
-                                if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
-
-                                    // remove leap from open leaps
-                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID())
-                                            .removeValue();
-                                    // remove from my leaps
-                                    dbRef.child("leaps").child(myUID)
-                                            .child(leapID).removeValue();
+                                    } else { // IF THE LEAP IS TO A CIRCLE
 
 
+                                        // IS IT AN OPEN LEAP
+                                        if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
 
-                                    Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
-                                    finish();
+                                            // remove leap from open leaps
+                                            dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID())
+                                                    .removeValue();
+                                            // remove from my leaps
+                                            dbRef.child("leaps").child(myUID)
+                                                    .child(leapID).removeValue();
+
+
+
+                                            Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+                                            finish();
+                                        }
+
+
+
+                                        else { // IT IS TO A PARTICULAR LEAPER
+
+                                            // Delete fromm list of leaper-to-leaper leaps
+                                            dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID())
+                                                    .removeValue();
+
+
+                                            // Delete leap for leaper one and two
+                                            dbRef.child("leaps").child(leaperOneUID).child(leapID).removeValue();
+                                            dbRef.child("leaps").child(leaperTwoUID).child(leapID).removeValue();
+
+
+                                            Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+                                            finish();
+
+                                        }
+
+
+                                    }
+
+
                                 }
 
 
 
-                                else { // IT IS TO A PARTICULAR LEAPER
-
-                                    // Delete fromm list of leaper-to-leaper leaps
-                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID())
-                                            .removeValue();
 
 
-                                    // Delete leap for leaper one and two
-                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).removeValue();
-                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).removeValue();
+                                else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
 
 
-                                    Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
-                                    finish();
+                                    // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can decline it
+                                    if (Objects.equals(circleID, "null")) {
+
+                                        // Set leap status to declined for leaper one and two
+                                        dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("2");
+                                        dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("2");
+
+
+
+                                        Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+                                        finish();
+
+
+                                    }
+
+
+
+
+                                    else { // IF THE LEAP IS TO A CIRCLE
+
+
+                                        // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CANCEL IT
+                                        if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
+
+                                            // remove leap from open leaps
+                                            dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID())
+                                                    .removeValue();
+
+
+                                            // remove from list of leaps for the sender // leaper one
+                                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("2");
+
+
+
+
+
+                                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+                                            finish();
+                                        }
+
+
+
+
+                                        else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN DECLINE IT
+
+                                            // remove leap from leapertoleaper leaps
+                                            dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID())
+                                                    .removeValue();
+
+
+
+                                            // Set leap status to declined for leaper one and two
+                                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("2");
+                                            dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("2");
+
+
+
+
+                                            Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+                                            finish();
+
+
+                                        }
+
+
+                                    }
+
+
+
+
 
                                 }
 
 
                             }
-
-
-                        }
-
-
-
-
-
-                        else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
-
-
-                            // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can decline it
-                            if (Objects.equals(circleID, "null")) {
-
-                                // Set leap status to declined for leaper one and two
-                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("2");
-                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("2");
-
-
-
-                                Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
-                                finish();
-
-
-                            }
-
-
-
-
-                            else { // IF THE LEAP IS TO A CIRCLE
-
-
-                                // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CANCEL IT
-                                if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
-
-                                    // remove leap from open leaps
-                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID())
-                                            .removeValue();
-
-
-                                    // remove from list of leaps for the sender // leaper one
-                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("2");
+                        });
 
 
 
 
 
-                                    Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
-
-
-
-
-                                else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN DECLINE IT
-
-                                    // remove leap from leapertoleaper leaps
-                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID())
-                                            .removeValue();
-
-
-
-                                    // Set leap status to declined for leaper one and two
-                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("2");
-                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("2");
-
-
-
-
-                                    Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
-                                    finish();
-
-
-                                }
-
-
-                            }
-
-
-
-
-
-                        }
 
 
                     }
@@ -1164,181 +1198,200 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                        new SingleDateAndTimePickerDialog.Builder(leapDetailsActivity.this)
-                                .bottomSheet()
-                                //.curved()
-                                //.minutesStep(15)
-                                //.defaultDate(new Date())
-                                //.minDateRange(new Date())
 
-                                //.displayHours(false)
-                                //.displayMinutes(false)
-                                .mustBeOnFuture()
-                                .backgroundColor(getResources().getColor(R.color.white))
-                                .mainColor(getResources().getColor(R.color.colorPrimary))
-                                .titleTextColor(getResources().getColor(R.color.colorPrimary))
+                                new SingleDateAndTimePickerDialog.Builder(leapDetailsActivity.this)
+                                        .bottomSheet()
+                                        //.curved()
+                                        //.minutesStep(15)
+                                        //.defaultDate(new Date())
+                                        //.minDateRange(new Date())
 
-                                .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
-                                    @Override
-                                    public void onDisplayed(SingleDateAndTimePicker picker) {
-                                        //retrieve the SingleDateAndTimePicker
-                                    }
-                                })
+                                        //.displayHours(false)
+                                        //.displayMinutes(false)
+                                        .mustBeOnFuture()
+                                        .backgroundColor(getResources().getColor(R.color.white))
+                                        .mainColor(getResources().getColor(R.color.colorPrimary))
+                                        .titleTextColor(getResources().getColor(R.color.colorPrimary))
 
-                                .title("Leap time")
-                                .listener(new SingleDateAndTimePickerDialog.Listener() {
-                                    @Override
-                                    public void onDateSelected(Date date) {
+                                        .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
+                                            @Override
+                                            public void onDisplayed(SingleDateAndTimePicker picker) {
+                                                //retrieve the SingleDateAndTimePicker
+                                            }
+                                        })
 
-                                        CharSequence mDay = DateFormat.format("dd/MMM/yyyy", date.getTime());
-
-                                        CharSequence mTime = DateFormat.format("HH:mm", date.getTime());
-
-                                        long leapDay = date.getTime();
-
+                                        .title("Leap time")
+                                        .listener(new SingleDateAndTimePickerDialog.Listener() {
+                                            @Override
+                                            public void onDateSelected(final Date date) {confirmDialog.NewConfirmDialog(context, "Postpone Leap", "Confirm change of leap time", "Postpone", "Cancel");
+                                                confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        confirmDialog.dialog.dismiss();
 
 
+                                                        CharSequence mDay = DateFormat.format("dd/MMM/yyyy", date.getTime());
 
+                                                        CharSequence mTime = DateFormat.format("HH:mm", date.getTime());
 
-
-
-                                        /// IF I SENT THIS LEAP // I GET TO CHANGE TIME
-                                        if (Objects.equals(myPhoneNumber, model.getleaperOne())){
-
-
-                                            // IF THE LEAP IS NOT TO A CIRCLE
-                                            if (Objects.equals(circleID, "null")) {
-
-                                                // Change time for leaper one and two
-                                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
-                                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
-
-
-                                                Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
-
-                                            } else { // IF THE LEAP IS TO A CIRCLE
-
-                                                // IS IT AN OPEN LEAP
-                                                if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
-
-                                                    // change time for open leaps
-                                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
-                                                    // change time for my leaps
-                                                    dbRef.child("leaps").child(myUID).child(leapID).child("leapDay").setValue(leapDay);
+                                                        long leapDay = date.getTime();
 
 
 
-                                                    Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
-                                                }
 
 
 
-                                                else { // IT IS TO A PARTICULAR LEAPER
 
-                                                    // change time for list of leaper-to-leaper leaps
-                                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
-
-
-                                                    // Delete leap for leaper one and two
-                                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
-                                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
+                                                        /// IF I SENT THIS LEAP // I GET TO CHANGE TIME
+                                                        if (Objects.equals(myPhoneNumber, model.getleaperOne())){
 
 
-                                                    Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+                                                            // IF THE LEAP IS NOT TO A CIRCLE
+                                                            if (Objects.equals(circleID, "null")) {
 
-                                                }
+                                                                // Change time for leaper one and two
+                                                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
+                                                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
+
+
+                                                                Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
+
+                                                            } else { // IF THE LEAP IS TO A CIRCLE
+
+                                                                // IS IT AN OPEN LEAP
+                                                                if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
+
+                                                                    // change time for open leaps
+                                                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
+                                                                    // change time for my leaps
+                                                                    dbRef.child("leaps").child(myUID).child(leapID).child("leapDay").setValue(leapDay);
+
+
+
+                                                                    Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
+                                                                }
+
+
+
+                                                                else { // IT IS TO A PARTICULAR LEAPER
+
+                                                                    // change time for list of leaper-to-leaper leaps
+                                                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
+
+
+                                                                    // Delete leap for leaper one and two
+                                                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
+                                                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
+
+
+                                                                    Toast.makeText(leapDetailsActivity.this, "You leaped out", Toast.LENGTH_LONG).show();
+
+                                                                }
+
+
+                                                            }
+
+
+                                                        }
+
+
+
+
+
+                                                        else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
+
+
+                                                            // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can change the time
+                                                            if (Objects.equals(circleID, "null")) {
+
+                                                                //change time for leaper one and two
+                                                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
+                                                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
+
+
+
+                                                                Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
+
+
+                                                            }
+
+
+
+
+                                                            else { // IF THE LEAP IS TO A CIRCLE
+
+
+                                                                // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CHANGE THE TIME
+                                                                if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
+
+                                                                    // change timie for open leaps
+                                                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
+
+
+                                                                    // change time for the sender // leaper one
+                                                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
+
+
+
+
+
+                                                                    Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
+                                                                }
+
+
+
+
+                                                                else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN CHANGE TIME
+
+                                                                    // change time for leapertoleaper leaps
+                                                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
+
+
+
+                                                                    // change time for leaper one and two
+                                                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
+                                                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
+
+
+
+
+                                                                    Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
+
+
+                                                                }
+
+
+                                                            }
+
+
+
+
+
+                                                        }
+
+
+                                                    }
+                                                });
+
+
+
+
+
+
+
+
 
 
                                             }
-
-
-                                        }
-
-
-
-
-
-                                        else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
-
-
-                                            // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can change the time
-                                            if (Objects.equals(circleID, "null")) {
-
-                                                //change time for leaper one and two
-                                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
-                                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
-
-
-
-                                                Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
-
-
-                                            }
-
-
-
-
-                                            else { // IF THE LEAP IS TO A CIRCLE
-
-
-                                                // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CHANGE THE TIME
-                                                if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
-
-                                                    // change timie for open leaps
-                                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
-
-
-                                                    // change time for the sender // leaper one
-                                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
+                                        }).display();
+                            }
+                        });
 
 
 
 
 
-                                                    Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
-                                                }
 
-
-
-
-                                                else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN CHANGE TIME
-
-                                                    // change time for leapertoleaper leaps
-                                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapDay").setValue(leapDay);
-
-
-
-                                                    // change time for leaper one and two
-                                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapDay").setValue(leapDay);
-                                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapDay").setValue(leapDay);
-
-
-
-
-                                                    Toast.makeText(leapDetailsActivity.this, "Time changed", Toast.LENGTH_LONG).show();
-
-
-                                                }
-
-
-                                            }
-
-
-
-
-
-                                        }
-
-
-
-
-
-                                    }
-                                }).display();
-
-
-                    }
-                });
 
 
 
@@ -1360,113 +1413,124 @@ public class leapDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
 
-                        /// IF I SENT THIS LEAP // I GET TO CHANGE TIME
-                        if (Objects.equals(myPhoneNumber, model.getleaperOne())){
+                        confirmDialog.NewConfirmDialog(context, "Cancel Leap", "Confirm leap cancel, entered score will no longer apply", "Cancel Leap", "Cancel");
+                        confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                confirmDialog.dialog.dismiss();
+
+
+                                /// IF I SENT THIS LEAP // I GET TO CHANGE TIME
+                                if (Objects.equals(myPhoneNumber, model.getleaperOne())){
 
 
 
-                            // IF THE LEAP IS NOT TO A CIRCLE
-                        if (Objects.equals(circleID, "null")) {
+                                    // IF THE LEAP IS NOT TO A CIRCLE
+                                    if (Objects.equals(circleID, "null")) {
 
-                            // Change time for leaper one and two
-                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
-                            dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
-
-
-                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
-
-                        } else { // IF THE LEAP IS TO A CIRCLE
-
-                            // IS IT AN OPEN LEAP
-                            if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
-
-                                // change time for open leaps
-                                dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
-                                // change time for my leaps
-                                dbRef.child("leaps").child(myUID).child(leapID).child("leapStatus").setValue("3");
+                                        // Change time for leaper one and two
+                                        dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                        dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
 
 
+                                        Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
 
-                                Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
-                            }
+                                    } else { // IF THE LEAP IS TO A CIRCLE
+
+                                        // IS IT AN OPEN LEAP
+                                        if (Objects.equals(model.getleaperTwo(), "Open Leap")) {
+
+                                            // change time for open leaps
+                                            dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+                                            // change time for my leaps
+                                            dbRef.child("leaps").child(myUID).child(leapID).child("leapStatus").setValue("3");
 
 
 
-                            else { // IT IS TO A PARTICULAR LEAPER
-
-                                // change time for list of leaper-to-leaper leaps
-                                dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
-
-
-                                // Delete leap for leaper one and two
-                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
-                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
-
-
-                                Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
-
-                            }
-
-
-                        }
-
-
-                    }
+                                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+                                        }
 
 
 
+                                        else { // IT IS TO A PARTICULAR LEAPER
+
+                                            // change time for list of leaper-to-leaper leaps
+                                            dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
 
 
-                                        else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
+                                            // Delete leap for leaper one and two
+                                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                            dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
 
 
-                            // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can change the time
-                            if (Objects.equals(circleID, "null")) {
+                                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
 
-                                //change time for leaper one and two
-                                dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
-                                dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+                                        }
 
 
-                                Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
-
-
-                            } else { // IF THE LEAP IS TO A CIRCLE
-
-
-                                // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CHANGE THE TIME
-                                if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
-
-                                    // change timie for open leaps
-                                    dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
-
-
-                                    // change time for the sender // leaper one
-                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
-
-
-                                    Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
-                                } else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN CHANGE TIME
-
-                                    // change time for leapertoleaper leaps
-                                    dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
-
-
-                                    // change time for leaper one and two
-                                    dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
-                                    dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
-
-
-                                    Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+                                    }
 
 
                                 }
 
 
+
+
+
+                                else { // IF I DIDN'T SEND THIS LEAP // I GET TO DECLINE IT
+
+
+                                    // IF THE LEAP IS NOT TO A CIRCLE // meaning it is to me so i can change the time
+                                    if (Objects.equals(circleID, "null")) {
+
+                                        //change time for leaper one and two
+                                        dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                        dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                        Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+
+
+                                    } else { // IF THE LEAP IS TO A CIRCLE
+
+
+                                        // IF IT IS AN OPEN LEAP AND I AM AN ADMIN I CAN CHANGE THE TIME
+                                        if (Objects.equals(myPhoneNumber, model.getleaperOne())) {
+
+                                            // change timie for open leaps
+                                            dbRef.child("leapsforcircles").child("openleaps").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+
+
+                                            // change time for the sender // leaper one
+                                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+                                        } else { // IF IT'S NOT AN OPEN LEAP AND IT WAS SENT TO ME, I CAN CHANGE TIME
+
+                                            // change time for leapertoleaper leaps
+                                            dbRef.child("leapsforcircles").child("leapertoleaper").child(circleID).child(model.getleapID()).child("leapStatus").setValue("3");
+
+
+                                            // change time for leaper one and two
+                                            dbRef.child("leaps").child(leaperOneUID).child(leapID).child("leapStatus").setValue("3");
+                                            dbRef.child("leaps").child(leaperTwoUID).child(leapID).child("leapStatus").setValue("3");
+
+
+                                            Toast.makeText(leapDetailsActivity.this, "Leap cancelled", Toast.LENGTH_LONG).show();
+
+
+                                        }
+
+
+                                    }
+
+
+                                }
+
                             }
+                        });
 
-
-                        }
 
 
                     }

@@ -42,6 +42,19 @@
                 android:layout_toEndOf="@+id/selectorText"
                 android:text="delete"
                 android:visibility="invisible"
+                android:textColor="@color/berry"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/makeAdmin"
+                android:layout_alignBaseline="@id/selectorText"
+                android:textSize="16sp"
+                android:layout_toEndOf="@+id/deleteLeaper"
+                android:text="Make Admin"
+                android:layout_marginStart="15dp"
+                android:visibility="invisible"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"

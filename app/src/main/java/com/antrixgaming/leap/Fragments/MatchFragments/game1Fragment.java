@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.LeapClasses.ConfirmDialog;
 import com.antrixgaming.leap.Models.LeapScore;
 import com.antrixgaming.leap.R;
 import com.antrixgaming.leap.leapDetailsActivity;
@@ -73,6 +74,8 @@ public class game1Fragment extends Fragment {
     String mScoreStatus;
     String resetBy;
 
+    ConfirmDialog confirmDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class game1Fragment extends Fragment {
         leapStatus = ((leapDetailsActivity)context).leapStatus;
         circleID = ((leapDetailsActivity)context).mCircleID;
         AdminFlag = ((leapDetailsActivity)context).AdminFlag;
+
+        confirmDialog = new ConfirmDialog();
 
 
 
@@ -256,68 +261,78 @@ public class game1Fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                confirmDialog.NewConfirmDialog(context, "Save Score", "Save new entry", "Save", "Cancel");
+                confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmDialog.dialog.dismiss();
+
+                        if (TextUtils.isEmpty(g1leaperOneScoreBox.getText().toString())) {
+                            Toast.makeText(getActivity(), "leaper one's enter score", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (TextUtils.isEmpty(g1leaperTwoScoreBox.getText().toString())) {
+                            Toast.makeText(getActivity(), "leaper two's enter score", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
 
 
 
-                if (TextUtils.isEmpty(g1leaperOneScoreBox.getText().toString())) {
-                    Toast.makeText(getActivity(), "leaper one's enter score", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(g1leaperTwoScoreBox.getText().toString())) {
-                    Toast.makeText(getActivity(), "leaper two's enter score", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                        g1leaperOneScoreBox.setEnabled(false);
+                        g1leaperTwoScoreBox.setEnabled(false);
+
+
+                        progressDialog.setMessage("Saving score...");
+                        progressDialog.show();
+
+                        leaperOneScore  = g1leaperOneScoreBox.getText().toString();
+                        leaperTwoScore = g1leaperTwoScoreBox.getText().toString();
+                        scoreStatus = "1";
+
+
+
+                        int mL1Score = Integer.parseInt(g1leaperOneScoreBox.getText().toString());
+                        int mL2Score = Integer.parseInt(g1leaperTwoScoreBox.getText().toString());
+
+                        if(mL1Score < mL2Score){
+                            looser  = leaperOne;
+                            winner = leaperTwo;
+
+
+
+                        }
+                        else if(mL1Score == mL2Score){
+
+                            looser  = "";
+                            winner = "";
+
+
+                        }
+
+                        else if(mL1Score > mL2Score){
+
+
+                            looser  = leaperTwo;
+                            winner = leaperOne;
+
+                        }
 
 
 
 
-                g1leaperOneScoreBox.setEnabled(false);
-                g1leaperTwoScoreBox.setEnabled(false);
+                        game1DbRef.setValue(new LeapScore(g1leapID, leaperOneScore, leaperTwoScore, "1", myPhoneNumber, winner, looser));
 
-
-                progressDialog.setMessage("Saving score...");
-                progressDialog.show();
-
-                leaperOneScore  = g1leaperOneScoreBox.getText().toString();
-                leaperTwoScore = g1leaperTwoScoreBox.getText().toString();
-                scoreStatus = "1";
-
-
-
-                int mL1Score = Integer.parseInt(g1leaperOneScoreBox.getText().toString());
-                int mL2Score = Integer.parseInt(g1leaperTwoScoreBox.getText().toString());
-
-                if(mL1Score < mL2Score){
-                    looser  = leaperOne;
-                    winner = leaperTwo;
-
-
-
-                }
-                else if(mL1Score == mL2Score){
-
-                    looser  = "";
-                    winner = "";
-
-
-                }
-
-                else if(mL1Score > mL2Score){
-
-
-                    looser  = leaperTwo;
-                    winner = leaperOne;
-
-                }
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show();
 
 
 
 
-                game1DbRef.setValue(new LeapScore(g1leapID, leaperOneScore, leaperTwoScore, "1", myPhoneNumber, winner, looser));
 
-                progressDialog.dismiss();
-                Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
 
 
@@ -890,16 +905,25 @@ public class game1Fragment extends Fragment {
                 public void onClick(View v) {
 
 
+                    confirmDialog.NewConfirmDialog(context, "Dispute Score", "Confirm score dispute, a notice will be sent to respective leapers", "Dispute", "Cancel");
+                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmDialog.dialog.dismiss();
+                            /////////// SCORE STATUS
+                            /////////// 0 - NOT ENTERED
+                            /////////// 1 - ENTERED (FIRST ENTRY)
+                            /////////// 2 - DISPUTED
+                            /////////// 3 - RESET REQUEST
 
-                    /////////// SCORE STATUS
-                    /////////// 0 - NOT ENTERED
-                    /////////// 1 - ENTERED (FIRST ENTRY)
-                    /////////// 2 - DISPUTED
-                    /////////// 3 - RESET REQUEST
+
+                            game1DbRef.child("resetBy").setValue(myPhoneNumber);
+                            game1DbRef.child("scoreStatus").setValue("2");
+
+                        }
+                    });
 
 
-                    game1DbRef.child("resetBy").setValue(myPhoneNumber);
-                    game1DbRef.child("scoreStatus").setValue("2");
 
                 }
             });
@@ -910,7 +934,17 @@ public class game1Fragment extends Fragment {
                 public void onClick(View v) {
 
 
-                    game1DbRef.child("scoreStatus").setValue("0");
+                    confirmDialog.NewConfirmDialog(context, "Reset Score", "The entered score will be reset", "Reset", "Cancel");
+                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmDialog.dialog.dismiss();
+
+                            game1DbRef.child("scoreStatus").setValue("0");
+
+
+                        }
+                    });
 
 
                 }
@@ -921,7 +955,19 @@ public class game1Fragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    game1DbRef.child("scoreStatus").setValue("0");
+                    confirmDialog.NewConfirmDialog(context, "Force Reset", "The other leaper has not accepted the reset, reset score forcefully", "Reset", "Cancel");
+                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmDialog.dialog.dismiss();
+
+                            game1DbRef.child("scoreStatus").setValue("0");
+
+
+                        }
+                    });
+
+
 
                 }
             });
@@ -1274,20 +1320,31 @@ public class game1Fragment extends Fragment {
 
 
 
+
             disputeScoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
 
+                    confirmDialog.NewConfirmDialog(context, "Dispute Score", "Confirm score dispute, a notice will be sent to respective leapers", "Dispute", "Cancel");
+                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmDialog.dialog.dismiss();
+                            /////////// SCORE STATUS
+                            /////////// 0 - NOT ENTERED
+                            /////////// 1 - ENTERED (FIRST ENTRY)
+                            /////////// 2 - DISPUTED
+                            /////////// 3 - RESET REQUEST
 
-                    /////////// SCORE STATUS
-                    /////////// 0 - NOT ENTERED
-                    /////////// 1 - ENTERED (FIRST ENTRY)
-                    /////////// 2 - DISPUTED
-                    /////////// 3 - RESET REQUEST
 
-                    game1DbRef.child("resetBy").setValue(myPhoneNumber);
-                    game1DbRef.child("scoreStatus").setValue("2");
+                            game1DbRef.child("resetBy").setValue(myPhoneNumber);
+                            game1DbRef.child("scoreStatus").setValue("2");
+
+                        }
+                    });
+
+
 
                 }
             });
@@ -1298,7 +1355,17 @@ public class game1Fragment extends Fragment {
                 public void onClick(View v) {
 
 
-                    game1DbRef.child("scoreStatus").setValue("0");
+                    confirmDialog.NewConfirmDialog(context, "Reset Score", "The entered score will be reset", "Reset", "Cancel");
+                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmDialog.dialog.dismiss();
+
+                            game1DbRef.child("scoreStatus").setValue("0");
+
+
+                        }
+                    });
 
 
                 }
@@ -1309,10 +1376,27 @@ public class game1Fragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    game1DbRef.child("scoreStatus").setValue("0");
+                    confirmDialog.NewConfirmDialog(context, "Force Reset", "The other leaper has not accepted the reset, reset score forcefully", "Reset", "Cancel");
+                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmDialog.dialog.dismiss();
+
+                            game1DbRef.child("scoreStatus").setValue("0");
+
+
+                        }
+                    });
+
+
 
                 }
             });
+
+
+
+
+
 
 
 

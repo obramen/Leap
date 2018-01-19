@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -53,6 +54,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+
+import static com.antrixgaming.leap.R.id.emojiChat;
+
 public class activity_one_circle extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     String groupID;
@@ -73,6 +79,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
     String myPhoneNumber;
 
     ImageView backImage;
+    ImageView emojiChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -469,7 +476,7 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
             @Override
             public void onClick(View view) {
 
-                EditText input = (EditText) findViewById(R.id.input);
+                final EmojiconEditText input = (EmojiconEditText) findViewById(R.id.input);
 
                 if (TextUtils.isEmpty(input.getText().toString().trim())) {
                     return;
@@ -711,8 +718,6 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
 
 
 
-    }
-
 
 
 
@@ -723,6 +728,47 @@ public class activity_one_circle extends BaseActivity implements NavigationView.
         /////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////
         /////////////////////////// READ DATA END ///////////////////////
+
+
+
+
+
+
+
+
+
+        emojiChat = (ImageView)findViewById(R.id.emojiChat);
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0);
+        final EmojiconEditText input = (EmojiconEditText) findViewById(R.id.input);
+        final EmojIconActions emojIcon=new EmojIconActions(this,viewGroup,input,emojiChat);
+
+        emojIcon.ShowEmojIcon();
+
+        /*
+
+        emojiChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                emojIcon.ShowEmojIcon();
+            }
+        });
+
+
+        */
+
+
+
+    }
+
+
+
+
+
+
+
+
 
 
 

@@ -15,10 +15,6 @@
             android:id="@+id/nav_leap_events"
             android:icon="@drawable/ic_events"
             android:title="Events" />
-        <item
-            android:id="@+id/nav_leap_circles"
-            android:icon="@drawable/ic_events"
-            android:title="Public Circles" />
 
 
     </group>

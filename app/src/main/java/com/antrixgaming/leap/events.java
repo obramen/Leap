@@ -29,8 +29,11 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -123,7 +126,7 @@ public class events extends BaseActivity implements ImageUtils.ImageAttachmentLi
                 eventsDbRef.orderByChild("eventStartDate")){
 
             @Override
-            protected void populateView(View v, CreateEvent model, int position) {
+            protected void populateView(View v, final CreateEvent model, int position) {
 
                 eventImage = (ImageView) v.findViewById(R.id.eventImage);
                 eventDay = (TextView)v.findViewById(R.id.eventDay);
@@ -157,8 +160,34 @@ public class events extends BaseActivity implements ImageUtils.ImageAttachmentLi
 
 
 
-                mEventStorage = mStorage.child("events").child(model.getEventBy()).child(model.getEventID()).child(model.getEventID());
-                leapUtilities.SquareImageFromFirebase(events.this, mEventStorage, eventImage);
+
+
+
+                FirebaseDatabase.getInstance().getReference().child("eventImageTimestamp").child(model.getEventID())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(model.getEventID()).getValue().toString();
+                                    mEventStorage = mStorage.child("events").child(model.getEventBy()).child(model.getEventID()).child(model.getEventID());
+                                    leapUtilities.SquareImageFromFirebase(events.this, mEventStorage, eventImage, timestamp);
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
 
 
 

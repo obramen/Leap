@@ -47,6 +47,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Date;
 import java.util.Objects;
 
 public class eventDetails extends BaseActivity implements ImageUtils.ImageAttachmentListener {
@@ -90,6 +91,8 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
 
     ProgressDialog progressDialog;
 
+    String eventID;
+
 
 
     @Override
@@ -99,7 +102,7 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
-        final String eventID = bundle.getString("eventID");
+        eventID = bundle.getString("eventID");
 
         dbRef = FirebaseDatabase.getInstance().getReference();
         eventsDbRef = dbRef.child("AnTrixEvents");
@@ -215,8 +218,37 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
                 eventPeriod.setText(periodStart + " to " + periodEnd);
 
 
+
                 mEventStorage = mStorage.child("events").child(eventBy).child(eventID).child(eventID);
-                leapUtilities.SquareImageFromFirebase(eventDetails.this, mEventStorage, eventImage);
+
+
+                FirebaseDatabase.getInstance().getReference().child("eventImageTimestamp").child(eventID)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(eventID).getValue().toString();
+                                    mEventStorage = mStorage.child("events").child(eventBy).child(eventID).child(eventID);
+                                    leapUtilities.SquareImageFromFirebase(eventDetails.this, mEventStorage, eventImage, timestamp);
+
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
 
 
                 if (Objects.equals(myPhoneNumber, eventBy)) {
@@ -600,6 +632,11 @@ public class eventDetails extends BaseActivity implements ImageUtils.ImageAttach
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                /// add new timestamp for image for caching purposes
+                FirebaseDatabase.getInstance().getReference().child("eventImageTimestamp")
+                        .child(eventID).child(eventID).setValue(new Date().getTime());
+
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
 

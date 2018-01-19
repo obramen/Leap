@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class activity_circle_settings extends BaseActivity {
@@ -81,6 +82,19 @@ public class activity_circle_settings extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
+
+                if (dataSnapshot.child("defaultGame").getValue() == null) {
+
+                } else {
+                    String mDefaultGame = dataSnapshot.child("defaultGame").getValue().toString();
+
+                    defaultGame.setText(mDefaultGame);
+
+                }
+
+
+
+
                 if (dataSnapshot.child("publicGroup").getValue() == null){
 
                 }else {
@@ -101,14 +115,6 @@ public class activity_circle_settings extends BaseActivity {
 
 
 
-                if (dataSnapshot.child("defaultGame").getValue() == null) {
-
-                } else {
-                    String mDefaultGame = dataSnapshot.child("defaultGame").getValue().toString();
-
-                    defaultGame.setText(mDefaultGame);
-
-                }
 
 
 
@@ -158,7 +164,7 @@ public class activity_circle_settings extends BaseActivity {
                 if (publicCheckBox.isChecked()){
 
                     if (Objects.equals(defaultGame.getText().toString(), "")){
-                        Toast.makeText(context, "Public groups require a default game. Select default game.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Public groups require a default game. Select default game", Toast.LENGTH_LONG).show();
                         publicCheckBox.setChecked(false);
 
                     } else{
@@ -204,17 +210,47 @@ public class activity_circle_settings extends BaseActivity {
                     @Override
                     protected void populateView(View v, final GameList model, int position) {
 
-                        ImageView gameListImage = (ImageView)v.findViewById(R.id.gameListImage);
+                        final ImageView gameListImage = (ImageView)v.findViewById(R.id.gameListImage);
                         gameTitle = (TextView)v.findViewById(R.id.gameListGameTitle);
                         TextView gameListId = (TextView)v.findViewById(R.id.gameListId);
 
                         gameTitle.setText(model.getGameTitle());
 
-                        String gameid = model.getGameid();
+                        final String gameid = model.getGameid();
                         gameListId.setText(gameid);
 
-                        StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameid  + ".jpg");
-                        leapUtilities.SquareImageFromFirebase(context, mGameImageStorage, gameListImage);
+
+
+
+                        FirebaseDatabase.getInstance().getReference().child("gameImageTimestamp").child(gameid)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        if (dataSnapshot.hasChildren()){
+
+                                            String timestamp = dataSnapshot.child(gameid).getValue().toString();
+                                            StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameid  + ".jpg");
+                                            leapUtilities.SquareImageFromFirebase(context, mGameImageStorage, gameListImage, timestamp);
+
+                                        } else {
+                                            FirebaseDatabase.getInstance().getReference().child("gameImageTimestamp").child(gameid)
+                                                    .child(gameid).setValue(new Date().getTime());
+                                        }
+
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+
+
 
 
 

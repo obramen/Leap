@@ -19,7 +19,7 @@ public class ConfirmDialog {
     TextView confirmHeader;
     TextView confirmMessage;
     public TextView confirmAccept;
-    TextView confirmCancel;
+    public TextView confirmCancel;
 
     public ConfirmDialog(){
     }

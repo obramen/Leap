@@ -32,7 +32,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/games_fifa_17"
+            android:src="@drawable/default_image"
             android:layout_below="@+id/createdByHeader"
             android:layout_marginTop="30dp"
             app:civ_border_color="#EEE"

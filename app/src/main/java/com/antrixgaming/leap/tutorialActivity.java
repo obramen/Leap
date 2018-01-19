@@ -1,7 +1,9 @@
 package com.antrixgaming.leap;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,7 +18,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.antrixgaming.leap.Fragments.LeapFragments.chatsFragment;
+import com.antrixgaming.leap.Fragments.LeapFragments.circlesFragment;
+import com.antrixgaming.leap.Fragments.LeapFragments.leapsFragment;
+import com.antrixgaming.leap.Fragments.LeapFragments.userProfileFragment;
+import com.google.firebase.auth.FirebaseAuth;
+
+import github.chenupt.springindicator.SpringIndicator;
 
 public class tutorialActivity extends AppCompatActivity {
 
@@ -35,6 +46,8 @@ public class tutorialActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    SpringIndicator springIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +61,28 @@ public class tutorialActivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+        springIndicator = (SpringIndicator) findViewById(R.id.indicator);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        springIndicator.setViewPager(mViewPager);
+
+        mViewPager.setCurrentItem(1);
+
+
+
+        Button leapInButton = (Button) findViewById(R.id.leapInButton);
+
+
+        leapInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openRegisterLoginIntent = new Intent(tutorialActivity.this, registerLogin.class);
+                tutorialActivity.this.startActivity(openRegisterLoginIntent);
+                FirebaseAuth.getInstance().signOut();
+                tutorialActivity.this.finish();
+            }
+        });
+
 
 
     }
@@ -105,7 +139,19 @@ public class tutorialActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            //return PlaceholderFragment.newInstance(position + 1);
+
+            switch (position) {
+                case 0:
+                    return new leapTutorialFragment();
+                case 1:
+                    return new chatTutorialFragment();
+                case 2:
+                    return new circleTutorialFragment();
+
+                default:
+                    return null;
+            }
         }
 
         @Override
@@ -118,13 +164,111 @@ public class tutorialActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "";
                 case 1:
-                    return "SECTION 2";
+                    return "";
                 case 2:
-                    return "SECTION 3";
+                    return "";
             }
             return null;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static class circleTutorialFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public circleTutorialFragment() {
+        }
+
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_tutorial_circle, container, false);
+
+
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
+    }
+
+
+
+
+
+
+    public static class chatTutorialFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public chatTutorialFragment() {
+        }
+
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_tutorial_chat, container, false);
+
+
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
+    }
+
+
+
+
+
+
+    public static class leapTutorialFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public leapTutorialFragment() {
+        }
+
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_tutorial_leap, container, false);
+
+
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
+    }
+
+
+
+
 }

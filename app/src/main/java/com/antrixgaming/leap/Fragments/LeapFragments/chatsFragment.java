@@ -126,17 +126,78 @@ public class chatsFragment extends Fragment {
 
                 if (Objects.equals(myPhoneNumber, model.getSenderPhoneNumber())){
 
-                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getReceiverPhoneNumber())
-                            .child(model.getReceiverPhoneNumber());
-                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
+
+
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.getReceiverPhoneNumber())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.hasChildren()){
+
+                                        String timestamp = dataSnapshot.child(model.getReceiverPhoneNumber()).getValue().toString();
+
+                                        mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getReceiverPhoneNumber())
+                                                .child(model.getReceiverPhoneNumber());
+                                        leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage, timestamp);
+
+
+
+
+
+
+                                    }
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
 
                 } else if(Objects.equals(myPhoneNumber, model.getReceiverPhoneNumber())) {
 
 
 
-                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getSenderPhoneNumber())
-                            .child(model.getSenderPhoneNumber());
-                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.getSenderPhoneNumber())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.hasChildren()){
+
+                                        String timestamp = dataSnapshot.child(model.getSenderPhoneNumber()).getValue().toString();
+
+
+                                        mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getSenderPhoneNumber())
+                                                .child(model.getSenderPhoneNumber());
+                                        leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage, timestamp);
+
+
+
+
+
+
+
+                                    }
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
 
                 }
 

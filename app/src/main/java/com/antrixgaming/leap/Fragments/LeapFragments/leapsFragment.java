@@ -1,6 +1,7 @@
 package com.antrixgaming.leap.Fragments.LeapFragments;
 
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.Leap;
+import com.antrixgaming.leap.LeapClasses.GetFirebaseInfo;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.Models.UserLeap;
 import com.antrixgaming.leap.R;
@@ -36,6 +39,7 @@ import com.antrixgaming.leap.leapDetailsActivity;
 import com.antrixgaming.leap.newLeap;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +53,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import cn.iwgang.countdownview.CountdownView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -77,6 +82,14 @@ public class leapsFragment extends Fragment {
     Long mleaperOneScore = null;
     Long mleaperTwoScore = null;
 
+    Context context;
+
+    int loadFlag = 0;
+
+    GetFirebaseInfo getFirebaseInfo;
+
+    TextView notificationTextView;
+
 
 
 
@@ -87,7 +100,7 @@ public class leapsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_leaps, container, false);
 
-
+        context = getActivity();
         dbRef = FirebaseDatabase.getInstance().getReference();
 
 
@@ -97,6 +110,7 @@ public class leapsFragment extends Fragment {
         leapUtilities = new LeapUtilities();
 
         mStorage = FirebaseStorage.getInstance().getReference();
+        getFirebaseInfo = new GetFirebaseInfo();
 
 
 
@@ -145,7 +159,7 @@ public class leapsFragment extends Fragment {
                 LinearLayout leapsDetails = (LinearLayout)v.findViewById(R.id.leapDetails);
                 final LinearLayout circleDetailsLayout = (LinearLayout)v.findViewById(R.id.circleDetailsLayout);
 
-                final CircleImageView leaperOneImage = (CircleImageView)v.findViewById(R.id.leaperOneImage);
+                //final CircleImageView leaperOneImage = (CircleImageView)v.findViewById(R.id.leaperOneImage);
                 final CircleImageView leaperTwoImage = (CircleImageView)v.findViewById(R.id.leaperTwoImage);
 
                 final TextView displayedLeaperOneName = (TextView)v.findViewById(R.id.displayedLeaperOneName);
@@ -186,11 +200,37 @@ public class leapsFragment extends Fragment {
                 }
 
 
-                String gameId = model.getgameType().replaceAll("\\s+","").toLowerCase();
-                CircleImageView gameImage = (CircleImageView)v.findViewById(R.id.gameImage);
-                StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameId + ".jpg");
-                leapUtilities.CircleImageFromFirebase(getActivity(), mGameImageStorage, gameImage);
+                final String gameId = model.getgameType().replaceAll("\\s+","").toLowerCase();
+                final CircleImageView gameImage = (CircleImageView)v.findViewById(R.id.gameImage);
 
+
+
+
+                FirebaseDatabase.getInstance().getReference().child("gameImageTimestamp").child(gameId)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(gameId).getValue().toString();
+                                    StorageReference mGameImageStorage = mStorage.child("gameImages").child(gameId + ".jpg");
+                                    leapUtilities.CircleImageFromFirebase(getActivity(), mGameImageStorage, gameImage, timestamp);
+
+                                } else{
+                                    FirebaseDatabase.getInstance().getReference().child("gameImageTimestamp").child(gameId)
+                                            .child(gameId).setValue(new Date().getTime());
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
 
 
@@ -399,18 +439,74 @@ public class leapsFragment extends Fragment {
 
 
 
-                mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
-                leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperOneStorageRef, leaperOneImage);
+
+
+
+
+
+
+                FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.leaperOne)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(model.leaperOne).getValue().toString();
+                                    mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
+                                    CircleImageView leaperOneImage = (CircleImageView)v.findViewById(R.id.leaperOneImage);
+                                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperOneStorageRef, leaperOneImage, timestamp);
+
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
 
 
                 if (Objects.equals(model.getleaperTwo(), "Leaper Two") || Objects.equals(model.getleaperTwo(), "Open Leap")){
 
 
                 }else {
-                        mLeaperTwoStorageRef = mStorage.child("leaperProfileImage").child(model.leaperTwo).child(model.leaperTwo);
-                        leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperTwoStorageRef, leaperTwoImage);
 
-               }
+
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.leaperTwo)
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.hasChildren()){
+
+                                        String timestamp = dataSnapshot.child(model.leaperTwo).getValue().toString();
+                                        mLeaperTwoStorageRef = mStorage.child("leaperProfileImage").child(model.leaperTwo).child(model.leaperTwo);
+                                        leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperTwoStorageRef, leaperTwoImage, timestamp);
+
+
+
+                                    }
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                }
 
 
 
@@ -692,6 +788,129 @@ public class leapsFragment extends Fragment {
                 //listOfLeaps.setBackgroundResource(R.color.verylightblack);
             }
         });
+
+
+
+
+
+
+
+
+
+        //////// CHILD ADD NOTIFICATION
+        dataSource.limitToLast(1).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+
+                if (loadFlag == 0){
+
+                    loadFlag = 1;
+
+                } else if (loadFlag == 1){
+                    if (dataSnapshot.hasChildren()) {
+
+
+                        String leaperOne = (String) dataSnapshot.child("leaperOne").getValue();
+                        if (!Objects.equals(leaperOne, myPhoneNumber)) {
+
+                            notificationTextView = (TextView) view.findViewById(R.id.notificationTextView);
+
+                            String nLeapID = (String) dataSnapshot.child("leapID").getValue();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("leapID", nLeapID);
+                            bundle.putString("sourceActivity", "1");
+
+                            getFirebaseInfo.GetLeaperName(leaperOne, notificationTextView);
+                            String nLeaperName = notificationTextView.getText().toString();
+
+                            if (Objects.equals(nLeaperName, "Name")) {
+
+                                PugNotification.with(context)
+                                        .load()
+                                        .title("You Got Leaped")
+                                        .message("New leap invitation received from " + leaperOne)
+                                        .bigTextStyle("New leap invitation received from " + leaperOne)
+                                        .smallIcon(R.mipmap.ic_leap)
+                                        .largeIcon(R.mipmap.ic_leap)
+                                        .flags(Notification.DEFAULT_ALL)
+                                        //.flags(Notification.FLAG_LOCAL_ONLY)
+                                        .click(leapDetailsActivity.class, bundle)
+                                        //.dismiss(leapDetailsActivity.class, bundle)
+                                        .autoCancel(true)
+                                        .simple()
+                                        .build();
+
+                            } else {
+
+
+                                PugNotification.with(context)
+                                        .load()
+                                        .title("You Got Leaped")
+                                        .message("New leap invitation received from " + nLeaperName)
+                                        .bigTextStyle("New leap invitation received from " + nLeaperName)
+                                        .smallIcon(R.mipmap.ic_leap)
+                                        .largeIcon(R.mipmap.ic_leap)
+                                        .flags(Notification.DEFAULT_ALL)
+                                        //.flags(Notification.FLAG_LOCAL_ONLY)
+                                        .click(leapDetailsActivity.class, bundle)
+                                        //.dismiss(leapDetailsActivity.class, bundle)
+                                        .autoCancel(true)
+                                        .simple()
+                                        .build();
+                            }
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         //return inflated layout

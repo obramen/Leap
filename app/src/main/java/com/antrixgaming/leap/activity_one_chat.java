@@ -644,10 +644,15 @@ public class activity_one_chat extends BaseActivity {
 
 
 
+        emojiChat = (ImageView)findViewById(R.id.emojiChat);
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
         final EmojiconEditText input = (EmojiconEditText) findViewById(R.id.input);
         final EmojIconActions emojIcon=new EmojIconActions(this,viewGroup,input,emojiChat);
+        emojIcon.ShowEmojIcon();
+
+
+        /*
 
         emojiChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -656,6 +661,8 @@ public class activity_one_chat extends BaseActivity {
                 emojIcon.ShowEmojIcon();
             }
         });
+
+        */
 
 
     }

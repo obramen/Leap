@@ -349,8 +349,37 @@ public class leapDetailsActivity extends BaseActivity {
 
 
 
-                mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
-                leapUtilities.CircleImageFromFirebase(leapDetailsActivity.this, mLeaperOneStorageRef, detailsLeaperOneImage);
+
+
+                FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.leaperOne)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(model.leaperOne).getValue().toString();
+                                    mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
+                                    leapUtilities.CircleImageFromFirebase(leapDetailsActivity.this, mLeaperOneStorageRef, detailsLeaperOneImage, timestamp);
+
+
+
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
 
 
                 if (Objects.equals(model.getleaperTwo(), "Leaper Two") || Objects.equals(model.getleaperTwo(), "Open Leap")){
@@ -359,8 +388,36 @@ public class leapDetailsActivity extends BaseActivity {
                 }else {
 
 
-                    mLeaperTwoStorageRef = mStorage.child("leaperProfileImage").child(model.leaperTwo).child(model.leaperTwo);
-                    leapUtilities.CircleImageFromFirebase(leapDetailsActivity.this, mLeaperTwoStorageRef, detailsLeaperTwoImage);
+
+
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.leaperTwo)
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.hasChildren()){
+
+                                        String timestamp = dataSnapshot.child(model.leaperTwo).getValue().toString();
+
+                                        mLeaperTwoStorageRef = mStorage.child("leaperProfileImage").child(model.leaperTwo).child(model.leaperTwo);
+                                        leapUtilities.CircleImageFromFirebase(leapDetailsActivity.this, mLeaperTwoStorageRef, detailsLeaperTwoImage, timestamp);
+
+
+
+
+                                    }
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
 
 
                     leaperTwo.setOnClickListener(new View.OnClickListener() {

@@ -1,27 +1,20 @@
 package com.antrixgaming.leap;
 
+import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.drawable.LayerDrawable;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.util.TimeUtils;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -34,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import android.widget.RemoteViews;
@@ -46,23 +38,22 @@ import com.antrixgaming.leap.Fragments.LeapFragments.circlesFragment;
 import com.antrixgaming.leap.Fragments.LeapFragments.leapsFragment;
 
 import com.antrixgaming.leap.Fragments.LeapFragments.userProfileFragment;
+import com.antrixgaming.leap.LeapClasses.ConfirmDialog;
 import com.antrixgaming.leap.LeapClasses.ContactPermissionStartService;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
-import com.antrixgaming.leap.LeapClasses.PermissionRequest;
-import com.antrixgaming.leap.LeapServices.ContactService;
+import com.antrixgaming.leap.LeapClasses.GetFirebaseInfo;
 import com.antrixgaming.leap.Models.CircleMember;
 import com.antrixgaming.leap.Models.circleMessage;
 import com.antrixgaming.leap.Models.createGroupCircle;
-import com.antrixgaming.leap.Models.getPhoneContacts;
-import com.antrixgaming.leap.Models.savePhoneContacts;
-import com.firebase.ui.database.FirebaseListAdapter;
+import com.bumptech.glide.util.Util;
+import com.futuremind.recyclerviewfastscroll.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -70,13 +61,11 @@ import com.google.firebase.storage.StorageReference;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 
-import java.lang.ref.ReferenceQueue;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.zip.Inflater;
+import java.util.concurrent.TimeUnit;
 
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -91,6 +80,8 @@ public class Leap extends BaseActivity
 
     FirebaseAuth.AuthStateListener mAuthListener;
 
+    GetFirebaseInfo getFirebaseInfo;
+
 
 
 
@@ -99,8 +90,9 @@ public class Leap extends BaseActivity
 
     // NOTIFICATIONS
     long count = 0;
-    MenuItem menuItem;
+    //MenuItem menuItem;
     int loadFlag = 0;
+    int pushNFlag = 0;
 
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
@@ -150,6 +142,12 @@ public class Leap extends BaseActivity
 
     TextView BugReport;
     TextView AboutLeap;
+    TextView inviteFriends;
+
+    ConfirmDialog confirmDialog;
+
+    //TextView notificationTextView;
+    //TextView notificationTextView2;
 
 
     @Override
@@ -160,12 +158,14 @@ public class Leap extends BaseActivity
         //contactPermissionStartService = new ContactPermissionStartService();
         //contactPermissionStartService.ContactPermissionStartService(Leap.this);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        FirebaseDatabase.getInstance().getReference().keepSynced(true);
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        //qFirebaseDatabase.getInstance().getReference().keepSynced(true);
 
 
 
         leapUtilities = new LeapUtilities();
+        confirmDialog = new ConfirmDialog();
+        getFirebaseInfo = new GetFirebaseInfo();
 
         context = this;
 
@@ -218,6 +218,8 @@ public class Leap extends BaseActivity
 
 
 
+
+
         /////////////// ADDING ENDS HERE /////////////////
 
 
@@ -244,7 +246,7 @@ public class Leap extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -259,14 +261,51 @@ public class Leap extends BaseActivity
         final CircleImageView profileImageFAB = (CircleImageView) findViewById(R.id.profile_image);
 
 
-        View header = navigationView.getHeaderView(0);
+        final View header = navigationView.getHeaderView(0);
         profileImage = (CircleImageView)header.findViewById(R.id.profile_image);
 
         mStorage = FirebaseStorage.getInstance().getReference();
         mLeaperStorageRef = mStorage.child("leaperProfileImage").child(myPhoneNumber).child(myPhoneNumber);
 
-        leapUtilities.CircleImageFromFirebase(this, mLeaperStorageRef, profileImage);
-        leapUtilities.CircleImageFromFirebase(this, mLeaperStorageRef, profileImageFAB);
+        //leapUtilities.CircleImageFromFirebase(this, mLeaperStorageRef, profileImage);
+        //leapUtilities.CircleImageFromFirebase(this, mLeaperStorageRef, profileImageFAB);
+
+
+
+
+
+        FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(myPhoneNumber)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.hasChildren()){
+
+                            String timestamp = dataSnapshot.child(myPhoneNumber).getValue().toString();
+
+                            mStorage = FirebaseStorage.getInstance().getReference();
+                            mLeaperStorageRef = mStorage.child("leaperProfileImage").child(myPhoneNumber).child(myPhoneNumber);
+
+                            leapUtilities.CircleImageFromFirebase(Leap.this, mLeaperStorageRef, profileImage, timestamp);
+                            leapUtilities.CircleImageFromFirebase(Leap.this, mLeaperStorageRef, profileImageFAB, timestamp);
+
+
+                        } else {
+                            FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(myPhoneNumber)
+                                    .child(myPhoneNumber).setValue(new Date().getTime());
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
 
 
 
@@ -305,6 +344,28 @@ public class Leap extends BaseActivity
 
 
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        final TextView notificationTextView = (TextView) findViewById(R.id.notificationTextView);
+        final TextView notificationTextView2 = (TextView) findViewById(R.id.notificationTextView2);
+
+
+
+
+
 
 
 
@@ -522,6 +583,24 @@ public class Leap extends BaseActivity
 
 
 
+
+        inviteFriends = (TextView)findViewById(R.id.inviteFriends);
+        inviteFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Leap - you got leaped");
+                    String sAux = "\nDownload the Leap app now and connect with gamers, share your passion and compete on a whole new level. Connect now and get leaped! \n";
+                    sAux = sAux + "https://play.google.com/store/apps/details?id="+ getPackageName() + " \n\n";
+                    i.putExtra(Intent.EXTRA_TEXT, sAux);
+                    startActivity(Intent.createChooser(i, "choose one"));
+                } catch(Exception e) {
+                    //e.toString();
+                }
+            }
+        });
 
 
 
@@ -872,6 +951,270 @@ public class Leap extends BaseActivity
 
 
 
+        final int versionCode = BuildConfig.VERSION_CODE;
+        dbRef.child("connections").child(myPhoneNumber).child("myAppVersion").setValue(versionCode);
+        //editor.apply();
+
+
+        dbRef.child("APP").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                int currentVersion = Integer.parseInt(dataSnapshot.child("currentVersion").getValue().toString());
+
+                if (versionCode == currentVersion){
+
+
+
+                    dbRef.child("patchnotes").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.hasChildren()){
+
+
+
+                                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Leap.this);
+                                final SharedPreferences.Editor editor = sharedPreferences.edit();
+                                String patchNotesReadTime = sharedPreferences.getString("patchNotesReadTime", null);
+
+                                String title = dataSnapshot.child("title").getValue().toString();
+                                String message = dataSnapshot.child("message").getValue().toString();
+                                final String time = dataSnapshot.child("time").getValue().toString();
+
+
+                                if(Objects.equals(patchNotesReadTime, time)){
+                                    /// PATCH READ
+
+
+                                } else {
+
+
+                                    /// PATCH NOT READ
+                                    confirmDialog.NewConfirmDialog(context, title, message, "Read later", "Don't show again");
+                                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            confirmDialog.dialog.dismiss();
+
+
+                                        }
+                                    });
+                                    confirmDialog.confirmCancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dbRef.child("connections").child(myPhoneNumber).child("patchnotes").setValue("true");
+                                            confirmDialog.dialog.dismiss();
+                                            editor.putString("patchNotesReadTime", time);
+                                            editor.apply();
+
+
+                                        }
+                                    });
+
+
+
+
+
+                                }
+
+
+
+
+
+
+
+
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                } else {
+
+
+
+                    dbRef.child("patchnotes").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.hasChildren()){
+
+
+
+                                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Leap.this);
+                                final SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                final long nowTime = new Date().getTime();
+                                final long inOneWeek = nowTime + TimeUnit.DAYS.toMillis(6);
+
+                                final long patchNotesUpdateTime = sharedPreferences.getLong("patchNotesUpdateTime", nowTime);
+
+
+                                String title = dataSnapshot.child("title").getValue().toString();
+                                String message = dataSnapshot.child("message").getValue().toString();
+                                final String time = dataSnapshot.child("time").getValue().toString();
+
+
+                                if (nowTime > patchNotesUpdateTime) {
+
+
+
+                                    /// PATCH NOT READ
+                                    confirmDialog.NewConfirmDialog(context, title, message, "Update Now", "Update Later");
+                                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            confirmDialog.dialog.dismiss();
+
+                                            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                                            try {
+                                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                                            }
+                                            catch (android.content.ActivityNotFoundException anfe) {
+                                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+                                            }
+
+                                        }
+                                    });
+                                    confirmDialog.confirmCancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dbRef.child("connections").child(myPhoneNumber).child("patchnotes").setValue("true");
+                                            confirmDialog.dialog.dismiss();
+                                            editor.putLong("patchNotesUpdateTime", inOneWeek);
+                                            editor.apply();
+
+
+
+
+
+                                        }
+                                    });
+
+
+
+                                } else if (nowTime == patchNotesUpdateTime) {
+
+
+
+
+
+
+                                    /// PATCH NOT READ
+                                    confirmDialog.NewConfirmDialog(context, title, message, "Update Now", "Update Later");
+                                    confirmDialog.confirmAccept.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            confirmDialog.dialog.dismiss();
+
+                                            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                                            try {
+                                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                                            }
+                                            catch (android.content.ActivityNotFoundException anfe) {
+                                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+                                            }
+
+                                        }
+                                    });
+                                    confirmDialog.confirmCancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dbRef.child("connections").child(myPhoneNumber).child("patchnotes").setValue("true");
+                                            confirmDialog.dialog.dismiss();
+                                            editor.putLong("patchNotesUpdateTime", inOneWeek);
+                                            editor.apply();
+
+
+
+
+
+                                        }
+                                    });
+
+
+                                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -899,6 +1242,26 @@ public class Leap extends BaseActivity
 
 
 
+                    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                    setSupportActionBar(toolbar);
+
+
+                    //Setting Drawers
+                    final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                            Leap.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                    drawer.setDrawerListener(toggle);
+                    toggle.syncState();
+
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    navigationView.setNavigationItemSelectedListener(Leap.this);
+
+
+
+
+
+
+
                 }
 
             }
@@ -915,8 +1278,106 @@ public class Leap extends BaseActivity
 
 
 
+        FirebaseDatabase.getInstance().getReference().child("notifications").child(myPhoneNumber).orderByChild("notificationStatus")
+                .equalTo("0").limitToLast(1).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
 
+                if (dataSnapshot.hasChildren()){
+
+
+                    if (pushNFlag == 0){
+                        pushNFlag = 1;
+                    } else if (pushNFlag == 1){
+
+
+
+                        if (dataSnapshot.hasChildren()){
+                            String notificationID = (String) dataSnapshot.child("notificationID").getValue();
+                            String inviteBy = (String) dataSnapshot.child("inviteBy").getValue();
+                            String circleID = (String) dataSnapshot.child("circleID").getValue();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("notificationID", notificationID);
+
+                            getFirebaseInfo.GetLeaperName(inviteBy, notificationTextView);
+                            String nLeaperName = notificationTextView.getText().toString();
+                            getFirebaseInfo.GetCircleName(circleID, notificationTextView2);
+                            String circleName = notificationTextView2.getText().toString();
+
+
+                            if ((Objects.equals(circleName, "Name") || (Objects.equals(nLeaperName, "Name")))){
+
+
+
+                                PugNotification.with(context)
+                                        .load()
+                                        .title("Circle Invitation")
+                                        .message("You've received a circle invite from " + inviteBy)
+                                        .bigTextStyle("You've received a circle invite from " + inviteBy)
+                                        .smallIcon(R.mipmap.ic_leap)
+                                        .largeIcon(R.mipmap.ic_leap)
+                                        .flags(Notification.DEFAULT_ALL)
+                                        .click(receivedNotifications.class, bundle)
+                                        .autoCancel(true)
+                                        .simple()
+                                        .build();
+
+                            } else {
+
+
+                                PugNotification.with(context)
+                                        .load()
+                                        .title("Circle Invitation")
+                                        .message("You've been invited by " + nLeaperName + " to join " + circleName)
+                                        .bigTextStyle("You've been invited by " + nLeaperName + " to join " + circleName)
+                                        .smallIcon(R.mipmap.ic_leap)
+                                        .largeIcon(R.mipmap.ic_leap)
+                                        .flags(Notification.DEFAULT_ALL)
+                                        .click(receivedNotifications.class, bundle)
+                                        .autoCancel(true)
+                                        .simple()
+                                        .build();
+
+                            }
+
+
+
+
+                        }
+
+
+
+                    }
+
+
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 
@@ -1016,7 +1477,7 @@ public class Leap extends BaseActivity
         getMenuInflater().inflate(R.menu.leap, menu);
 
         MenuItem menuItem = menu.findItem(R.id.nav_leap_notifications);
-        menuItem.setIcon(leapUtilities.buildCounterDrawable(count, R.drawable.ic_bell));
+        menuItem.setIcon(leapUtilities.buildCounterDrawable(count, R.drawable.ic_bell, context));
 
 
         return true;
@@ -1089,21 +1550,49 @@ public class Leap extends BaseActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mViewPager = (ViewPager) findViewById(R.id.leapsContainer);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             this.moveTaskToBack(true);
             return true;
-        } else {
-            super.onBackPressed();
+        } else if ((keyCode == event.KEYCODE_BACK) && (mViewPager.getCurrentItem() != 0)){
+                mViewPager.setCurrentItem(0);
+        }else {
+            //super.onBackPressed();
         }
 
 
+
+        mViewPager.setCurrentItem(0);
         return super.onKeyDown(keyCode, event);
 
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // Sign in logic here.
+                }
+                else {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(Leap.this, registerLogin.class);
+                    startActivity(intent);
+
+                }
+            }
+        };
+
+        super.onResumeFragments();
+    }
 
     @Override
     protected void onResumeFragments() {

@@ -64,6 +64,7 @@ public class LeapUtilities extends AppCompatActivity implements ImageUtils.Image
 
     ImageUtils imageutils;
 
+    private String timestamp;
 
 
 
@@ -72,20 +73,23 @@ public class LeapUtilities extends AppCompatActivity implements ImageUtils.Image
 
 
 
-    public void CircleImageFromFirebase(Context context, StorageReference storageReference, CircleImageView circleImageView){
+
+    public void CircleImageFromFirebase(Context context, StorageReference storageReference, CircleImageView circleImageView, String timestamp){
 
         this.context = context;
         this.storageReference = storageReference;
         this.circleImageView = circleImageView;
+        //this.timestamp = timestamp;
 
 
 
 
 
         Glide.with(context).using(new FirebaseImageLoader()).load(storageReference)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                .error(R.drawable.profile_picture)
+                .skipMemoryCache(true)
+                //.diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .signature(new StringSignature(String.valueOf(timestamp)))
+                .error(R.drawable.ic_camera)
                 .centerCrop()
                 .into(circleImageView);
 
@@ -105,23 +109,26 @@ public class LeapUtilities extends AppCompatActivity implements ImageUtils.Image
 
 
 
-    public void SquareImageFromFirebase(Context context, StorageReference storageReference, ImageView imageView){
+    public void SquareImageFromFirebase(Context context, StorageReference storageReference, ImageView imageView, String timestampB){
 
         this.context =context;
         this.storageReference = storageReference;
         this.imageView = imageView;
 
         Glide.with(context).using(new FirebaseImageLoader()).load(storageReference)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                .error(R.drawable.profile_picture)
+                .skipMemoryCache(true)
+                //.diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .signature(new StringSignature(String.valueOf(timestampB)))
+                .error(R.drawable.ic_camera)
                 .fitCenter()
                 .into(imageView);
 
     }
 
 
-    public Drawable buildCounterDrawable(long count, int backgroundImageId) {
+    public Drawable buildCounterDrawable(long count, int backgroundImageId, Context context) {
+        this.context = context;
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.notification_layout, null);
         view.setBackgroundResource(backgroundImageId);
@@ -146,34 +153,6 @@ public class LeapUtilities extends AppCompatActivity implements ImageUtils.Image
 
         return new BitmapDrawable(context.getResources(), bitmap);
     }
-
-
-
-
-
-    public static void justifyListViewHeightBasedOnChildren (ListView listView) {
-
-        ListAdapter adapter = listView.getAdapter();
-
-        if (adapter == null) {
-            return;
-        }
-        ViewGroup vg = listView;
-        int totalHeight = 0;
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View listItem = adapter.getView(i, null, vg);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams par = listView.getLayoutParams();
-        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
-        listView.setLayoutParams(par);
-        listView.requestLayout();
-    }
-
-
-
 
 
 

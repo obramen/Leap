@@ -106,7 +106,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/freeLeapGameImage"
                                 android:layout_centerHorizontal="true"
-                                android:text="FIFA 17"
+                                android:text="FIFA 18"
                                 android:textStyle="bold"
                                 android:textSize="12sp" />
                         </RelativeLayout>

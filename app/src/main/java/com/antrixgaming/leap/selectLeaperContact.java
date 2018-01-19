@@ -107,7 +107,7 @@ public class selectLeaperContact extends BaseActivity {
         adapter = new FirebaseListAdapter<savePhoneContacts>(this, savePhoneContacts.class,
                 R.layout.phone_contact_list, leapContactRef.orderByChild("name")) {  //dbRef.orderByChild("name")
             @Override
-            protected void populateView(View v, savePhoneContacts model, int position) {
+            protected void populateView(View v, final savePhoneContacts model, int position) {
 
 
                 TextView mPhoneContactName = (TextView) v.findViewById(R.id.phoneContactName);
@@ -116,15 +116,43 @@ public class selectLeaperContact extends BaseActivity {
                 // Populate the data into the template view using the data object
                 mPhoneContactName.setText(model.getcontactName());
                 mContactPhoneNumber.setText(model.getcontactPhoneNumber());
-                CircleImageView contact_list_image = (CircleImageView)v.findViewById(R.id.contact_list_image);
+                final CircleImageView contact_list_image = (CircleImageView)v.findViewById(R.id.contact_list_image);
 
 
 
                 if (model.getcontactPhoneNumber() == null){
 
                 } else {
-                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getcontactPhoneNumber()).child(model.getcontactPhoneNumber());
-                    leapUtilities.CircleImageFromFirebase(selectLeaperContact.this, mLeaperStorageRef, contact_list_image);
+
+
+
+
+
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.getcontactPhoneNumber())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.hasChildren()){
+
+                                        String timestamp = dataSnapshot.child(model.getcontactPhoneNumber()).getValue().toString();
+
+                                        mLeaperStorageRef = mStorage.child("leaperProfileImage").child(model.getcontactPhoneNumber()).child(model.getcontactPhoneNumber());
+                                        leapUtilities.CircleImageFromFirebase(selectLeaperContact.this, mLeaperStorageRef, contact_list_image, timestamp);
+
+                                    }
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
                 }
 
 
@@ -282,7 +310,7 @@ public class selectLeaperContact extends BaseActivity {
                 // 0 - notification status
                 // 1 - type of notification
 
-
+/*
                 for(int x = 0; x < selectedNumbers.size(); x++ ){
 
 
@@ -302,10 +330,14 @@ public class selectLeaperContact extends BaseActivity {
 
                 }
 
+                */
 
 
 
-/*
+
+
+
+
 
                 circleMembersRef = dbRef.child("groupcirclemembers").child(finalCircleID).child("currentmembers");
 
@@ -390,7 +422,7 @@ public class selectLeaperContact extends BaseActivity {
                     }
                 });
 
-                */
+
 
 
                 finish();

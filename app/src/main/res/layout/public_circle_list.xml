@@ -10,7 +10,7 @@
         android:id="@+id/publicCircleCard"
         android:background="@color/colorPrimary"
         android:layout_width="112dp"
-        android:layout_height="190dp">
+        android:layout_height="195dp">
 
 
         <ImageView
@@ -22,7 +22,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_alignParentBottom="true">
 
             <TextView
@@ -49,10 +49,10 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textSize="12sp"
-                android:layout_alignBaseline="@+id/leapInText"
-                android:layout_alignBottom="@+id/leapInText"
                 android:layout_alignStart="@+id/circleName"
+                android:layout_below="@id/circleName"
                 android:textColor="@color/white"
+                android:layout_marginTop="2dp"
                 />
 
             <TextView

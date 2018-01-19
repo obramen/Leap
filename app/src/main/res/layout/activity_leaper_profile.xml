@@ -58,6 +58,7 @@
 
 
                     <RelativeLayout
+                        android:padding="5dp"
 
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
@@ -71,6 +72,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_marginStart="10dp"
                             android:padding="5dp"
+                            android:visibility="invisible"
                             android:src="@drawable/ic_chat" />
 
                         <ImageView
@@ -79,8 +81,21 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
-                            android:layout_alignParentEnd="true"
+                            android:visibility="invisible"
+                            android:layout_toEndOf="@id/leaperProfileNewMessage"
                             android:src="@drawable/ic_add_attachment"
+                            android:tint="@color/white" />
+
+                        <ImageView
+                            android:padding="5dp"
+                            android:id="@+id/leaperProfileFavorite"
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:visibility="invisible"
+                            android:layout_marginEnd="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_favorite_empty"
                             android:tint="@color/white" />
 
 
@@ -111,7 +126,7 @@
                     android:layout_height="170dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/games_fifa_17"
+                    android:src="@drawable/default_image"
                     app:civ_border_color="#EEE"
                     app:civ_border_width="2dp" />
 

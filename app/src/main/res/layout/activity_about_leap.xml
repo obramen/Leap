@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/aboutImage"
             android:layout_centerHorizontal="true"
-            android:text="Version 0.7"
+            android:text="Version 1.7"
             android:textColor="@color/white"
             android:layout_marginBottom="15dp"
             android:textSize="12sp" />
@@ -45,11 +45,20 @@
             android:id="@+id/aboutContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/aboutImage"
+            android:layout_below="@+id/aboutImage"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:textColor="@color/white"
-            android:text="2017 AnTrix Gaming Ltd."
+            android:text="© 2017 AnTrix Gaming Ltd."
+            android:textSize="12sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/aboutContent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Phone: +233-242366623"
             android:textSize="12sp" />
 
 

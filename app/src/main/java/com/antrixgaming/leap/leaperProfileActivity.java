@@ -35,6 +35,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antrixgaming.leap.LeapClasses.FavoriteLeaper;
 import com.antrixgaming.leap.LeapClasses.ImageUtils;
 import com.antrixgaming.leap.LeapClasses.LeapUtilities;
 import com.antrixgaming.leap.Models.CircleMember;
@@ -61,6 +62,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -90,6 +92,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
     DatabaseReference dbRef;
     DatabaseReference userProfileDbRef;
+    //DatabaseReference favoriteDbRef;
 
 
     int uploadflag = 0;
@@ -100,6 +103,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
     Switch statusPermissionSwitch;
     ImageView leaperProfileNewLeap;
     ImageView leaperProfileNewMessage;
+    ImageView leaperProfileFavorite;
 
 
     EditText tauntEditText;
@@ -156,6 +160,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         mStorage = FirebaseStorage.getInstance().getReference();
         dbRef = FirebaseDatabase.getInstance().getReference();
         userProfileDbRef = dbRef.child("userprofiles").child(leaperPhoneNumber);
+        //favoriteDbRef = dbRef.child("favoriteleapers").child(myPhoneNumber);
         myPhoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         if (Objects.equals(leaperPhoneNumber, myPhoneNumber))
@@ -348,6 +353,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
         changeProfileImage = (CircleImageView) findViewById(R.id.changeProfileImage);
         leaperProfileNewLeap = (ImageView) findViewById(R.id.leaperProfileNewLeap);
         leaperProfileNewMessage = (ImageView) findViewById(R.id.leaperProfileNewMessage);
+        leaperProfileFavorite = (ImageView) findViewById(R.id.leaperProfileFavorite);
 
 
 
@@ -428,6 +434,7 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
             changeProfileImage.setVisibility(View.GONE);
             leaperProfileNewLeap.setVisibility(View.VISIBLE);
             leaperProfileNewMessage.setVisibility(View.VISIBLE);
+            leaperProfileFavorite.setVisibility(View.VISIBLE);
 
 
 
@@ -442,6 +449,8 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
             changeProfileImage.setVisibility(View.VISIBLE);
             leaperProfileNewLeap.setVisibility(View.GONE);
             leaperProfileNewMessage.setVisibility(View.GONE);
+            leaperProfileFavorite.setVisibility(View.GONE);
+
 
         }
 
@@ -449,13 +458,35 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+        FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(leaperPhoneNumber)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-        mLeaperStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child(leaperPhoneNumber);
-        leapUtilities.CircleImageFromFirebase(leaperProfileActivity.this, mLeaperStorageRef, profileImage);
+                        if (dataSnapshot.hasChildren()){
+
+                            String timestamp = dataSnapshot.child(leaperPhoneNumber).getValue().toString();
+                            mLeaperStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child(leaperPhoneNumber);
+                            leapUtilities.CircleImageFromFirebase(leaperProfileActivity.this, mLeaperStorageRef, profileImage, timestamp);
+
+                        }
 
 
-        mLeaperProfileStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child("backgroundImage");
-        leapUtilities.SquareImageFromFirebase(leaperProfileActivity.this, mLeaperProfileStorageRef, profileImageBackground);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
+        //mLeaperProfileStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child("backgroundImage");
+        //leapUtilities.SquareImageFromFirebase(leaperProfileActivity.this, mLeaperProfileStorageRef, profileImageBackground);
 
 
 
@@ -853,6 +884,71 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
 
 
 
+        dbRef.child("favoriteleapers").child(myPhoneNumber).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+
+
+                if (dataSnapshot.child(leaperPhoneNumber).getValue() == null){
+
+                } else {
+
+                    if(dataSnapshot.child(leaperPhoneNumber).exists()){
+                        leaperProfileFavorite.setImageResource(R.drawable.ic_favorite_full);
+                    } else {
+                        leaperProfileFavorite.setImageResource(R.drawable.ic_favorite_empty);
+                    }
+
+                }
+
+
+
+
+
+
+                leaperProfileFavorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (dataSnapshot.child(leaperPhoneNumber).getValue() == null){
+
+                            dbRef.child("favoriteleapers").child(myPhoneNumber).child(leaperPhoneNumber).setValue(new FavoriteLeaper(leaperPhoneNumber));
+
+                        } else {
+
+                            if(dataSnapshot.child(leaperPhoneNumber).exists()){
+                                dbRef.child("favoriteleapers").child(myPhoneNumber).child(leaperPhoneNumber).removeValue();
+                                leaperProfileFavorite.setImageResource(R.drawable.ic_favorite_empty);
+
+                            } else {
+                                dbRef.child("favoriteleapers").child(myPhoneNumber).child(leaperPhoneNumber).setValue(new FavoriteLeaper(leaperPhoneNumber));
+                                leaperProfileFavorite.setImageResource(R.drawable.ic_favorite_full);
+
+                            }
+
+                        }
+
+
+
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
 
 
 
@@ -915,14 +1011,22 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    /// add new timestamp for image for caching purposes
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp")
+                            .child(myPhoneNumber).child(myPhoneNumber).setValue(new Date().getTime());
+
+
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
                     Toast.makeText(leaperProfileActivity.this, "Profile banner changed", Toast.LENGTH_SHORT).show();
+                    /*
                     Glide.with(leaperProfileActivity.this).using(new FirebaseImageLoader()).load(mLeaperProfileStorageRef)
                             .diskCacheStrategy(DiskCacheStrategy.RESULT)
                             .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                             .error(R.drawable.profile_picture).fitCenter().into(profileImageBackground);
+                            */
                     progressDialog.dismiss();
 
 
@@ -967,6 +1071,11 @@ public class leaperProfileActivity extends BaseActivity implements ImageUtils.Im
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    /// add new timestamp for image for caching purposes
+                    FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp")
+                            .child(myPhoneNumber).child(myPhoneNumber).setValue(new Date().getTime());
+
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
 

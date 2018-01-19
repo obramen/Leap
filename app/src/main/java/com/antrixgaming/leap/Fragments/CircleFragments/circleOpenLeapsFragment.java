@@ -107,7 +107,7 @@ public class circleOpenLeapsFragment extends Fragment {
                 TextView gameFormat = (TextView) v.findViewById(R.id.gameFormat);
                 TextView gameTime = (TextView) v.findViewById(R.id.gameTime);
                 TextView mleapID = (TextView) v.findViewById(R.id.leapID);
-                CircleImageView circleOpenListImage = (CircleImageView) v.findViewById(R.id.circleOpenListImage);
+                final CircleImageView circleOpenListImage = (CircleImageView) v.findViewById(R.id.circleOpenListImage);
 
 
                 final TextView displayedLeaperOneName = (TextView) v.findViewById(R.id.displayedLeaperOneName);
@@ -154,8 +154,38 @@ public class circleOpenLeapsFragment extends Fragment {
                 // 2 - declined leap
                 // 3 - cancelled leap
 
-                mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
-                leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperOneStorageRef, circleOpenListImage);
+
+
+                FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(model.leaperOne)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(model.leaperOne).getValue().toString();
+
+                                    mLeaperOneStorageRef = mStorage.child("leaperProfileImage").child(model.leaperOne).child(model.leaperOne);
+                                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperOneStorageRef, circleOpenListImage, timestamp);
+
+
+
+
+
+
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
 
                 FirebaseDatabase.getInstance().getReference().child("phonenumbers").child(model.getleaperOne())
                         .addListenerForSingleValueEvent(new ValueEventListener() {

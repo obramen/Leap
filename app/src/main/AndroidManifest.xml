@@ -37,10 +37,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".phoneVerifyActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".registerLogin"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".newLeap"
             android:label="@string/title_activity_new_leap"
@@ -59,7 +59,7 @@
         <activity
             android:name=".leapDetailsActivity"
             android:label="Leap details"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".selectLeaperContact"
             android:label="Select leaper" />
@@ -97,7 +97,7 @@
         <activity
             android:name=".eventDetails"
             android:label="Event Details"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".about_leap"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -120,7 +120,9 @@
         <activity
             android:name=".settings_circle"
             android:label="@string/title_activity_settings_circle" />
-        <activity android:name=".activity_circle_settings"></activity>
+        <activity android:name=".activity_circle_settings" />
+        <activity android:name=".public_circles"
+            android:label="Public Circles"></activity>
     </application>
 
 </manifest>

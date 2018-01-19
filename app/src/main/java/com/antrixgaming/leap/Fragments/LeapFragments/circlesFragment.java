@@ -130,10 +130,33 @@ public class circlesFragment extends Fragment {
 
 
 
-                mLeaperStorageRef = mStorage.child("groupCircleProfileImage").child(model.getGroupid()).child(model.getGroupid());
-                circleImageView = (CircleImageView)v.findViewById(R.id.circle_image_1);
+                //mLeaperStorageRef = mStorage.child("groupCircleProfileImage").child(model.getGroupid()).child(model.getGroupid());
 
-                leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, circleImageView);
+
+
+                FirebaseDatabase.getInstance().getReference().child("circleImageTimestamp").child(model.getGroupid())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(model.getGroupid()).getValue().toString();
+                                    mLeaperStorageRef = mStorage.child("groupCircleProfileImage").child(model.getGroupid()).child(model.getGroupid());
+                                    circleImageView = (CircleImageView)v.findViewById(R.id.circle_image_1);
+                                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, circleImageView, timestamp);
+
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
 
 

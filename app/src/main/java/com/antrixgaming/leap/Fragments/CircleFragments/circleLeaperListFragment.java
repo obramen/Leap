@@ -104,8 +104,37 @@ public class circleLeaperListFragment extends Fragment {
                 final String leaperPhoneNumber = model.getPhoneNumber();
 
 
-                mLeaperStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child(leaperPhoneNumber);
-                leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage);
+
+
+                FirebaseDatabase.getInstance().getReference().child("profileImageTimestamp").child(leaperPhoneNumber)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChildren()){
+
+                                    String timestamp = dataSnapshot.child(leaperPhoneNumber).getValue().toString();
+                                    mLeaperStorageRef = mStorage.child("leaperProfileImage").child(leaperPhoneNumber).child(leaperPhoneNumber);
+                                    leapUtilities.CircleImageFromFirebase(getActivity(), mLeaperStorageRef, leaperImage, timestamp);
+
+
+
+
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
 
 
                 if (Objects.equals(myPhoneNumber, leaperPhoneNumber)){

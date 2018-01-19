@@ -12,9 +12,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -24,11 +26,17 @@ public class splashScreen extends Activity {
     private final int SPLASH_DISPLAY_LENGTH = 1000;
 
     /** Called when the activity is first created. */
+
+
+    Persistence persistence;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_splash_screen);
 
+        persistence = new Persistence();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
 
 
@@ -56,7 +64,7 @@ public class splashScreen extends Activity {
 
                 } else {
                     // No user is signed in
-                    Intent openRegisterLoginIntent = new Intent(splashScreen.this, registerLogin.class);
+                    Intent openRegisterLoginIntent = new Intent(splashScreen.this, tutorialActivity.class);
                     splashScreen.this.startActivity(openRegisterLoginIntent);
                     FirebaseAuth.getInstance().signOut();
                     splashScreen.this.finish();
